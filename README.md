@@ -4,7 +4,7 @@ RunBridge is a small, standalone Bluetooth Low Energy (BLE) bridge that connects
 
 It allows your watch to receive **accurate pace, distance, and cadence** from a treadmill — without relying on wrist estimation or a footpod.
 
-RunBridge is **not Garmin-specific** and does **not** require any proprietary apps.
+RunBridge is **not Brand-specific** and does **not** require any proprietary apps.
 
 ---
 
@@ -46,7 +46,7 @@ RunBridge uses **standard BLE RSC**, so it is compatible with watches that suppo
 
 - Treadmills that broadcast **FTMS**
 - Currently tested with:
-  - **AssaultRunner / AssaultRunner Pro**
+  - **AssaultRunner Pro**
 
 Additional treadmills will be validated over time.
 
@@ -68,8 +68,8 @@ All logic runs directly on the device.
 ## Setup Overview
 
 1. Power on RunBridge
-2. Start a treadmill session
-3. Pair your watch to RunBridge as a footpod / speed sensor
+2. Pair your watch to RunBridge as a footpod / speed sensor
+3. Start a treadmill session
 4. Start your run
 
 No phone or app is required.
@@ -90,7 +90,6 @@ Release notes may be published here for major versions.
 ## Project Status
 
 - Hardware: Production-grade BLE module
-- Enclosure: Custom 3D-printed case
 - Current firmware: Stable production release
 - Storefront: Tindie (link coming soon)
 
