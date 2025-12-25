@@ -4,6 +4,8 @@ RunBridge is a small, standalone Bluetooth Low Energy (BLE) bridge that connects
 
 It lets your watch receive **accurate pace and distance** directly from the treadmill instead of relying on wrist-based estimation or a separate footpod.
 
+Cadence is **estimated from pace** on the bridge (since most treadmills do not expose true step data), and is best treated as an approximate value.
+
 RunBridge is **not brand-specific** and does **not** require any proprietary phone apps.
 
 ---
@@ -11,10 +13,12 @@ RunBridge is **not brand-specific** and does **not** require any proprietary pho
 ## What RunBridge Does
 
 - Connects to treadmills that broadcast **FTMS (Fitness Machine Service)**
-- Re-broadcasts speed, distance, and cadence using **RSC (Running Speed and Cadence)**
+- Re-broadcasts treadmill **speed and distance**, and **estimates cadence from pace**, using **RSC (Running Speed and Cadence)**
 - Appears to your watch like a standard footpod / running speed & cadence sensor
 - Works fully offline — no phone, no app, no Wi-Fi
 - Runs on a **Seeed XIAO nRF52840** board in a small 3D-printed enclosure
+
+Because cadence is estimated from speed, it’s useful for getting a rough number in your data, but it will not be as precise as a true footpod or wrist/HR-based cadence source.
 
 ---
 
@@ -40,9 +44,9 @@ Indoor running accuracy has always been a compromise:
 - Manual calibration fixes totals but not mile/km splits
 - Footpods add cost, require calibration, and don’t always match the treadmill
 
-RunBridge solves this by acting as a **protocol bridge**, not an estimator.
+RunBridge solves this by acting as a **protocol bridge**, not an estimator for distance.
 
-Your watch receives **the treadmill’s own speed and distance** via standard BLE RSC, using interfaces it already understands.
+Your watch receives **the treadmill’s own speed and distance** via standard BLE RSC, using interfaces it already understands. Cadence is filled in based on pace so your data looks consistent, but distance and pace are the primary, accurate values.
 
 ---
 
@@ -51,7 +55,8 @@ Your watch receives **the treadmill’s own speed and distance** via standard BL
 See the full guide at [`Docs/QuickStart.md`](Docs/QuickStart.md). High level:
 
 1. **Power On**  
-   Plug RunBridge into any 5V USB power source (treadmill USB port, battery pack, or wall adapter).
+   Plug RunBridge into any 5V USB power source (treadmill USB port, battery pack, or wall adapter).  
+   If your treadmill or console has a Bluetooth toggle, make sure **Bluetooth is turned on**.
 
 2. **Pair Your Watch (one-time)**  
    - **Garmin (e.g., Fenix 7):**  
@@ -65,7 +70,8 @@ See the full guide at [`Docs/QuickStart.md`](Docs/QuickStart.md). High level:
 
 4. **Run**  
    - Start an **Indoor Run / Treadmill** activity on your watch.  
-   - Pace and distance should track the treadmill display.
+   - Pace and distance should track the treadmill display.  
+   - Cadence will be estimated from pace on the bridge.
 
 No phone or app is required once things are paired.
 
@@ -95,13 +101,11 @@ Confirmed working:
 
 - **Garmin Fenix 7** (Fenix 7 Pro Sapphire Solar variant)
 
-Previously tested prototypes:
-
-- **COROS Pace 2** (via footpod profile)
-
 RunBridge uses standard BLE RSC, which is supported by many modern GPS running watches. Other Garmin, COROS, Suunto, and Polar models *should* work if they support external footpod / RSC sensors, but they have not been individually verified.
 
 If you test with a different watch, please report your results.
+
+> Note: Cadence on the watch will be coming from RunBridge’s pace-based estimate unless you configure the watch to use another cadence source (e.g., wrist/HR or a dedicated footpod).
 
 ---
 
@@ -149,6 +153,7 @@ The full troubleshooting guide lives in [`Docs/Troubleshooting.md`](Docs/Trouble
 
 - **Watch won’t find RunBridge**
   - Confirm RunBridge is powered (LED not completely off).
+  - Make sure Bluetooth is enabled on your treadmill console if it has a setting.
   - Move the watch close during pairing.
   - Remove the existing sensor entry on the watch and re-pair.
 
@@ -162,6 +167,10 @@ The full troubleshooting guide lives in [`Docs/Troubleshooting.md`](Docs/Trouble
   - Make sure you stayed in **System Ready (solid green)** most of the workout.
   - Minor differences are normal; large ones may indicate a treadmill quirk.
 
+- **Cadence looks odd**
+  - Remember cadence is **estimated from speed**, not measured from your steps.
+  - If your watch offers another cadence source (wrist/HR, footpod), you can configure it to use that instead.
+
 If you’re stuck, send details (watch model, treadmill model, LED behavior, screenshots / photos) to `support@runbridge.dev`.
 
 ---
@@ -171,8 +180,10 @@ If you’re stuck, send details (watch model, treadmill model, LED behavior, scr
 1. RunBridge advertises as an **RSC sensor** and waits for your watch to connect.
 2. Once the watch is connected, it scans for nearby **FTMS** treadmills.
 3. It connects to the treadmill and subscribes to FTMS speed/distance notifications.
-4. Incoming FTMS data is transformed into **Running Speed and Cadence (RSC)** format.
-5. The watch sees the data exactly as if it came from a normal footpod.
+4. Incoming FTMS data is transformed into **Running Speed and Cadence (RSC)** format:
+   - Speed and distance come directly from the treadmill.
+   - Cadence is derived from speed using a simple estimation model.
+5. The watch sees the data as if it came from a normal footpod.
 
 All logic runs directly on the device. No cloud, no app, no phone.
 
@@ -192,8 +203,6 @@ Current production hardware:
 
 Each unit is hand-assembled, loaded with firmware, and test-run before shipping. Units ship in an anti-static bag with a printed quick start card.
 
-> **Note:** Earlier prototypes used Raytac MDBT50Q modules. The Tindie-ready product described here is based on the XIAO nRF52840.
-
 ---
 
 ## Firmware
@@ -207,6 +216,7 @@ Internally, the firmware includes:
 - A watchdog for automatic recovery from rare lockups
 - State-driven BLE management for the FTMS (treadmill) and RSC (watch) sides
 - Robust distance handling that prefers **treadmill odometer** when available, with sensible fallback
+- A cadence estimation layer based on treadmill speed
 - LED state machine to make it obvious what’s going on (see [`Docs/LED-States.md`](Docs/LED-States.md))
 
 This repository **does not** contain firmware source code.

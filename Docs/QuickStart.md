@@ -12,7 +12,7 @@ This guide is for first-time setup. It assumes you already have:
 ## 1. Plug in RunBridge
 
 1. Connect the USB-C port on RunBridge to a **5V USB power source**.
-2. The status LED on the XIAO board should come on or start blinking.
+2. The status LED on the XIAO board should come on or start blinking once through each color.
 
 If the LED never lights, try a different USB port or adapter.
 
@@ -43,7 +43,7 @@ On most Garmin watches, the path is:
 Then:
 
 1. Wait for the watch to scan for devices.
-2. Choose the device named **RunBridge** (or whatever custom name you’ve set in firmware).
+2. Choose the device named **RunBridge**.
 3. Save / confirm the new sensor.
 
 If you already have another footpod (like Stryd) paired, you may want to temporarily disable it so Garmin prefers RunBridge.

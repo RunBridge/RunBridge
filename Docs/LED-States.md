@@ -104,26 +104,3 @@ If you expect it to be doing something but it’s off:
 
 - Unplug RunBridge, wait a few seconds, and plug back in.
 
----
-
-## Code reference
-
-These LED states are implemented in `updateLedStatus(unsigned long now)` in the firmware.
-
-Priority logic (simplified):
-
-```cpp
-// 1: Both connected
-if (watchSubscribed && treadmillConnected) { /* System Ready */ }
-
-// 2: Nothing connected
-else if (!watchConnected && !treadmillConnected) { /* Idle */ }
-
-// 3: Treadmill only
-else if (treadmillConnected && !watchConnected) { /* Treadmill Only */ }
-
-// 4: Watch connected, not subscribed
-else if (watchConnected && !watchSubscribed) { /* Watch Connected */ }
-
-// 5: Watch subscribed, scanning for treadmill
-else if (watchSubscribed && !treadmillConnected) { /* Scanning */ }

@@ -83,9 +83,7 @@ and send it to [support@runbridge.dev](mailto:support@runbridge.dev).
    - Temporarily disable / forget other footpods and test again.
 
 2. **Ensure you stayed in System Ready:**
-   - During the run, LED should be solid:
-     - XIAO: solid green  
-     - Raytac: solid blue  
+   - During the run, LED should be solid green
    - If it kept bouncing between states (fast blink, scanning), the connection to treadmill or watch may be unstable.
 
 3. **Check treadmill behavior:**
