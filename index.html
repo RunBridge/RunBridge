@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>RunBridge – Treadmill to Garmin Footpod Bridge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="RunBridge lets your Garmin watch use your treadmill's speed and distance directly over Bluetooth FTMS as a virtual footpod." />
+  <style>
+    :root {
+      --accent: #2563eb;
+      --accent-soft: #e0edff;
+      --bg: #0f172a;
+      --card-bg: #0b1120;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --danger: #ef4444;
+      --warning: #eab308;
+      --success: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .logo-img {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      object-fit: contain;
+      background: #020617;
+    }
+
+    .logo-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+    }
+
+    .nav-links a:hover {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr);
+      gap: 1.75rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      border-radius: 1.5rem;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.25), transparent 55%),
+        linear-gradient(to bottom right, rgba(15,23,42,0.95), rgba(15,23,42,0.98));
+      border: 1px solid rgba(148,163,184,0.3);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.8);
+    }
+
+    .hero-kicker {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      color: var(--accent-soft);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.9rem, 3vw + 1.1rem, 2.6rem);
+    }
+
+    .hero p {
+      margin: 0 0 1rem;
+      color: var(--text-muted);
+      max-width: 40rem;
+    }
+
+    .hero-highlight {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 0.75rem;
+      color: var(--accent-soft);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-highlight span {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 0 6px rgba(34,197,94,0.25);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border-color: rgba(191,219,254,0.5);
+      box-shadow: 0 10px 25px rgba(37,99,235,0.45);
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+      text-decoration: none;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-main);
+      border-color: rgba(148,163,184,0.5);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15,23,42,0.85);
+      text-decoration: none;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.1rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 0.75rem;
+    }
+
+    .layout-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr);
+      gap: 1.5rem;
+      margin-top: 2.25rem;
+    }
+
+    @media (max-width: 800px) {
+      .layout-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    section {
+      margin-bottom: 2rem;
+    }
+
+    section h2 {
+      font-size: 1.25rem;
+      margin: 0 0 0.5rem;
+    }
+
+    section > p {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+      padding: 1rem 1.1rem;
+    }
+
+    .card + .card {
+      margin-top: 1rem;
+    }
+
+    ol.quickstart-list {
+      margin: 0.3rem 0 0;
+      padding-left: 1.1rem;
+      font-size: 0.95rem;
+    }
+
+    ol.quickstart-list li {
+      margin-bottom: 0.35rem;
+    }
+
+    .step-label {
+      font-weight: 600;
+    }
+
+    .note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.35rem;
+    }
+
+    .led-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.35rem;
+    }
+
+    .led-table th,
+    .led-table td {
+      text-align: left;
+      padding: 0.4rem 0.4rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .led-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      vertical-align: middle;
+      margin-right: 0.4rem;
+    }
+
+    .led-blue {
+      background: #3b82f6;
+    }
+
+    .led-red {
+      background: var(--danger);
+    }
+
+    .led-green {
+      background: var(--success);
+    }
+
+    .led-off {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .led-purple {
+      background: #a855f7;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .troubleshooting-list {
+      margin: 0.3rem 0 0.2rem;
+      padding-left: 1.1rem;
+      font-size: 0.9rem;
+    }
+
+    .troubleshooting-list li {
+      margin-bottom: 0.35rem;
+    }
+
+    .faq-item + .faq-item {
+      margin-top: 0.75rem;
+    }
+
+    .faq-q {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .faq-a {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.1rem;
+    }
+
+    .compat-list {
+      margin: 0.35rem 0 0.5rem;
+      padding-left: 1.1rem;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 1.5rem 1rem 2rem;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-inner">
+      <div class="logo">
+        <!-- If you don't end up using a logo file, you can remove the img and replace with simple text or initials. -->
+        <img src="Docs/runbridge-logo.png" alt="RunBridge logo" class="logo-img" />
+        <div>
+          <div>RunBridge</div>
+          <div class="logo-subtitle">Treadmill → Garmin Footpod Bridge</div>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#quickstart">Quick Start</a>
+        <a href="#troubleshooting">Help</a>
+        <a href="#support">Support</a>
+        <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs" target="_blank" rel="noopener">Docs</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="hero-kicker">Indoor running, solved</div>
+        <div class="hero-highlight">
+          <span></span>
+          Uses your treadmill's FTMS data as a Garmin footpod
+        </div>
+        <h1>Use your treadmill's distance directly on your Garmin watch.</h1>
+        <p>
+          RunBridge plugs into USB power, connects to your FTMS-enabled treadmill,
+          and exposes speed &amp; distance to your Garmin watch as a standard
+          footpod. No more guessing, no more mismatched distances.
+        </p>
+        <div class="hero-actions">
+          <a href="#quickstart" class="btn btn-primary">
+            Quick Start Guide
+          </a>
+          <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs/QuickStart.md" class="btn btn-ghost" target="_blank" rel="noopener">
+            View Quick Start in GitHub
+          </a>
+        </div>
+        <div class="hero-meta">
+          <div class="badge">Small-batch hardware, built and tested in the U.S.</div>
+          <div>Questions? <a href="mailto:support@runbridge.dev">support@runbridge.dev</a></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="layout-grid">
+      <!-- LEFT COLUMN: QUICK START + TROUBLESHOOTING -->
+      <div>
+        <section id="quickstart">
+          <h2>Quick Start</h2>
+          <p>Follow these steps the first time you use RunBridge:</p>
+
+          <div class="card">
+            <div class="pill">Setup</div>
+            <ol class="quickstart-list">
+              <li>
+                <span class="step-label">Plug in RunBridge.</span><br />
+                Connect the USB-C port to a 5V USB power source
+                (wall adapter, treadmill USB, or powered hub).
+              </li>
+              <li>
+                <span class="step-label">Turn on your treadmill.</span><br />
+                Make sure your treadmill console is powered and
+                broadcasting FTMS over Bluetooth.
+              </li>
+              <li>
+                <span class="step-label">Pair on your Garmin watch.</span><br />
+                On your watch, go to <strong>Settings → Sensors &amp; Accessories → Add New → Foot Pod</strong>
+                (or Running Speed/Cadence) and select the device named
+                <strong>RunBridge</strong> (or your configured name).
+              </li>
+              <li>
+                <span class="step-label">Start an indoor run.</span><br />
+                Start an <strong>Indoor Run</strong> activity. Once your
+                treadmill session begins, pace and distance should match
+                what the treadmill reports.
+              </li>
+            </ol>
+            <p class="note">
+              If your watch already has another footpod paired, you may
+              need to disable or remove it so Garmin uses RunBridge as the
+              primary source.
+            </p>
+            <p class="note">
+              Prefer reading on GitHub? See the full quick start at  
+              <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs/QuickStart.md" target="_blank" rel="noopener">
+                Docs/QuickStart.md
+              </a>.
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="pill">LED States</div>
+            <p style="margin: 0 0 0.35rem;">
+              The XIAO nRF52840 board uses a single RGB LED to show what RunBridge is doing:
+            </p>
+            <table class="led-table">
+              <thead>
+                <tr>
+                  <th style="width: 30%;">State</th>
+                  <th>XIAO nRF52840 LED</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span class="led-dot led-green"></span>
+                    System Ready
+                  </td>
+                  <td>
+                    Solid green<br />
+                    <span class="note">Watch subscribed + treadmill connected</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="led-dot led-red"></span>
+                    Treadmill Only
+                  </td>
+                  <td>
+                    Double blink red<br />
+                    <span class="note">2 short red blinks every ~2 seconds (waiting for watch)</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="led-dot led-purple"></span>
+                    Watch Connected
+                  </td>
+                  <td>
+                    Fast blink magenta<br />
+                    <span class="note">On/off every ~150 ms (watch connected, not yet subscribed)</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="led-dot led-blue"></span>
+                    Scanning
+                  </td>
+                  <td>
+                    Slow blink blue<br />
+                    <span class="note">1 second on / 1 second off (watch ready, searching for treadmill)</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="led-dot led-off"></span>
+                    Idle / Sleep
+                  </td>
+                  <td>
+                    Off<br />
+                    <span class="note">No active connections</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <p class="note">
+              For a deeper technical breakdown, see  
+              <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs/LED-States.md" target="_blank" rel="noopener">
+                Docs/LED-States.md
+              </a>.
+            </p>
+          </div>
+        </section>
+
+        <section id="troubleshooting">
+          <h2>Troubleshooting</h2>
+          <p>If something isn’t working, start here:</p>
+
+          <div class="card">
+            <div class="pill">Common issues</div>
+            <ul class="troubleshooting-list">
+              <li>
+                <strong>My watch doesn’t see RunBridge.</strong><br />
+                Make sure RunBridge is powered and the LED is <strong>blinking</strong>
+                (any pattern). If the LED is completely off, it’s idle: unplug and plug
+                it back in, then retry <strong>Settings → Sensors &amp; Accessories → Add New → Foot Pod</strong>.
+              </li>
+              <li>
+                <strong>Treadmill distance doesn’t change on the watch.</strong><br />
+                Confirm your treadmill supports FTMS over Bluetooth and that its
+                Bluetooth is turned on. Some treadmills only broadcast once a workout
+                has started.
+              </li>
+              <li>
+                <strong>Distance on watch doesn’t match treadmill.</strong><br />
+                Make sure the watch is using RunBridge as the primary footpod.
+                If needed, temporarily disable other footpods or Stryd sensors.
+              </li>
+              <li>
+                <strong>Everything is stuck / LED pattern looks wrong.</strong><br />
+                Unplug RunBridge, wait 5 seconds, and plug it back in. Then restart
+                the activity on your watch. During a normal run you should settle into
+                the <strong>System Ready</strong> state (solid green).
+              </li>
+            </ul>
+            <p class="note">
+              Full troubleshooting guide:  
+              <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs/Troubleshooting.md" target="_blank" rel="noopener">
+                Docs/Troubleshooting.md
+              </a>
+            </p>
+            <p class="note">
+              Still stuck? Take a photo of your treadmill console and LED,
+              and email it to <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>.
+            </p>
+          </div>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN: COMPATIBILITY, FAQ, SUPPORT -->
+      <div>
+        <section>
+          <h2>Compatibility</h2>
+          <div class="card">
+            <div class="pill">Designed for</div>
+            <ul class="compat-list">
+              <li>Garmin watches that support Footpod / Running Speed &amp; Cadence sensors.</li>
+              <li>Indoor treadmills that broadcast FTMS over Bluetooth.</li>
+              <li>Standard 5V USB power sources (wall adapter, treadmill USB, powered hub).</li>
+            </ul>
+
+            <div class="pill">Not a good fit for</div>
+            <ul class="compat-list">
+              <li>Non-FTMS treadmills with only proprietary Bluetooth apps.</li>
+              <li>Watches or devices that cannot pair to a Bluetooth footpod.</li>
+              <li>Environments without safe, stable USB power.</li>
+            </ul>
+            <p class="note">
+              Full compatibility details (including an optional FTMS check using the nRF Connect app):  
+              <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs/Compatibility.md" target="_blank" rel="noopener">
+                Docs/Compatibility.md
+              </a><br />
+              Unsure if your treadmill is compatible? Email a photo of the console
+              and model to <a href="mailto:hello@runbridge.dev">hello@runbridge.dev</a>.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <h2>FAQ</h2>
+          <div class="card">
+            <div class="faq-item">
+              <div class="faq-q">Does this store or upload any of my data?</div>
+              <div class="faq-a">
+                No. RunBridge simply relays speed and distance from your treadmill
+                to your watch as a standard BLE sensor. Your activities live in
+                Garmin Connect, just like a normal run.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">Can I update the firmware?</div>
+              <div class="faq-a">
+                Firmware is shipped in a stable, production-ready state and is not
+                intended for end-user updates. If a critical issue is found, we’ll
+                publish guidance in the <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs" target="_blank" rel="noopener">Docs</a>.
+              </div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-q">What if it doesn’t work with my setup?</div>
+              <div class="faq-a">
+                Reach out to <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>.
+                If we can’t get it working with your treadmill and watch, we’ll work
+                with you on a return or refund according to the
+                <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs/Support-and-Policies.md" target="_blank" rel="noopener">
+                  Support &amp; Policies
+                </a>.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="support">
+          <h2>Support &amp; Policies</h2>
+          <div class="card">
+            <p style="margin-top: 0;">
+              RunBridge is a small-batch, hand-assembled hardware product.
+              Every unit is powered on and tested before it ships.
+            </p>
+            <ul class="compat-list">
+              <li><strong>Support:</strong> <a href="mailto:support@runbridge.dev">support@runbridge.dev</a></li>
+              <li><strong>General questions:</strong> <a href="mailto:hello@runbridge.dev">hello@runbridge.dev</a></li>
+              <li><strong>Returns:</strong> Please contact support within 30 days of delivery.</li>
+              <li><strong>Warranty:</strong> Covers hardware defects for 6 months from delivery.</li>
+            </ul>
+            <p class="note">
+              Full text:  
+              <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs/Support-and-Policies.md" target="_blank" rel="noopener">
+                Docs/Support-and-Policies.md
+              </a>
+            </p>
+            <p class="note">
+              RunBridge is not affiliated with or endorsed by Garmin, Assault,
+              or any treadmill manufacturer. Always use caution when training on
+              any exercise equipment.
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <div>© <span id="year"></span> RunBridge. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="https://github.com/RunBridge/RunBridge" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/RunBridge/RunBridge/tree/main/Docs" target="_blank" rel="noopener">Docs</a>
+        <a href="mailto:hello@runbridge.dev">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

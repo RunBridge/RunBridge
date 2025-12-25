@@ -1,0 +1,102 @@
+# Compatibility
+
+RunBridge sits between your treadmill and your Garmin watch. It relies on two things:
+
+1. An **FTMS-enabled treadmill** that broadcasts over Bluetooth.
+2. A **Garmin watch** that supports external speed/cadence / footpod sensors.
+
+---
+
+## Supported (in general)
+
+### Treadmills
+
+RunBridge is designed for treadmills whose consoles advertise **FTMS** over Bluetooth:
+
+- Often described as “Bluetooth FTMS”, “FTMS compatible”, or “supports Zwift/third-party apps”.
+- Many modern commercial and prosumer treadmills fall into this category.
+
+If your treadmill works with apps like Zwift or Kinomap over Bluetooth (without extra dongles), there’s a good chance it uses FTMS.
+
+### Watches
+
+Most Garmin running and multisport watches that support:
+
+- **Foot Pod** sensors, and/or
+- **Running Speed/Cadence** sensors
+
+will work with RunBridge.
+
+Check your watch under:
+
+> **Settings → Sensors & Accessories → Add New**
+
+If you see **Foot Pod** or **Running Speed/Cadence**, you should be good.
+
+---
+
+## Not supported / poor fit
+
+RunBridge is **not** a good fit if:
+
+- Your treadmill only supports:
+  - Proprietary app connections (e.g., brand-only apps) with no FTMS exposed.
+  - Bluetooth audio (headphone icon only).
+- Your watch:
+  - Does not support external running sensors.
+  - Cannot pair to a Bluetooth footpod or running speed/cadence sensor.
+
+If you’re unsure, feel free to ask.
+
+---
+
+## Quick FTMS check with nRF Connect (optional)
+
+If you’re comfortable using a phone app, you can roughly confirm FTMS support using **nRF Connect for Mobile** by Nordic Semiconductor (free on iOS and Android).
+
+### Steps
+
+1. **Install the app**
+   - Search for **“nRF Connect for Mobile”** in the App Store or Google Play.
+   - Install and open it.
+
+2. **Get close to the treadmill**
+   - Stand near the treadmill console.
+   - Make sure the treadmill is powered on and Bluetooth is enabled.
+
+3. **Scan for devices**
+   - In nRF Connect, go to the **Scanner** tab.
+   - Tap **Scan**.
+   - If needed, start a simple workout on the treadmill so it begins broadcasting.
+
+4. **Find your treadmill**
+   - Look for a device name that matches your treadmill brand/model, or something clearly related to it.
+   - Tap that device in the list.
+
+5. **Check for FTMS / Fitness Machine service**
+   - After connecting, look at the list of services.
+   - You’re interested in a service named **“Fitness Machine”** or with the UUID **0x1826**.
+   - Some apps also label this as **FTMS** or **Fitness Machine Service**.
+
+If you see a Fitness Machine / FTMS service (UUID 0x1826), that’s a strong sign your treadmill is using FTMS and is a good match for RunBridge.
+
+If you don’t see it:
+
+- The treadmill might not expose FTMS.
+- Or it may hide the service until a specific mode is selected.
+- Or it only talks to a proprietary phone app.
+
+If you’re not sure what you’re seeing, grab a screenshot and email it to  
+[hello@runbridge.dev](mailto:hello@runbridge.dev).
+
+---
+
+## Still not sure?
+
+Send us:
+
+- Treadmill brand and model
+- Garmin watch model
+- Any nRF Connect screenshots (optional)
+
+to **[hello@runbridge.dev](mailto:hello@runbridge.dev)** and we’ll tell you if it’s a good match before you buy or before you spend more time troubleshooting.

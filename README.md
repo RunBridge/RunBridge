@@ -1,10 +1,10 @@
 # RunBridge
 
-RunBridge is a small, standalone Bluetooth Low Energy (BLE) bridge that connects **FTMS-compatible treadmills** to **running watches** using standard BLE services.
+RunBridge is a small, standalone Bluetooth Low Energy (BLE) bridge that connects **FTMS-compatible treadmills** to **GPS running watches** using standard BLE services.
 
-It allows your watch to receive **accurate pace, distance**, and estimated cadence from a treadmill — without relying on wrist estimation or a footpod.
+It lets your watch receive **accurate pace and distance** directly from the treadmill instead of relying on wrist-based estimation or a separate footpod.
 
-RunBridge is **not brand-specific** and does **not** require any proprietary apps.
+RunBridge is **not brand-specific** and does **not** require any proprietary phone apps.
 
 ---
 
@@ -12,8 +12,23 @@ RunBridge is **not brand-specific** and does **not** require any proprietary app
 
 - Connects to treadmills that broadcast **FTMS (Fitness Machine Service)**
 - Re-broadcasts speed, distance, and cadence using **RSC (Running Speed and Cadence)**
-- Appears to your watch like a standard footpod
+- Appears to your watch like a standard footpod / running speed & cadence sensor
 - Works fully offline — no phone, no app, no Wi-Fi
+- Runs on a **Seeed XIAO nRF52840** board in a small 3D-printed enclosure
+
+---
+
+## For Users
+
+Most end users should start with the docs in this repo:
+
+- 👉 **Quick Start:** [`Docs/QuickStart.md`](Docs/QuickStart.md)  
+- 🛠️ **Troubleshooting:** [`Docs/Troubleshooting.md`](Docs/Troubleshooting.md)  
+- ✅ **Compatibility (including nRF Connect check):** [`Docs/Compatibility.md`](Docs/Compatibility.md)  
+- 💡 **LED States:** [`Docs/LED-States.md`](Docs/LED-States.md)  
+- 📩 **Support & Policies:** [`Docs/Support-and-Policies.md`](Docs/Support-and-Policies.md)  
+
+The public QR code / landing page at **runbridge.dev** points to a streamlined HTML version of these.
 
 ---
 
@@ -22,67 +37,71 @@ RunBridge is **not brand-specific** and does **not** require any proprietary app
 Indoor running accuracy has always been a compromise:
 
 - Wrist-based estimation drifts
-- Manual calibration fixes totals but not splits
-- Footpods add cost and complexity
+- Manual calibration fixes totals but not mile/km splits
+- Footpods add cost, require calibration, and don’t always match the treadmill
 
-RunBridge solves this by acting as a **protocol bridge**, not an estimator.  
-Your watch receives treadmill data directly, using standards it already understands.
+RunBridge solves this by acting as a **protocol bridge**, not an estimator.
 
----
-
-## Quick Start
-
-### 1. Power On
-Plug RunBridge into any USB power source (treadmill USB port, battery pack, or wall adapter). The LED will blink to indicate it's ready.
-
-### 2. Pair Your Watch (First Time Only)
-
-**Garmin (tested on Fenix 7 Pro Sapphire Solar):**
-1. Go to **Settings → Sensors & Accessories → Add New**
-2. Select **Foot Pod**
-3. Your watch will discover "RunBridge"
-4. Select it to pair
-
-**COROS (tested on Pace 2):**
-1. Go to **System → Accessories → Add Bluetooth**
-2. Select **Footpod**
-3. Your watch will discover "RunBridge"
-4. Select it to pair
-
-Once paired, your watch will automatically reconnect to RunBridge for future sessions.
-
-### 3. Connect to Treadmill
-1. Power on your treadmill
-2. RunBridge automatically scans and connects to nearby FTMS treadmills
-3. The LED goes solid when both watch and treadmill are connected
-
-### 4. Run
-Start a **Treadmill** or **Indoor Run** activity on your watch. You'll see real-time pace and distance from the treadmill.
-
-No phone or app is required.
+Your watch receives **the treadmill’s own speed and distance** via standard BLE RSC, using interfaces it already understands.
 
 ---
 
-## LED Status Guide
+## Quick Start (Short Version)
 
-| Pattern | Meaning |
-|---------|---------|
-| Fast blink | Waiting for watch to connect |
-| Slow blink | Watch connected, scanning for treadmill |
-| Double-blink | Treadmill connected, waiting for watch |
-| Solid | Bridge active — both connected |
-| Off | No power |
+See the full guide at [`Docs/QuickStart.md`](Docs/QuickStart.md). High level:
+
+1. **Power On**  
+   Plug RunBridge into any 5V USB power source (treadmill USB port, battery pack, or wall adapter).
+
+2. **Pair Your Watch (one-time)**  
+   - **Garmin (e.g., Fenix 7):**  
+     `Settings → Sensors & Accessories → Add New → Foot Pod`  
+     Select **RunBridge**.
+   - Other brands: look for **Footpod** or **Running Speed/Cadence** sensor options.
+
+3. **Connect to Treadmill**  
+   - Power on the treadmill and, if needed, start a basic workout so it starts broadcasting FTMS.
+   - RunBridge will scan and connect automatically.
+
+4. **Run**  
+   - Start an **Indoor Run / Treadmill** activity on your watch.  
+   - Pace and distance should track the treadmill display.
+
+No phone or app is required once things are paired.
+
+---
+
+## LED Status Guide (XIAO nRF52840)
+
+RunBridge uses the XIAO’s RGB LED to show state. Full details are in [`Docs/LED-States.md`](Docs/LED-States.md).
+
+| LED Pattern (XIAO)         | Meaning                                           |
+|----------------------------|---------------------------------------------------|
+| **Solid green**            | System Ready – watch subscribed + treadmill connected |
+| **Double blink red**       | Treadmill Only – FTMS treadmill connected, waiting for watch |
+| **Fast blink magenta**     | Watch Connected – watch connected, not yet subscribed |
+| **Slow blink blue**        | Scanning – watch subscribed, searching for treadmill |
+| **Off**                    | Idle / Sleep – no active connections              |
+
+During a normal run you should end up in **solid green** most of the time.
 
 ---
 
 ## Tested Watches
 
-RunBridge has been tested and confirmed working with:
+RunBridge targets watches that support external footpod / running speed & cadence sensors.
 
-- **Garmin Fenix 7**
-- **COROS Pace 2**
+Confirmed working:
 
-**Other watches:** RunBridge uses standard BLE RSC (Running Speed and Cadence), which is supported by most modern GPS running watches. Other Garmin, COROS, Suunto, and Polar watches *should* work if they support external footpod or RSC sensors, but this has not been verified. If you test with a different watch, please report your results.
+- **Garmin Fenix 7** (Fenix 7 Pro Sapphire Solar variant)
+
+Previously tested prototypes:
+
+- **COROS Pace 2** (via footpod profile)
+
+RunBridge uses standard BLE RSC, which is supported by many modern GPS running watches. Other Garmin, COROS, Suunto, and Polar models *should* work if they support external footpod / RSC sensors, but they have not been individually verified.
+
+If you test with a different watch, please report your results.
 
 ---
 
@@ -90,124 +109,161 @@ RunBridge has been tested and confirmed working with:
 
 RunBridge has been tested and confirmed working with:
 
-- **AssaultRunner Pro**
+- **AssaultRunner Pro** (FTMS-enabled console)
 
-**Other treadmills:** RunBridge works with treadmills that broadcast FTMS (Fitness Machine Service) over Bluetooth. Many modern treadmills claim FTMS support, including models from NordicTrack, Peloton, Woodway, Life Fitness, Technogym, and others.
+In principle, RunBridge should work with any treadmill that:
 
-However, **FTMS implementations vary by manufacturer and even by model**. Some treadmills may not follow the specification correctly, may only broadcast while a workout is active, or may have other quirks. There is no guarantee that an untested treadmill will work, even if the manufacturer claims FTMS support.
+- Broadcasts **FTMS** (Fitness Machine Service, UUID `0x1826`) over BLE, and  
+- Implements speed and distance characteristics reasonably close to the spec.
 
-**How to check if your treadmill supports FTMS:** Use the free [nRF Connect](https://www.nordicsemi.com/Products/Development-tools/nrf-connect-for-mobile) app on your phone to scan for Bluetooth devices while your treadmill is on. If it advertises "Fitness Machine" or shows service UUID `0x1826`, it likely supports FTMS — but compatibility is not guaranteed until tested.
+Many modern treadmills advertise FTMS support (NordicTrack, Peloton, Woodway, Life Fitness, Technogym, etc.), but **implementations vary**. Some:
 
-If you test RunBridge with a treadmill not listed above, please report your results (working or not) so we can build a compatibility list.
+- Only broadcast once a workout is active
+- Use non-standard fields
+- Hide FTMS behind a proprietary app
+
+Compatibility with untested models is **not guaranteed**.
+
+---
+
+## Checking FTMS with nRF Connect
+
+A quick way to sanity-check your treadmill is with **nRF Connect for Mobile** (free on iOS / Android). Full instructions are in [`Docs/Compatibility.md`](Docs/Compatibility.md); short version:
+
+1. Install **“nRF Connect for Mobile”** on your phone.
+2. Stand near the treadmill, power it on, and enable Bluetooth.
+3. In nRF Connect, open the **Scanner** tab and tap **Scan**.
+4. Identify your treadmill and connect to it.
+5. Look for a service named **“Fitness Machine”** or with UUID **`0x1826`**.
+
+If you see a Fitness Machine / FTMS service, that’s a strong sign your treadmill is a good candidate for RunBridge (but not a guarantee).
+
+If you’re not sure what you’re seeing, grab a screenshot and email it to  
+`hello@runbridge.dev`.
 
 ---
 
 ## Troubleshooting
 
-### Watch won't find RunBridge
-- Confirm RunBridge is powered (LED should be blinking)
-- Move closer during initial pairing
-- On your watch, try removing the sensor and re-pairing
+The full troubleshooting guide lives in [`Docs/Troubleshooting.md`](Docs/Troubleshooting.md). Common issues:
 
-### Treadmill won't connect
-- Confirm your treadmill has Bluetooth enabled (check treadmill settings)
-- Place RunBridge within 2 feet of the treadmill console during initial connection
-- Some treadmills only broadcast FTMS while a workout is active — try starting a session on the treadmill first
+- **Watch won’t find RunBridge**
+  - Confirm RunBridge is powered (LED not completely off).
+  - Move the watch close during pairing.
+  - Remove the existing sensor entry on the watch and re-pair.
 
-### Pace shows 0:00 or is erratic
-- Ensure the treadmill belt is actually moving
-- Some treadmills delay broadcasting until you reach a minimum speed
-- Check that your watch shows the footpod as connected
+- **Treadmill won’t connect**
+  - Ensure treadmill Bluetooth is enabled.
+  - Some treadmills only broadcast FTMS after a workout is started.
+  - Place RunBridge close to the console.
 
-### RunBridge keeps disconnecting
-- Try a different USB power source — some treadmill USB ports are underpowered
-- In busy gyms, position RunBridge closer to your treadmill to avoid connecting to a neighbor's equipment
+- **Distance or pace looks wrong**
+  - Confirm your watch is using the **footpod** as the pace/distance source.
+  - Make sure you stayed in **System Ready (solid green)** most of the workout.
+  - Minor differences are normal; large ones may indicate a treadmill quirk.
 
-### Distance doesn't match treadmill display
-- Minor differences are normal due to rounding
-- Large discrepancies may indicate the treadmill's FTMS implementation is non-standard
-- Please report these cases so we can investigate
+If you’re stuck, send details (watch model, treadmill model, LED behavior, screenshots / photos) to `support@runbridge.dev`.
 
 ---
 
-## How It Works (Technical)
+## How It Works (Technical Overview)
 
-1. RunBridge advertises as an RSC sensor and waits for your watch to connect
-2. Once paired, it scans for nearby FTMS treadmills
-3. It connects to the treadmill and subscribes to speed/distance notifications
-4. Incoming FTMS data is translated to RSC format and broadcast to your watch
-5. Your watch displays the data as if it came from a footpod
+1. RunBridge advertises as an **RSC sensor** and waits for your watch to connect.
+2. Once the watch is connected, it scans for nearby **FTMS** treadmills.
+3. It connects to the treadmill and subscribes to FTMS speed/distance notifications.
+4. Incoming FTMS data is transformed into **Running Speed and Cadence (RSC)** format.
+5. The watch sees the data exactly as if it came from a normal footpod.
 
-All logic runs directly on the device. No cloud, no app, no phone required.
+All logic runs directly on the device. No cloud, no app, no phone.
 
 ---
 
 ## Hardware
 
-| Specification | Value |
-|---------------|-------|
-| Module | Raytac MDBT50Q-CX-40 |
-| Processor | Nordic nRF52840 |
-| Bluetooth | 5.4 (BLE) |
-| Power | USB-C, 5V |
-| Size | 33 × 15 × 7 mm |
-| Weight | ~3 grams |
+Current production hardware:
 
-The Raytac module is pre-certified for FCC, IC, CE, TELEC, and other regulatory bodies.
+| Specification | Value                  |
+|---------------|------------------------|
+| Base board    | Seeed XIAO nRF52840    |
+| SoC           | Nordic nRF52840        |
+| Bluetooth     | BLE 5.x                |
+| Power         | USB-C, 5V              |
+| Enclosure     | 3D-printed custom case |
+
+Each unit is hand-assembled, loaded with firmware, and test-run before shipping. Units ship in an anti-static bag with a printed quick start card.
+
+> **Note:** Earlier prototypes used Raytac MDBT50Q modules. The Tindie-ready product described here is based on the XIAO nRF52840.
 
 ---
 
 ## Firmware
 
-- Firmware is **closed-source**
-- Actively developed and tested for stability in gym environments
-- Features include:
-  - Hardware watchdog for automatic recovery
-  - RSSI-based connection management to avoid pairing with distant treadmills
-  - Session continuity across brief disconnections
-  - Adaptive distance tracking with odometer validation
+- Firmware is **closed-source** and pre-flashed.
+- It is intended to be **appliance-style** for end users — no routine firmware updates are required.
+- If a critical issue is ever found, update instructions will be published in the Docs and on the GitHub repo.
 
-Firmware updates are delivered via USB DFU (Device Firmware Update). Instructions will be posted when updates are available.
+Internally, the firmware includes:
+
+- A watchdog for automatic recovery from rare lockups
+- State-driven BLE management for the FTMS (treadmill) and RSC (watch) sides
+- Robust distance handling that prefers **treadmill odometer** when available, with sensible fallback
+- LED state machine to make it obvious what’s going on (see [`Docs/LED-States.md`](Docs/LED-States.md))
+
+This repository **does not** contain firmware source code.
 
 ---
 
-## Project Status
+## Project Status & Availability
 
-- **Hardware:** Production-grade BLE module
-- **Firmware:** Stable release
-- **Storefront:** Tindie (link coming soon)
+- **Hardware:** Stable (XIAO nRF52840 + 3D-printed enclosure)  
+- **Firmware:** Stable release for FTMS → RSC bridging  
+- **Docs & UX:** Public user docs live under `Docs/` and on the GitHub Pages site  
+- **Storefront:** Planned via **Tindie** for small-batch sales  
+- **Shipping:** Currently planned as **U.S.-only**, small batches assembled and flashed on demand
+
+As this is a small personal project, availability may be limited.
 
 ---
 
 ## Support & Feedback
 
 If you have:
-- A treadmill you'd like to report as compatible (or incompatible)
-- A watch compatibility report
-- Feedback from real-world use
-- Feature requests
 
-Please [open an issue](../../issues) in this repository.
+- A treadmill or watch to report as compatible / incompatible
+- Questions about setup
+- Real-world feedback or edge cases
+
+You can:
+
+- Open an issue in this repository, or  
+- Email **support@runbridge.dev** (support) or **hello@runbridge.dev** (general questions)
 
 This repository is for:
+
 - Documentation
 - Compatibility tracking
 - User feedback
 
-It does **not** contain firmware source code.
+It does **not** contain firmware source.
 
 ---
 
 ## Disclaimer
 
-RunBridge is an independent product and is not affiliated with or endorsed by Garmin, COROS, Assault Fitness, or any other manufacturer.
+RunBridge is an independent project and is **not** affiliated with or endorsed by:
 
-Compatibility with untested watches and treadmills is not guaranteed. FTMS and RSC are industry standards, but manufacturer implementations vary.
+- Garmin
+- COROS
+- Assault Fitness
+- Any treadmill manufacturer
 
-All product names are trademarks of their respective owners.
+FTMS and RSC are industry standards, but manufacturer implementations vary. Compatibility with untested watches and treadmills is not guaranteed.
+
+All product names and trademarks are property of their respective owners.
 
 ---
 
 ## License
 
-Documentation in this repository is provided for informational purposes. Firmware is proprietary and not open source.
+Documentation in this repository is provided for informational purposes.  
+Firmware is proprietary and not open source.
