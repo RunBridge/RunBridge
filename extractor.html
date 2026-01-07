@@ -239,7 +239,7 @@
       </div>
     </div>
     <nav class="nav-links">
-      <a href="#" id="toAnalyzer">Analyzer</a>
+      <a href="analyzer.html">Analyzer</a>
       <a href="#" id="privacyLink">Privacy</a>
     </nav>
   </div>
@@ -308,7 +308,7 @@
   <div class="footer-inner">
     <div>© 2024–2026 RunBridge</div>
     <div class="footer-links">
-      <a href="#" id="openAnalyzerFooter">Open Analyzer</a>
+      <a href="analyzer.html">Open Analyzer</a>
       <a href="#" id="copyLastSupportPkg">Copy last support package</a>
     </div>
   </div>
@@ -601,12 +601,7 @@
     setStatus("warn","Partial downloaded", "Send the support package to RunBridge support.");
   });
 
-  // Nav links (replace with real URLs when hosting)
-  function explainNav(which) {
-    alert(`When you host these pages, set this link to your ${which} page URL.`);
-  }
-  toAnalyzer.addEventListener("click", (e) => { e.preventDefault(); explainNav("Analyzer"); });
-  openAnalyzerFooter.addEventListener("click", (e) => { e.preventDefault(); explainNav("Analyzer"); });
+
 
   privacyLink.addEventListener("click", (e) => {
     e.preventDefault();
