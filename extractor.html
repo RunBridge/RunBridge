@@ -51,14 +51,16 @@
       gap: 0.6rem;
       font-weight: 600;
       letter-spacing: 0.04em;
+      text-decoration: none;
+      color: inherit;
     }
-    .logo-badge {
+    .logo:hover { text-decoration: none; }
+    .logo-img {
       width: 30px;
       height: 30px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, rgba(37,99,235,0.9), rgba(168,85,247,0.7));
-      box-shadow: 0 10px 25px rgba(37,99,235,0.25);
-      border: 1px solid rgba(148,163,184,0.35);
+      border-radius: 6px;
+      object-fit: contain;
+      background: #020617;
     }
     .logo-subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
     .nav-links {
@@ -231,8 +233,8 @@
 <body>
 <header>
   <div class="nav-inner">
-    <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">
-      <div class="logo-badge" aria-hidden="true"></div>
+    <a href="index.html" class="logo">
+      <img src="Docs/runbridge-logo.png" alt="RunBridge logo" class="logo-img" />
       <div>
         <div>RunBridge <span class="logo-subtitle">Support</span></div>
         <div class="logo-subtitle">Log Extractor</div>
