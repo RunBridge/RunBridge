@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>RunBridge – Log Extractor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Download RunBridge logs for support using Web Serial." />
+  <style>
+    :root {
+      --accent: #2563eb;
+      --accent-soft: #e0edff;
+      --bg: #0f172a;
+      --card-bg: #0b1120;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --danger: #ef4444;
+      --warning: #eab308;
+      --success: #22c55e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .logo-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(37,99,235,0.9), rgba(168,85,247,0.7));
+      box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+      border: 1px solid rgba(148,163,184,0.35);
+    }
+    .logo-subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
+    .nav-links {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+    }
+    .nav-links a:hover {
+      background: rgba(15,23,42,0.9);
+      color: var(--text-main);
+      text-decoration: none;
+    }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .hero {
+      padding: 1.5rem;
+      margin-top: 1rem;
+      border-radius: 1.5rem;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.25), transparent 55%),
+        linear-gradient(to bottom right, rgba(15,23,42,0.95), rgba(15,23,42,0.98));
+      border: 1px solid rgba(148,163,184,0.3);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.8);
+    }
+    .hero-kicker {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      color: var(--accent-soft);
+      margin-bottom: 0.5rem;
+    }
+    .hero h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.8rem, 3vw + 1.1rem, 2.4rem);
+    }
+    .hero p { margin: 0 0 1rem; color: var(--text-muted); max-width: 44rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.92rem;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border-color: rgba(191,219,254,0.5);
+      box-shadow: 0 10px 25px rgba(37,99,235,0.45);
+    }
+    .btn-primary:hover { background: #1d4ed8; text-decoration: none; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-main);
+      border-color: rgba(148,163,184,0.5);
+    }
+    .btn-ghost:hover { background: rgba(15,23,42,0.85); text-decoration: none; }
+    .btn-danger {
+      background: rgba(239,68,68,0.18);
+      color: var(--text-main);
+      border-color: rgba(239,68,68,0.35);
+    }
+    .btn-danger:hover { background: rgba(239,68,68,0.26); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    .layout-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    @media (max-width: 900px) { .layout-grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+      padding: 1rem 1.1rem;
+    }
+    .pill {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .status {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(2,6,23,0.55);
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 0.32rem;
+      background: var(--text-muted);
+      box-shadow: 0 0 0 7px rgba(156,163,175,0.12);
+      flex: 0 0 auto;
+    }
+    .status.good .status-dot { background: var(--success); box-shadow: 0 0 0 7px rgba(34,197,94,0.18); }
+    .status.warn .status-dot { background: var(--warning); box-shadow: 0 0 0 7px rgba(234,179,8,0.18); }
+    .status.bad  .status-dot { background: var(--danger);  box-shadow: 0 0 0 7px rgba(239,68,68,0.18); }
+    .status-title { font-weight: 600; }
+    .status-body { color: var(--text-muted); font-size: 0.9rem; }
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      background: #050a16;
+      border: 1px solid rgba(148,163,184,0.22);
+      border-radius: 0.9rem;
+      padding: 0.85rem;
+      max-height: 360px;
+      overflow: auto;
+      color: #a7f3d0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .small { font-size: 0.85rem; color: var(--text-muted); }
+    .list { margin: 0.4rem 0 0; padding-left: 1.1rem; color: var(--text-muted); font-size: 0.95rem; }
+    .list li { margin: 0.35rem 0; }
+    .hr { height: 1px; background: var(--border-subtle); margin: 0.9rem 0; }
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 1.5rem 1rem 2rem;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+    code.kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 0.12rem 0.35rem;
+      border-radius: 6px;
+      color: var(--accent-soft);
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-badge" aria-hidden="true"></div>
+      <div>
+        <div>RunBridge <span class="logo-subtitle">Support</span></div>
+        <div class="logo-subtitle">Log Extractor</div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#" id="toAnalyzer">Analyzer</a>
+      <a href="#" id="privacyLink">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-kicker">Support toolkit</div>
+    <h1>Download your RunBridge logs</h1>
+    <p>
+      Plug in your RunBridge dongle, connect, and download a log file you can email to support.
+      This runs locally in your browser. No data is uploaded anywhere.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn btn-primary" id="connectBtn">Connect & Download</button>
+      <button class="btn btn-ghost" id="downloadPartialBtn" disabled>Download Partial</button>
+      <button class="btn btn-danger" id="disconnectBtn" disabled>Disconnect</button>
+    </div>
+
+    <div class="hr"></div>
+
+    <div id="status" class="status warn">
+      <div class="status-dot"></div>
+      <div>
+        <div class="status-title" id="statusTitle">Ready</div>
+        <div class="status-body" id="statusBody">
+          Use Chrome or Edge. When prompted, select <b>RunBridge</b> (or the USB serial device).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout-grid">
+    <section class="card">
+      <div class="pill">Quickstart</div>
+      <ol class="list">
+        <li>Plug the RunBridge dongle into USB.</li>
+        <li>Click <b>Connect & Download</b>.</li>
+        <li>Select the device from the popup list (the correct device should be highlighted if you've connected before).</li>
+        <li>When it finishes, email the downloaded file to support.</li>
+      </ol>
+      <div class="small" style="margin-top:0.75rem;">
+        If you're asked what to select: pick the device that mentions RunBridge, nRF52, or USB Serial.
+      </div>
+
+      <div class="hr"></div>
+
+      <div class="pill">Troubleshooting</div>
+      <ul class="list">
+        <li>If the button does nothing, your browser may not support Web Serial.</li>
+        <li>Try a different USB port/cable, then refresh the page and try again.</li>
+        <li>If the download never finishes, click <b>Download Partial</b> and send that file.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <div class="pill">Live capture</div>
+      <div class="small">We stop automatically once we detect <code class="kbd">=== CURRENT LOG END ===</code>.</div>
+      <div class="mono" id="console" aria-label="Console output"></div>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2024–2026 RunBridge</div>
+    <div class="footer-links">
+      <a href="#" id="openAnalyzerFooter">Open Analyzer</a>
+      <a href="#" id="copyLastSupportPkg">Copy last support package</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---------- UI ----------
+  const connectBtn = document.getElementById("connectBtn");
+  const disconnectBtn = document.getElementById("disconnectBtn");
+  const downloadPartialBtn = document.getElementById("downloadPartialBtn");
+  const consoleEl = document.getElementById("console");
+  const statusTitle = document.getElementById("statusTitle");
+  const statusBody = document.getElementById("statusBody");
+  const statusBox = document.getElementById("status");
+
+  const toAnalyzer = document.getElementById("toAnalyzer");
+  const openAnalyzerFooter = document.getElementById("openAnalyzerFooter");
+  const privacyLink = document.getElementById("privacyLink");
+  const copyLastSupportPkg = document.getElementById("copyLastSupportPkg");
+
+  const EXPECTED_ID_PREFIX = "RUNBRIDGE:";
+  const ID_DETECT_TIMEOUT_MS = 1200;   // quick, but not too aggressive
+  const ID_DETECT_MIN_BYTES = 10;
+
+
+  // ---------- State ----------
+  let port = null;
+  let reader = null;
+  let keepReading = false;
+  let accumulated = "";
+  let lastSupportPackage = "";
+  let deviceIdentLine = "";
+
+  function findIdentityLine(text) {
+    // Look for a line containing RUNBRIDGE:...
+    const lines = text.split(/\r?\n/);
+    for (const line of lines) {
+      const cleaned = line.trim();
+      if (cleaned.startsWith(EXPECTED_ID_PREFIX)) return cleaned;
+    }
+      return "";
+  }
+
+  async function identifyDeviceOrWarn() {
+    // Send '?' and wait briefly for the ID line to appear in accumulated data.
+    deviceIdentLine = "";
+    const start = Date.now();
+
+    await sendCommand("?");
+
+    while (Date.now() - start < ID_DETECT_TIMEOUT_MS) {
+      // small sleep
+      await new Promise(r => setTimeout(r, 50));
+
+      if (accumulated.length >= ID_DETECT_MIN_BYTES) {
+        const found = findIdentityLine(accumulated);
+        if (found) {
+          deviceIdentLine = found;
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function setStatus(kind, title, bodyHtml) {
+    statusBox.classList.remove("good","warn","bad");
+    statusBox.classList.add(kind);
+    statusTitle.textContent = title;
+    statusBody.innerHTML = bodyHtml || "";
+  }
+
+  function appendConsole(text) {
+    consoleEl.textContent += text;
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  function supportsWebSerial() {
+    return !!navigator.serial;
+  }
+
+  function tsForFilename() {
+    return new Date().toISOString().slice(0,19).replace(/:/g,"-");
+  }
+
+  function downloadText(filename, data) {
+    const blob = new Blob([data], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function sanitizeForSupport(raw) {
+    // Minimal sanitization that keeps your key markers intact.
+    // - Strips leading serial timestamps like "06:27:59.546 -> "
+    // - Removes extra whitespace-only lines at start/end
+    const lines = raw.split(/\r?\n/).map(l =>
+      l.replace(/^\d{2}:\d{2}:\d{2}\.\d+\s*->\s*/,"")
+    );
+    return lines.join("\n").trim();
+  }
+
+  function buildSupportPackage(raw) {
+    const cleaned = sanitizeForSupport(raw);
+    const header = [
+      "RunBridge Support Package",
+      "-------------------------",
+      "Generated: " + new Date().toString(),
+      "Browser: " + navigator.userAgent,
+      "Device: " + (deviceIdentLine || "(not detected)"),
+      "Note: This file is created locally in your browser. Nothing is uploaded.",
+      "",
+      "Paste any notes below (what happened, treadmill model, watch model, etc.):",
+      "NOTES: ",
+      "",
+      "----- RAW LOG (sanitized serial prefixes) -----",
+      ""
+    ].join("\n");
+    return header + cleaned + "\n";
+  }
+
+  async function disconnect() {
+    keepReading = false;
+    try { if (reader) await reader.cancel(); } catch(e) {}
+    try { if (port) await port.close(); } catch(e) {}
+    reader = null;
+    port = null;
+
+    connectBtn.disabled = false;
+    disconnectBtn.disabled = true;
+    downloadPartialBtn.disabled = accumulated.length === 0;
+
+    setStatus("warn","Disconnected", "You can reconnect and download again.");
+  }
+
+  async function sendCommand(ch) {
+    const encoder = new TextEncoder();
+    const writer = port.writable.getWriter();
+    try {
+      await writer.write(encoder.encode(ch));
+    } finally {
+      writer.releaseLock();
+    }
+  }
+
+  async function readLoop() {
+    const decoder = new TextDecoder();
+    reader = port.readable.getReader();
+    keepReading = true;
+
+    try {
+      while (keepReading) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        if (!value) continue;
+
+        const chunk = decoder.decode(value);
+        accumulated += chunk;
+        appendConsole(chunk);
+
+        // Enable partial download as soon as any data arrives
+        if (accumulated.length > 0) downloadPartialBtn.disabled = false;
+
+        // End marker your firmware prints
+        if (accumulated.includes("=== CURRENT LOG END ===")) {
+          keepReading = false;
+          break;
+        }
+      }
+    } catch (e) {
+      setStatus("bad","Read error", String(e));
+    } finally {
+      try { reader.releaseLock(); } catch(e) {}
+    }
+
+    // If we reached end marker, export files
+    if (accumulated.includes("=== CURRENT LOG END ===")) {
+      const ts = tsForFilename();
+      const rawFile = `RunBridge_Log_${ts}.txt`;
+      const supportFile = `RunBridge_SupportPackage_${ts}.txt`;
+
+      lastSupportPackage = buildSupportPackage(accumulated);
+
+      downloadText(rawFile, accumulated);
+      downloadText(supportFile, lastSupportPackage);
+
+      setStatus("good","Complete", "Downloaded two files: <b>raw log</b> and <b>support package</b>.");
+      downloadPartialBtn.disabled = false;
+
+      // Close port cleanly
+      try { await port.close(); } catch(e) {}
+      port = null;
+      connectBtn.disabled = false;
+      disconnectBtn.disabled = true;
+    }
+  }
+
+  connectBtn.addEventListener("click", async () => {
+    if (!supportsWebSerial()) {
+      setStatus("bad","Not supported", "This browser does not support Web Serial. Use Chrome or Edge.");
+      return;
+    }
+
+    accumulated = "";
+    consoleEl.textContent = "";
+    deviceIdentLine = ""; // Reset identity on every connect
+
+    try {
+      setStatus("warn","Waiting for device", "Select the RunBridge device from the popup.");
+
+      // USB VID filter for Seeed XIAO nRF52840
+      const filters = [
+        { usbVendorId: 0x2886 }, // Seeed Technology
+      ];
+
+      // Try to auto-reconnect to a previously-granted port first
+      const existingPorts = await navigator.serial.getPorts();
+      if (existingPorts.length === 1) {
+        port = existingPorts[0];
+        setStatus("warn","Reconnecting", "Using previously connected device…");
+      } else {
+        // Show picker filtered to Seeed devices only
+        port = await navigator.serial.requestPort({ filters });
+      }
+
+      await port.open({ baudRate: 115200 });
+
+      // Best-effort DTR/RTS toggling — helps some USB serial bridges,
+      // but silently ignored if the device doesn't support it.
+      try {
+        await port.setSignals({ dataTerminalReady: true, requestToSend: true });
+      } catch (_) {
+        // ignore unsupported signal toggling
+      }
+
+      connectBtn.disabled = true;
+      disconnectBtn.disabled = false;
+      downloadPartialBtn.disabled = true;
+
+      setStatus("warn","Connected", "Checking device identity…");
+
+      // Start reading immediately so we capture the ID response
+      const readPromise = readLoop();
+
+      // Ask device to identify itself
+      const ok = await identifyDeviceOrWarn();
+
+      if (!ok) {
+        setStatus(
+          "bad",
+          "Wrong device selected?",
+          "I couldn't find a <b>RUNBRIDGE:</b> identity line. You may have picked the wrong serial device. " +
+          "Try disconnecting and selecting the RunBridge dongle again."
+        );
+        downloadPartialBtn.disabled = accumulated.length === 0;
+        await disconnect();
+        return;
+      }
+
+      // If identified, show it, then request logs
+      setStatus("warn","RunBridge detected", `Device: <b>${deviceIdentLine}</b><br>Requesting logs…`);
+
+      await sendCommand("d");
+
+    } catch (err) {
+      setStatus("bad","Connection error", err?.message ? err.message : String(err));
+      connectBtn.disabled = false;
+      disconnectBtn.disabled = true;
+      downloadPartialBtn.disabled = accumulated.length === 0;
+      try { if (port) await port.close(); } catch(e) {}
+      port = null;
+    }
+  });
+
+  disconnectBtn.addEventListener("click", disconnect);
+
+  downloadPartialBtn.addEventListener("click", () => {
+    if (!accumulated) return;
+    const ts = tsForFilename();
+    const partial = `RunBridge_Log_PARTIAL_${ts}.txt`;
+    const support = `RunBridge_SupportPackage_PARTIAL_${ts}.txt`;
+    lastSupportPackage = buildSupportPackage(accumulated);
+
+    downloadText(partial, accumulated);
+    downloadText(support, lastSupportPackage);
+
+    setStatus("warn","Partial downloaded", "Send the support package to RunBridge support.");
+  });
+
+  // Nav links (replace with real URLs when hosting)
+  function explainNav(which) {
+    alert(`When you host these pages, set this link to your ${which} page URL.`);
+  }
+  toAnalyzer.addEventListener("click", (e) => { e.preventDefault(); explainNav("Analyzer"); });
+  openAnalyzerFooter.addEventListener("click", (e) => { e.preventDefault(); explainNav("Analyzer"); });
+
+  privacyLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    alert("Privacy: This tool runs locally in your browser. It does not upload logs anywhere. The downloaded file is created on your machine.");
+  });
+
+  copyLastSupportPkg.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (!lastSupportPackage) {
+      alert("No support package generated yet. Click Connect & Download first.");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(lastSupportPackage);
+      setStatus("good","Copied", "Support package copied to clipboard.");
+    } catch {
+      alert("Clipboard copy failed. You can still use the downloaded support package file.");
+    }
+  });
+
+  // initial status
+  if (!supportsWebSerial()) {
+    setStatus("bad","Web Serial unavailable", "Use Chrome or Edge on desktop to connect to RunBridge.");
+  }
+</script>
+</body>
+</html>

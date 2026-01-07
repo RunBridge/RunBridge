@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>RunBridge – Log Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Analyze RunBridge logs locally in your browser." />
+  <style>
+    :root {
+      --accent: #2563eb;
+      --accent-soft: #e0edff;
+      --bg: #0f172a;
+      --card-bg: #0b1120;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --danger: #ef4444;
+      --warning: #eab308;
+      --success: #22c55e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .logo { display:flex; align-items:center; gap:0.6rem; font-weight:600; letter-spacing:0.04em; }
+    .logo-badge {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: linear-gradient(135deg, rgba(37,99,235,0.9), rgba(168,85,247,0.7));
+      box-shadow: 0 10px 25px rgba(37,99,235,0.25);
+      border: 1px solid rgba(148,163,184,0.35);
+    }
+    .logo-subtitle { font-size:0.8rem; color:var(--text-muted); font-weight:400; }
+    .nav-links { display:flex; gap:0.75rem; font-size:0.9rem; flex-wrap:wrap; justify-content:flex-end; }
+    .nav-links a { color:var(--text-muted); padding:0.25rem 0.55rem; border-radius:999px; text-decoration:none; }
+    .nav-links a:hover { background: rgba(15,23,42,0.9); color:var(--text-main); }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .hero {
+      padding: 1.5rem;
+      margin-top: 1rem;
+      border-radius: 1.5rem;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.25), transparent 55%),
+        linear-gradient(to bottom right, rgba(15,23,42,0.95), rgba(15,23,42,0.98));
+      border: 1px solid rgba(148,163,184,0.3);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.8);
+    }
+    .hero-kicker {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      color: var(--accent-soft);
+      margin-bottom: 0.5rem;
+    }
+    .hero h1 { margin:0 0 0.5rem; font-size: clamp(1.8rem, 3vw + 1.1rem, 2.4rem); }
+    .hero p { margin:0 0 1rem; color:var(--text-muted); max-width:44rem; }
+
+    .card { background: var(--card-bg); border-radius: 1rem; border: 1px solid var(--border-subtle); padding: 1rem 1.1rem; display: flex; flex-direction: column; }
+    .layout-grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 1.5rem; margin-top: 1.5rem; align-items: stretch; }
+    .layout-grid > .card { min-height: 0; }
+    @media (max-width: 900px) { .layout-grid { grid-template-columns: 1fr; } }
+
+    .btn {
+      display:inline-flex; align-items:center; justify-content:center; gap:0.5rem;
+      padding:0.6rem 1.1rem; border-radius:999px; border:1px solid transparent;
+      font-size:0.92rem; cursor:pointer; text-decoration:none; white-space:nowrap; user-select:none;
+    }
+    .btn-primary { background: var(--accent); color:white; border-color: rgba(191,219,254,0.5); box-shadow: 0 10px 25px rgba(37,99,235,0.45); }
+    .btn-primary:hover { background:#1d4ed8; }
+    .btn-ghost { background: transparent; color: var(--text-main); border-color: rgba(148,163,184,0.5); }
+    .btn-ghost:hover { background: rgba(15,23,42,0.85); }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .pill {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    .pill.good { border-color: rgba(34,197,94,0.45); color: #bbf7d0; }
+    .pill.warn { border-color: rgba(234,179,8,0.45); color: #fde68a; }
+    .pill.bad  { border-color: rgba(239,68,68,0.55); color: #fecaca; }
+
+    .drop {
+      border: 1px dashed rgba(148,163,184,0.45);
+      border-radius: 1rem;
+      padding: 1rem 1.1rem;
+      background: rgba(2,6,23,0.45);
+    }
+    .drop.dragover {
+      border-color: rgba(37,99,235,0.9);
+      box-shadow: 0 0 0 6px rgba(37,99,235,0.12);
+    }
+    .small { font-size: 0.85rem; color: var(--text-muted); }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      background: #050a16;
+      border: 1px solid rgba(148,163,184,0.22);
+      border-radius: 0.9rem;
+      padding: 0.85rem;
+      min-height: 120px;
+      overflow: auto;
+      color: #a7f3d0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      flex: 1 1 auto;
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align:left; padding: 0.55rem 0.5rem; border-bottom: 1px solid var(--border-subtle); vertical-align: top; }
+    th { color: var(--text-muted); font-weight: 600; background: rgba(2,6,23,0.35); position: sticky; top: 0; }
+    .click { cursor: pointer; }
+    .click:hover { background: rgba(15,23,42,0.6); }
+
+    textarea {
+      width: 100%;
+      min-height: 160px;
+      background: rgba(2,6,23,0.35);
+      border: 1px solid rgba(148,163,184,0.25);
+      border-radius: 0.9rem;
+      padding: 0.85rem;
+      color: var(--text-main);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+    }
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 1.5rem 1rem 2rem;
+      margin-top: 2rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .footer-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-links { display:flex; flex-wrap:wrap; gap:0.75rem; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .hr { height: 1px; background: var(--border-subtle); margin: 0.9rem 0; }
+  </style>
+</head>
+<body>
+<header>
+  <div class="nav-inner">
+    <div class="logo">
+      <div class="logo-badge" aria-hidden="true"></div>
+      <div>
+        <div>RunBridge <span class="logo-subtitle">Support</span></div>
+        <div class="logo-subtitle">Log Analyzer</div>
+      </div>
+    </div>
+    <nav class="nav-links">
+      <a href="#" id="toExtractor">Extractor</a>
+      <a href="#" id="privacyLink">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-kicker">Support toolkit</div>
+    <h1>Analyze RunBridge logs</h1>
+    <p>
+      Drop a log file here and get a clean summary: sessions, disconnects, stalls, discovery failures, grace/ghost events, and odometer notes.
+      Everything runs locally in your browser.
+    </p>
+
+    <div class="drop" id="drop">
+      <div class="pill">Upload</div>
+      <div><b>Drag & drop</b> a log file here, or pick one.</div>
+      <div class="small">Recommended: use the "SupportPackage" file from the extractor.</div>
+      <div style="display:flex; flex-wrap:wrap; gap:0.75rem; margin-top: 0.9rem; align-items:center;">
+        <input id="file" type="file" accept=".txt,text/plain" />
+        <button class="btn btn-primary" id="analyzeBtn" disabled>Analyze</button>
+        <button class="btn btn-ghost" id="copyBtn" disabled>Copy Support Summary</button>
+        <button class="btn btn-ghost" id="jsonBtn" disabled>Download JSON</button>
+        <button class="btn btn-ghost" id="demoBtn" type="button">Load Demo</button>
+      </div>
+      <div class="small" id="status" style="margin-top:0.6rem;">Waiting for a log file.</div>
+    </div>
+  </div>
+
+  <div class="layout-grid">
+    <section class="card">
+      <div class="pill">Overview</div>
+      <div id="overview"></div>
+      <div class="hr"></div>
+      <div class="pill">Flags</div>
+      <div id="flags"></div>
+    </section>
+
+    <section class="card">
+      <div class="pill">Selected session timeline</div>
+      <div class="small" id="timelineMeta">No session selected.</div>
+      <div class="mono" id="timeline"></div>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top: 1.5rem;">
+    <div class="pill">Sessions</div>
+    <div class="small">Click a session row to load its timeline.</div>
+    <div style="max-height: 320px; overflow:auto; border: 1px solid var(--border-subtle); border-radius: 0.9rem; margin-top: 0.75rem;">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:60px;">#</th>
+            <th>Marker</th>
+            <th style="width:160px;">Boot</th>
+            <th style="width:220px;">Watch</th>
+            <th style="width:220px;">FTMS</th>
+            <th>Issues</th>
+          </tr>
+        </thead>
+        <tbody id="sessionBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card" style="margin-top: 1.5rem;">
+    <div class="pill">Support summary (copy/paste)</div>
+    <textarea id="supportText" readonly></textarea>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-inner">
+    <div>© 2024–2026 RunBridge</div>
+    <div class="footer-links">
+      <a href="#" id="openExtractorFooter">Open Extractor</a>
+      <a href="#" id="copyAllFooter">Copy Support Summary</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ---------- UI ----------
+  const drop = document.getElementById("drop");
+  const fileInput = document.getElementById("file");
+  const analyzeBtn = document.getElementById("analyzeBtn");
+  const copyBtn = document.getElementById("copyBtn");
+  const jsonBtn = document.getElementById("jsonBtn");
+  const demoBtn = document.getElementById("demoBtn");
+
+  const statusEl = document.getElementById("status");
+  const overviewEl = document.getElementById("overview");
+  const flagsEl = document.getElementById("flags");
+  const sessionBody = document.getElementById("sessionBody");
+  const timelineEl = document.getElementById("timeline");
+  const timelineMetaEl = document.getElementById("timelineMeta");
+  const supportText = document.getElementById("supportText");
+
+  const toExtractor = document.getElementById("toExtractor");
+  const openExtractorFooter = document.getElementById("openExtractorFooter");
+  const privacyLink = document.getElementById("privacyLink");
+  const copyAllFooter = document.getElementById("copyAllFooter");
+
+  // ---------- State ----------
+  let loadedText = "";
+  let analysis = null;
+
+  const DEMO_LOG = `
+06:27:59.546 -> --- SESSION START @ 1508 ms ---
+06:27:59.546 -> [1638] [BOOT] RunBridge v3.1.0
+06:27:59.546 -> [1638] [BOOT] Hardware: Seeed XIAO nRF52840
+06:27:59.546 -> [3172] [WATCH] Connected
+06:27:59.546 -> [6481] [WATCH] Subscribed to RSC
+06:27:59.578 -> [6481] [STATE] Watch subscribed -> RUN mode
+06:27:59.578 -> [14605] [SCAN] Found FTMS, RSSI=-45
+06:27:59.578 -> [15431] [SESSION] New session started
+06:27:59.578 -> [16058] [STALL] Enter. Age=4294966856
+06:27:59.578 -> [16438] [STALL] Exit
+06:27:59.578 -> [16751] [FTMS] Initial rate learned: 880ms
+06:27:59.578 -> [18811] [FTMS] Rate: 916ms->959ms (Stall: 2877ms)
+06:27:59.578 -> [26139] Motion START: 10.9 kph
+06:27:59.578 -> [31751] [ODO] Baseline: Treadmill=16m, Offset=16m
+06:27:59.578 -> [2189883] Motion STOP
+06:27:59.578 -> [2198863] [GHOST] Defense triggered, suspending TX
+06:27:59.578 -> [2216269] [WATCH] Disconnected, reason=0x13
+`.trim();
+
+  const BLE_REASON_MAP = {
+    // These are common GAP disconnect reason codes seen in practice.
+    // If a code differs by stack/device, we still show "unknown" gracefully.
+    "08": "Connection timeout (device stopped responding / out of range / RF interference).",
+    "13": "Remote user terminated connection (peer intentionally disconnected).",
+    "16": "Connection terminated by local host (your device/stack ended it).",
+    "3E": "Connection failed to be established / terminated for unknown reasons."
+  };
+
+  function reasonToEnglish(hex) {
+    const key = String(hex || "").toUpperCase().padStart(2, "0");
+    return BLE_REASON_MAP[key] || "Unknown / vendor-specific reason.";
+  }
+
+  // ---------- Helpers ----------
+  function setStatus(text) { statusEl.textContent = text; }
+
+  function pill(text, kind) {
+    const cls = kind ? `pill ${kind}` : "pill";
+    return `<span class="${cls}" style="margin-right:0.4rem; margin-top:0.35rem; display:inline-block;">${escapeHtml(text)}</span>`;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[c]));
+  }
+
+  function tsForFilename() {
+    return new Date().toISOString().slice(0,19).replace(/:/g,"-");
+  }
+
+  function downloadText(filename, data) {
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function stripSerialPrefix(line) {
+    return line.replace(/^\d{2}:\d{2}:\d{2}\.\d+\s*->\s*/,"").trim();
+  }
+
+  function parseLine(line) {
+    const raw = stripSerialPrefix(line);
+    if (!raw) return null;
+
+    const sessionMatch = raw.match(/^---\s*SESSION START\s*@\s*(\d+)\s*ms\s*---/i);
+    if (sessionMatch) return { kind: "session_marker", ms: Number(sessionMatch[1]), tag: "SESSION_MARK", msg: raw };
+
+    const m = raw.match(/^\[(\d+)\]\s*\[([^\]]+)\]\s*(.*)$/);
+    if (!m) return { kind: "text", ms: null, tag: "TEXT", msg: raw };
+
+    return { kind: "event", ms: Number(m[1]), tag: m[2].trim(), msg: (m[3] || "").trim() };
+  }
+
+  function analyzeLog(text) {
+    const lines = text.split(/\r?\n/);
+    const events = [];
+    for (const ln of lines) {
+      const p = parseLine(ln);
+      if (p) events.push(p);
+    }
+
+    function newSession(markerObj) {
+      return {
+        marker: markerObj?.msg || "(no session marker found)",
+        markerMs: markerObj?.ms ?? null,
+        events: [],
+        facts: { bootVersion: null, hardware: null, watchConnected: false, watchSubscribed: false, ftmsConnected: false },
+        flags: { serviceDiscoveryFails: 0, ftmsDisconnects: 0, stallEnter: 0, stallWeirdAge: false, graceExpired: false, ghostTriggered: false, odoResetWarn: false },
+        issues: [],
+        ftmsReasons: [],
+        watchReasons: []
+      };
+    }
+
+    const sessions = [];
+    let current = null;
+
+    for (const ev of events) {
+      if (!current) current = newSession(null);
+      if (ev.kind === "session_marker") {
+        if (current.events.length) sessions.push(current);
+        current = newSession(ev);
+        continue;
+      }
+      current.events.push(ev);
+    }
+    if (current && current.events.length) sessions.push(current);
+
+    for (const s of sessions) {
+      for (const ev of s.events) {
+        if (ev.tag === "BOOT") {
+          const v = ev.msg.match(/RunBridge\s+v([0-9.]+)/i);
+          if (v) s.facts.bootVersion = v[1];
+          const hw = ev.msg.match(/Hardware:\s*(.+)$/i);
+          if (hw) s.facts.hardware = hw[1].trim();
+        }
+
+        if (ev.tag === "WATCH") {
+          if (ev.msg.startsWith("Connected")) s.facts.watchConnected = true;
+          if (ev.msg.startsWith("Subscribed")) s.facts.watchSubscribed = true;
+          if (ev.msg.startsWith("Disconnected")) {
+            const r = ev.msg.match(/reason=0x([0-9A-Fa-f]+)/);
+            if (r) s.watchReasons.push({ reason: r[1].toUpperCase(), ms: ev.ms });
+          }
+        }
+
+        if (ev.tag === "FTMS") {
+          if (ev.msg.startsWith("Connected")) s.facts.ftmsConnected = true;
+          if (ev.msg.includes("Service discovery failed")) s.flags.serviceDiscoveryFails++;
+          if (ev.msg.startsWith("Disconnected")) {
+            s.flags.ftmsDisconnects++;
+            const r = ev.msg.match(/reason=0x([0-9A-Fa-f]+)/);
+            if (r) s.ftmsReasons.push({ reason: r[1].toUpperCase(), ms: ev.ms });
+          }
+        }
+
+        if (ev.tag === "STALL" && ev.msg.includes("Enter")) {
+          s.flags.stallEnter++;
+          const age = ev.msg.match(/Age=(\d+)/);
+          if (age && Number(age[1]) > 60_000_000) s.flags.stallWeirdAge = true;
+        }
+
+        if (ev.tag === "GRACE" && ev.msg.includes("Window expired")) s.flags.graceExpired = true;
+        if (ev.tag === "GHOST" && ev.msg.includes("Defense triggered")) s.flags.ghostTriggered = true;
+        if (ev.tag === "ODO" && ev.msg.includes("Reset:")) s.flags.odoResetWarn = true;
+      }
+
+      if (s.flags.stallWeirdAge) s.issues.push("STALL age looks invalid (likely unsigned underflow or timestamp/state reset).");
+      if (s.flags.ftmsDisconnects) s.issues.push(`FTMS disconnected ${s.flags.ftmsDisconnects} time(s).`);
+      if (s.flags.serviceDiscoveryFails >= 2) s.issues.push(`Repeated FTMS service discovery failures (${s.flags.serviceDiscoveryFails}).`);
+      if (s.flags.graceExpired) s.issues.push("Grace window expired (TX suspended).");
+      if (s.flags.ghostTriggered) s.issues.push("Ghost defense triggered (TX suppressed after extended zero-speed).");
+      if (s.flags.odoResetWarn) s.issues.push("Odometer reset baseline warning present.");
+      if (!s.issues.length) s.issues.push("No obvious issues detected.");
+      s.explanations = [];
+
+if (s.flags.stallWeirdAge) {
+  s.explanations.push({
+    title: "STALL age looks invalid",
+    meaning: "The firmware logged a very large STALL age value. This usually happens when an unsigned subtraction underflows or when the timing baseline was reset unexpectedly.",
+    try: "If this repeats: confirm lastTreadmillDataTime/prevTreadmillDataTime are initialized before stall math, and verify the stall check is only done when connected + timestamps are sane."
+  });
+}
+
+if (s.flags.serviceDiscoveryFails >= 2) {
+  s.explanations.push({
+    title: "Repeated FTMS service discovery failures",
+    meaning: "The dongle sees the treadmill (RSSI is good) but can’t discover the FTMS service reliably. Often this is a transient GATT state on the treadmill, or the connection is being torn down mid-discovery.",
+    try: "Power-cycle the treadmill console, then retry. If common: increase backoff before reconnect attempts and consider a short delay before service discovery."
+  });
+}
+
+if (s.flags.ftmsDisconnects) {
+  const common = s.ftmsReasons.map(r => `0x${r.reason}: ${reasonToEnglish(r.reason)}`);
+  s.explanations.push({
+    title: "FTMS disconnect(s)",
+    meaning: "The treadmill BLE connection dropped. The reason code helps narrow it down.",
+    try: "If you see 0x08 frequently, treat it as RF/range/console BLE behavior. Try moving the dongle closer, reducing interference, and avoiding USB hubs. If it happens during discovery, add a small delay before discover/enableNotify."
+  });
+  if (common.length) {
+    s.explanations.push({
+      title: "FTMS disconnect reasons (decoded)",
+      meaning: common.join(" | "),
+      try: "If the reason is 'Remote user terminated', the treadmill is likely choosing to drop the connection under certain conditions (sleep, internal BLE policy, another central, etc.)."
+    });
+  }
+}
+
+if (s.flags.graceExpired) {
+  s.explanations.push({
+    title: "Grace window expired",
+    meaning: "FTMS data stopped long enough that RunBridge suspended transmission rather than sending stale speed/distance indefinitely.",
+    try: "This is expected if the treadmill disconnect lasted > grace window. If it happens while FTMS still looks connected, it points to a notification stall."
+  });
+}
+
+if (s.flags.ghostTriggered) {
+  s.explanations.push({
+    title: "Ghost defense triggered",
+    meaning: "RunBridge detected extended zero-speed and suppressed TX to avoid the watch recording bogus movement.",
+    try: "If it triggers while you’re actually running, focus on why speed dropped to 0: FTMS notify stalls, treadmill quirk, or filtering logic."
+  });
+}
+
+if (s.flags.odoResetWarn) {
+  s.explanations.push({
+    title: "Odometer reset warning",
+    meaning: "The treadmill odometer decreased, and the firmware couldn’t preserve session distance cleanly. That can cause a perceived jump or offset change.",
+    try: "If you see this on a specific treadmill, capture a longer log including when the console boots/starts. Consider treating odometer resets as a new session boundary."
+  });
+}
+
+if (!s.explanations.length) {
+  s.explanations.push({
+    title: "No major issues detected",
+    meaning: "This session doesn’t show common failure patterns.",
+    try: "If the user still reports a problem, get the exact time and symptom and compare to the timeline."
+  });
+}
+
+    }
+
+    const global = {
+      totalSessions: sessions.length,
+      totalLines: lines.length,
+      versions: [...new Set(sessions.map(s => s.facts.bootVersion).filter(Boolean))],
+      hardware: [...new Set(sessions.map(s => s.facts.hardware).filter(Boolean))],
+      ftmsDisconnects: sessions.reduce((a,s)=>a+s.flags.ftmsDisconnects,0),
+      serviceDiscoveryFails: sessions.reduce((a,s)=>a+s.flags.serviceDiscoveryFails,0),
+      anyWeirdStallAge: sessions.some(s=>s.flags.stallWeirdAge),
+      anyGhost: sessions.some(s=>s.flags.ghostTriggered),
+      anyGrace: sessions.some(s=>s.flags.graceExpired),
+    };
+
+    const flags = [];
+    if (global.ftmsDisconnects) flags.push({ sev:"warn", text:`FTMS disconnects observed (${global.ftmsDisconnects}).` });
+    if (global.serviceDiscoveryFails) flags.push({ sev:"warn", text:`Service discovery failures observed (${global.serviceDiscoveryFails}).` });
+    if (global.anyGrace) flags.push({ sev:"warn", text:"Grace window expired at least once (TX suspended)." });
+    if (global.anyGhost) flags.push({ sev:"warn", text:"Ghost defense triggered at least once (TX suppressed)." });
+    if (global.anyWeirdStallAge) flags.push({ sev:"bad", text:"At least one STALL age value looks invalid (very large number)." });
+    if (!flags.length) flags.push({ sev:"good", text:"No obvious failure patterns detected." });
+
+    return { global, sessions, flags };
+  }
+
+  function buildSupportSummary(a) {
+    const g = a.global;
+    const lines = [];
+    lines.push("RunBridge Support Summary");
+    lines.push("------------------------");
+    lines.push("Generated: " + new Date().toString());
+    lines.push("Sessions: " + g.totalSessions);
+    lines.push("Lines: " + g.totalLines);
+    lines.push("Versions: " + (g.versions.length ? g.versions.join(", ") : "Unknown"));
+    lines.push("Hardware: " + (g.hardware.length ? g.hardware.join(", ") : "Unknown"));
+    lines.push("FTMS disconnects: " + g.ftmsDisconnects);
+    lines.push("Service discovery fails: " + g.serviceDiscoveryFails);
+    lines.push("");
+
+    lines.push("Flags:");
+    for (const f of a.flags) lines.push("- " + f.text);
+    lines.push("");
+
+    lines.push("Session highlights:");
+    a.sessions.forEach((s, i) => {
+      lines.push(`- Session ${i+1}: ${s.facts.bootVersion ? "v"+s.facts.bootVersion : "v?"}, ${s.facts.hardware || "hw?"}`);
+      for (const iss of s.issues) lines.push("    • " + iss);
+if (s.ftmsReasons.length) {
+  lines.push("    • FTMS disconnects:");
+  for (const r of s.ftmsReasons) {
+    lines.push(`        - 0x${r.reason} @ ${r.ms}ms: ${reasonToEnglish(r.reason)}`);
+  }
+}
+if (s.watchReasons.length) {
+  lines.push("    • WATCH disconnects:");
+  for (const r of s.watchReasons) {
+    lines.push(`        - 0x${r.reason} @ ${r.ms}ms: ${reasonToEnglish(r.reason)}`);
+  }
+}
+
+      lines.push("");
+    });
+
+    return lines.join("\n");
+  }
+
+  function render(a) {
+    analysis = a;
+
+    analyzeBtn.disabled = true;
+    copyBtn.disabled = false;
+    jsonBtn.disabled = false;
+
+    const g = a.global;
+
+    overviewEl.innerHTML = `
+      ${pill("Sessions: " + g.totalSessions)} ${pill("Lines: " + g.totalLines)}
+      <div class="small" style="margin-top:0.5rem;">
+        <div><b>Versions:</b> ${escapeHtml(g.versions.length ? g.versions.join(", ") : "Unknown")}</div>
+        <div><b>Hardware:</b> ${escapeHtml(g.hardware.length ? g.hardware.join(", ") : "Unknown")}</div>
+        <div><b>FTMS disconnects:</b> ${g.ftmsDisconnects}</div>
+        <div><b>Service discovery fails:</b> ${g.serviceDiscoveryFails}</div>
+      </div>
+    `;
+
+    flagsEl.innerHTML = a.flags.map(f => {
+      const cls = f.sev === "bad" ? "bad" : (f.sev === "warn" ? "warn" : "good");
+      return `<div style="margin-top:0.45rem;">${pill(f.text, cls)}</div>`;
+    }).join("");
+    // Add a quick “top explanation” rollup
+const top = [];
+a.sessions.forEach((s, i) => {
+  const noteworthy = s.explanations.filter(x => !x.title.includes("No major")).slice(0, 2);
+  for (const ex of noteworthy) {
+    top.push(`Session ${i+1}: ${ex.title} — ${ex.meaning}`);
+  }
+});
+if (top.length) {
+  overviewEl.innerHTML += `
+    <div class="hr"></div>
+    <div class="pill">Plain English notes</div>
+    <div class="small" style="margin-top:0.5rem;">${top.map(t => `<div>• ${escapeHtml(t)}</div>`).join("")}</div>
+  `;
+}
+
+
+    sessionBody.innerHTML = "";
+    a.sessions.forEach((s, idx) => {
+      const watch = `${s.facts.watchConnected ? "Connected" : "—"}${s.facts.watchSubscribed ? " + Subscribed" : ""}`;
+      const ftms = `${s.facts.ftmsConnected ? "Connected" : "—"}${s.flags.ftmsDisconnects ? `, Disconnected x${s.flags.ftmsDisconnects}` : ""}`;
+
+      const issueTag = s.issues.some(x => x.startsWith("No obvious")) ? pill("OK", "good") : pill(`${s.issues.length} item(s)`, "warn");
+      const issuesShort = s.issues.filter(x => !x.startsWith("No obvious")).slice(0,2).join(" ");
+
+      const tr = document.createElement("tr");
+      tr.className = "click";
+      tr.innerHTML = `
+        <td>${idx+1}</td>
+        <td>${escapeHtml(s.marker)}</td>
+        <td>${escapeHtml(s.facts.bootVersion ? "v"+s.facts.bootVersion : "—")}</td>
+        <td>${escapeHtml(watch)}</td>
+        <td>${escapeHtml(ftms)}</td>
+        <td>${issueTag}<div class="small" style="margin-top:0.35rem;">${escapeHtml(issuesShort || "")}</div></td>
+      `;
+      tr.addEventListener("click", () => selectSession(idx));
+      sessionBody.appendChild(tr);
+    });
+
+    supportText.value = buildSupportSummary(a);
+    selectSession(0);
+    setStatus("Analysis complete.");
+  }
+
+  function selectSession(idx) {
+    const s = analysis.sessions[idx];
+    timelineMetaEl.textContent = `Session ${idx+1} — ${s.marker} — ${s.events.length} lines`;
+    const out = [];
+    for (const ev of s.events) {
+      if (ev.kind === "event") out.push(`[${String(ev.ms).padStart(7," ")}] [${ev.tag}] ${ev.msg}`);
+      else out.push(ev.msg);
+    }
+    timelineEl.textContent = out.join("\n");
+  }
+
+  async function loadFile(file) {
+    setStatus("Loading " + file.name + "…");
+    const text = await file.text();
+    loadedText = text;
+    analyzeBtn.disabled = false;
+    setStatus("Loaded. Ready to analyze.");
+  }
+
+  // ---------- Events ----------
+  drop.addEventListener("dragover", (e) => { e.preventDefault(); drop.classList.add("dragover"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("dragover"));
+  drop.addEventListener("drop", async (e) => {
+    e.preventDefault();
+    drop.classList.remove("dragover");
+    const f = e.dataTransfer.files?.[0];
+    if (!f) return;
+    await loadFile(f);
+  });
+
+  fileInput.addEventListener("change", async () => {
+    const f = fileInput.files?.[0];
+    if (!f) return;
+    await loadFile(f);
+  });
+
+  demoBtn.addEventListener("click", () => {
+    loadedText = DEMO_LOG;
+    analyzeBtn.disabled = false;
+    setStatus("Demo loaded. Ready to analyze.");
+  });
+
+  analyzeBtn.addEventListener("click", () => {
+    try {
+      const a = analyzeLog(loadedText);
+      render(a);
+    } catch (e) {
+      setStatus("Analyze failed: " + (e?.message || String(e)));
+    }
+  });
+
+  copyBtn.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(supportText.value);
+      setStatus("Copied support summary.");
+    } catch {
+      setStatus("Clipboard copy failed. You can still select and copy the text manually.");
+    }
+  });
+
+  copyAllFooter.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (!supportText.value) return;
+    try {
+      await navigator.clipboard.writeText(supportText.value);
+      setStatus("Copied support summary.");
+    } catch {
+      setStatus("Clipboard copy failed.");
+    }
+  });
+
+  jsonBtn.addEventListener("click", () => {
+    if (!analysis) return;
+    const name = `RunBridge_Analysis_${tsForFilename()}.json`;
+    downloadText(name, JSON.stringify(analysis, null, 2));
+    setStatus("Downloaded JSON.");
+  });
+
+  function explainNav(which) {
+    alert(`When you host these pages, set this link to your ${which} page URL.`);
+  }
+  toExtractor.addEventListener("click", (e) => { e.preventDefault(); explainNav("Extractor"); });
+  openExtractorFooter.addEventListener("click", (e) => { e.preventDefault(); explainNav("Extractor"); });
+
+  privacyLink.addEventListener("click", (e) => {
+    e.preventDefault();
+    alert("Privacy: This analyzer runs locally in your browser. It does not upload logs anywhere.");
+  });
+</script>
+</body>
+</html>

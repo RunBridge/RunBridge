@@ -50,7 +50,7 @@
     }
 
     .nav-inner {
-      max-width: 960px;
+      max-width: 1140px;
       margin: 0 auto;
       padding: 0.75rem 1rem;
       display: flex;
@@ -102,16 +102,17 @@
     }
 
     main {
-      max-width: 960px;
+      max-width: 1140px;
       margin: 0 auto;
       padding: 1.5rem 1rem 3rem;
     }
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 3fr);
-      gap: 1.75rem;
-      padding: 1.5rem;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 2.5rem;
+      align-items: center;
+      padding: 2rem 1.5rem;
       margin-top: 1rem;
       border-radius: 1.5rem;
       background:
@@ -119,6 +120,13 @@
         linear-gradient(to bottom right, rgba(15,23,42,0.95), rgba(15,23,42,0.98));
       border: 1px solid rgba(148,163,184,0.3);
       box-shadow: 0 18px 45px rgba(15,23,42,0.8);
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2rem;
+      }
     }
 
     .hero-kicker {
@@ -223,6 +231,111 @@
       border-radius: 999px;
       border: 1px solid rgba(148,163,184,0.5);
       font-size: 0.75rem;
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .product-showcase {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .product-img-main {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .product-img-secondary {
+      position: absolute;
+      width: 45%;
+      height: auto;
+      bottom: -15%;
+      right: -10%;
+      transition: transform 0.3s ease;
+      opacity: 0.95;
+    }
+
+    .product-showcase:hover .product-img-main {
+      transform: scale(1.02);
+    }
+
+    .product-showcase:hover .product-img-secondary {
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 900px) {
+      .product-img-secondary {
+        width: 40%;
+        bottom: -10%;
+        right: -5%;
+      }
+    }
+
+    .video-section {
+      margin: 3rem 0 2rem;
+      padding: 2rem;
+      border-radius: 1.25rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .video-section h2 {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(15,23,42,0.8));
+      border: 1px solid rgba(148,163,184,0.3);
+    }
+
+    .video-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 1rem;
+    }
+
+    .video-placeholder-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(37,99,235,0.2);
+      border: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: var(--accent);
+    }
+
+    .video-placeholder-text {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .video-placeholder-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      opacity: 0.7;
     }
 
     .layout-grid {
@@ -382,7 +495,7 @@
     }
 
     .footer-inner {
-      max-width: 960px;
+      max-width: 1140px;
       margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
@@ -410,6 +523,7 @@
       </div>
       <nav class="nav-links">
         <a href="#quickstart">Quick Start</a>
+        <a href="#video">Demo</a>
         <a href="#troubleshooting">Help</a>
         <a href="#support">Support</a>
         <!-- CHANGED: Docs now points to docs.html instead of GitHub -->
@@ -420,7 +534,7 @@
 
   <main>
     <section class="hero">
-      <div>
+      <div class="hero-content">
         <div class="hero-kicker">Indoor running, solved</div>
         <div class="hero-highlight">
           <span></span>
@@ -444,6 +558,23 @@
         <div class="hero-meta">
           <div class="badge">Small-batch hardware, built and tested in the U.S.</div>
           <div>Questions? <a href="mailto:support@runbridge.dev">support@runbridge.dev</a></div>
+        </div>
+      </div>
+      
+      <div class="hero-visual">
+        <div class="product-showcase">
+          <img src="Docs/runbridge-front.png" alt="RunBridge device front view showing USB-C port" class="product-img-main" loading="eager" />
+        </div>
+      </div>
+    </section>
+
+    <section class="video-section" id="video">
+      <h2>See RunBridge in Action</h2>
+      <div class="video-container">
+        <div class="video-placeholder">
+          <div class="video-placeholder-icon">▶</div>
+          <div class="video-placeholder-text">Demo Video Coming Soon</div>
+          <div class="video-placeholder-subtitle">Watch how easy it is to set up and use RunBridge</div>
         </div>
       </div>
     </section>
@@ -572,25 +703,24 @@
 
         <section id="troubleshooting">
           <h2>Troubleshooting</h2>
-          <p>If something isn’t working, start here:</p>
+          <p>If something isn't working, start here:</p>
 
           <div class="card">
             <div class="pill">Common issues</div>
             <ul class="troubleshooting-list">
               <li>
                 <strong>My watch doesn’t see RunBridge.</strong><br />
-                Make sure RunBridge is powered and the LED is <strong>blinking</strong>
-                (any pattern). If the LED is completely off, it’s idle: unplug and plug
-                it back in, then retry <strong>Settings → Sensors &amp; Accessories → Add New → Foot Pod</strong>.
+                Make sure RunBridge is powered. If the LED is completely off, it’s idle: unplug and plug
+                it back in, the lights should cycle, then retry <strong>Settings → Sensors &amp; Accessories → Add New → Foot Pod</strong>.
               </li>
               <li>
-                <strong>Treadmill distance doesn’t change on the watch.</strong><br />
+                <strong>Treadmill distance doesn't change on the watch.</strong><br />
                 Confirm your treadmill supports FTMS over Bluetooth and that its
                 Bluetooth is turned on. Some treadmills only broadcast once a workout
                 has started.
               </li>
               <li>
-                <strong>Distance on watch doesn’t match treadmill.</strong><br />
+                <strong>Distance on watch doesn't match treadmill.</strong><br />
                 Make sure the watch is using RunBridge as the primary footpod.
                 If needed, temporarily disable other footpods or Stryd sensors.
               </li>
@@ -609,8 +739,8 @@
               </a>
             </p>
             <p class="note">
-              Still stuck? Take a photo of your treadmill console and LED,
-              and email it to <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>.
+              Still stuck? <a href="extractor.html">Download your RunBridge logs</a> and email them
+              along with a photo of your treadmill console and LED to <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>.
             </p>
           </div>
         </section>
@@ -661,15 +791,15 @@
               <div class="faq-q">Can I update the firmware?</div>
               <div class="faq-a">
                 Firmware is shipped in a stable, production-ready state and is not
-                intended for end-user updates. If a critical issue is found, we’ll
+                intended for end-user updates. If a critical issue is found, we'll
                 publish guidance in the <a href="docs.html" target="_blank" rel="noopener">Docs</a>.
               </div>
             </div>
             <div class="faq-item">
-              <div class="faq-q">What if it doesn’t work with my setup?</div>
+              <div class="faq-q">What if it doesn't work with my setup?</div>
               <div class="faq-a">
                 Reach out to <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>.
-                If we can’t get it working with your treadmill and watch, we’ll work
+                If we can't get it working with your treadmill and watch, we'll work
                 with you on a return or refund according to the
                 <!-- CHANGED: Internal docs viewer -->
                 <a href="docs.html?page=Support-and-Policies" target="_blank" rel="noopener">
@@ -718,6 +848,7 @@
         <a href="https://github.com/RunBridge/RunBridge" target="_blank" rel="noopener">GitHub</a>
         <!-- CHANGED: Footer Docs link -->
         <a href="docs.html">Docs</a>
+        <a href="extractor.html">Log Extractor</a>
         <a href="mailto:hello@runbridge.dev">Contact</a>
       </div>
     </div>
