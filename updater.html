@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>RunBridge – Firmware Updater</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Update your RunBridge firmware via Web Serial or Drag-and-Drop." />
+  <style>
+    :root {
+      --accent: #2563eb;
+      --accent-soft: #e0edff;
+      --bg: #0f172a;
+      --card-bg: #0b1120;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --danger: #ef4444;
+      --warning: #eab308;
+      --success: #22c55e;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .nav-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      color: inherit;
+    }
+    .logo:hover { text-decoration: none; }
+    .logo-img {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      object-fit: contain;
+      background: #020617;
+    }
+    .logo-subtitle { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
+    .nav-links {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav-links a {
+      color: var(--text-muted);
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+    }
+    .nav-links a:hover {
+      background: rgba(15,23,42,0.9);
+      color: var(--text-main);
+      text-decoration: none;
+    }
+    main { max-width: 960px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+    .hero {
+      padding: 1.5rem;
+      margin-top: 1rem;
+      border-radius: 1.5rem;
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.25), transparent 55%),
+        linear-gradient(to bottom right, rgba(15,23,42,0.95), rgba(15,23,42,0.98));
+      border: 1px solid rgba(148,163,184,0.3);
+      box-shadow: 0 18px 45px rgba(15,23,42,0.8);
+    }
+    .hero-kicker {
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      color: var(--accent-soft);
+      margin-bottom: 0.5rem;
+    }
+    .hero h1 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(1.8rem, 3vw + 1.1rem, 2.4rem);
+    }
+    .hero p { margin: 0 0 1rem; color: var(--text-muted); max-width: 44rem; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.75rem; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.1rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.92rem;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border-color: rgba(191,219,254,0.5);
+      box-shadow: 0 10px 25px rgba(37,99,235,0.45);
+    }
+    .btn-primary:hover { background: #1d4ed8; text-decoration: none; }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-main);
+      border-color: rgba(148,163,184,0.5);
+    }
+    .btn-ghost:hover { background: rgba(15,23,42,0.85); text-decoration: none; }
+    
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+      padding: 1rem 1.1rem;
+      margin-top: 1.5rem;
+    }
+    .pill {
+      display: inline-block;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+    
+    .status {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0.9rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(2,6,23,0.55);
+      margin-top: 1.5rem;
+    }
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 0.32rem;
+      background: var(--text-muted);
+      box-shadow: 0 0 0 7px rgba(156,163,175,0.12);
+      flex: 0 0 auto;
+    }
+    .status.good .status-dot { background: var(--success); box-shadow: 0 0 0 7px rgba(34,197,94,0.18); }
+    .status.warn .status-dot { background: var(--warning); box-shadow: 0 0 0 7px rgba(234,179,8,0.18); }
+    .status.bad  .status-dot { background: var(--danger);  box-shadow: 0 0 0 7px rgba(239,68,68,0.18); }
+    .status-title { font-weight: 600; }
+    .status-body { color: var(--text-muted); font-size: 0.9rem; }
+    
+    .step-list { margin: 0.4rem 0 0; padding-left: 1.1rem; color: var(--text-muted); font-size: 0.95rem; }
+    .step-list li { margin: 0.35rem 0; }
+    .hr { height: 1px; background: var(--border-subtle); margin: 0.9rem 0; }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--border-subtle);
+      border-radius: 2px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+    .progress-val {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.2s;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        display: block;
+        margin-top: 1rem;
+    }
+    .file-input-wrapper input[type=file] {
+        display: block;
+        margin-top: 0.5rem;
+        color: var(--text-muted);
+    }
+  </style>
+
+</head>
+<body>
+<header>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <img src="Docs/runbridge-logo.png" alt="RunBridge logo" class="logo-img" />
+      <div>
+        <div>RunBridge <span class="logo-subtitle">Support</span></div>
+        <div class="logo-subtitle">Firmware Updater</div>
+      </div>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="extractor.html">Extractor</a>
+      <a href="analyzer.html">Analyzer</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-kicker">Device Management</div>
+    <h1>Update RunBridge Firmware</h1>
+    <p>
+      Flash the latest features and fixes to your RunBridge device via USB Drag-and-Drop.
+    </p>
+
+    <!-- END USER: DOWNLOAD & UPDATE -->
+    <div class="hero-actions">
+       <div style="width: 100%;">
+         <div class="pill">Step 1</div>
+         <div style="margin-bottom: 0.5rem; color: var(--text-muted);">
+            Download the latest firmware file.
+         </div>
+         <a href="Firmware/CURRENT.UF2" download="CURRENT.UF2" class="btn btn-primary" style="text-decoration:none;">
+            Download Firmware (CURRENT.UF2)
+         </a>
+       </div>
+    </div>
+
+    <!-- INSTRUCTIONS -->
+     <div id="status" class="status warn" style="margin-top: 2rem;">
+      <div class="status-dot"></div>
+      <div>
+        <div class="status-title" id="statusTitle">Step 2: Install Update</div>
+        <div class="status-body" id="statusBody">
+           1. Plug in RunBridge.<br>
+           2. <b>Double-tap Reset</b> quickly to show the <b>RUNBRIDGE</b> drive.<br>
+              <img src="Docs/runbridge-button.png" alt="RunBridge Reset Button Location" style="max-width: 100%; width: 320px; border-radius: 8px; margin: 0.5rem 0 1rem; border: 1px solid var(--border-subtle); background: white; padding: 1rem;">
+              <br>
+           3. Drag the downloaded <b>CURRENT.UF2</b> onto that drive (replace the existing file if asked).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="pill">Troubleshooting</div>
+    <ul class="step-list">
+      <li><b>Drive not showing?</b> Try a different USB cable or adjust your double-tap speed.</li>
+      <li><b>Replacing file?</b> Yes, it is safe to overwrite the existing CURRENT.UF2.</li>
+      <li><b>Device stuck in DFU?</b> If the LED stays pulsing, simply drag the <b>CURRENT.UF2</b> file onto the drive again to restore it.</li>
+    </ul>
+  </div>
+
+  <!-- DEVELOPER TOOLS -->
+  <br>
+  <details style="color: var(--text-muted); cursor:pointer;">
+    <summary>Developer Tools (Hex Converter)</summary>
+    
+    <div class="card" style="margin-top: 1rem; border-color: var(--border-subtle); cursor:default;">
+      <div class="pill">Tool: Hex to UF2 Converter</div>
+      <p style="font-size:0.9rem;">
+        Developer Utility: Convert raw Arduino .hex exports to release-ready .uf2 files.
+      </p>
+      <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+        <input type="file" id="hexInput" accept=".hex" />
+        <button class="btn btn-ghost" id="convertBtn" disabled style="border:1px solid var(--border-subtle);">Convert</button>
+      </div>
+      <div id="convertStatus" class="small" style="margin-top:0.5rem; color: var(--text-muted);"></div>
+    </div>
+  </details>
+</main>
+
+<script type="module">
+  // ---------- UI ----------
+  const statusBox = document.getElementById("status");
+  const statusTitle = document.getElementById("statusTitle");
+  const statusBody = document.getElementById("statusBody");
+  
+  // Converter UI
+  const hexInput = document.getElementById("hexInput");
+  const convertBtn = document.getElementById("convertBtn");
+  const convertStatus = document.getElementById("convertStatus");
+
+  // ---------- UF2 Conversion Logic ----------
+  const FAMILY_ID_NRF52840 = 0xADA52840;
+  const UF2_MAGIC_START0 = 0x0A324655;
+  const UF2_MAGIC_START1 = 0x9E5D5157;
+  const UF2_MAGIC_END    = 0x0AB16F30;
+
+  // Hex Parser
+  function parseHex(text) {
+    const lines = text.split(/\r?\n/);
+    let extendedAddr = 0;
+    const dataBlocks = []; // { addr: number, data: Uint8Array }
+
+    // First pass: simply gather all data bytes at their absolute addresses
+    // For efficiency, we'll store them in small chunks and then coalesce
+    for (let line of lines) {
+      line = line.trim();
+      if (!line.startsWith(":")) continue;
+      
+      const byteCount = parseInt(line.substr(1, 2), 16);
+      const addrPart = parseInt(line.substr(3, 4), 16);
+      const recType = parseInt(line.substr(7, 2), 16);
+      const dataStr = line.substr(9, byteCount * 2);
+
+      if (recType === 0x00) { // Data
+        const addr = extendedAddr + addrPart;
+        const data = new Uint8Array(byteCount);
+        for (let i = 0; i < byteCount; i++) {
+          data[i] = parseInt(dataStr.substr(i * 2, 2), 16);
+        }
+        dataBlocks.push({ addr, data });
+      } else if (recType === 0x02) { // Extended Segment Address
+        extendedAddr = parseInt(dataStr, 16) << 4;
+      } else if (recType === 0x04) { // Extended Linear Address
+        extendedAddr = parseInt(dataStr, 16) << 16;
+      }
+    }
+
+    if (dataBlocks.length === 0) throw new Error("No data found in HEX file");
+
+    // Flatten into a single buffer (or sparse map). 
+    // UF2 expects 256-byte blocks.
+    // We will find min/max address and create a sparse representation.
+    // Actually, uf2conv.py creates a single bytearray from min to max.
+    // Let's find bounds.
+    let minAddr = Infinity;
+    let maxAddr = 0;
+    for (const b of dataBlocks) {
+      if (b.addr < minAddr) minAddr = b.addr;
+      if (b.addr + b.data.length > maxAddr) maxAddr = b.addr + b.data.length;
+    }
+
+    // Cap sensible size (e.g. 2MB) to prevent browser crash on bad hex
+    if (maxAddr - minAddr > 4 * 1024 * 1024) throw new Error("Hex file data range too large");
+
+    const fullSize = maxAddr - minAddr;
+    const fullBuffer = new Uint8Array(fullSize).fill(0xFF); // flash default is usually FF, though 00 is also safe for padding
+
+    for (const b of dataBlocks) {
+      const offset = b.addr - minAddr;
+      fullBuffer.set(b.data, offset);
+    }
+    
+    return { startAddr: minAddr, data: fullBuffer };
+  }
+
+  // UF2 Encoder
+  function convertToUF2(startAddr, data) {
+    const numBlocks = Math.ceil(data.length / 256);
+    const outBuffer = new Uint8Array(numBlocks * 512);
+    const view = new DataView(outBuffer.buffer);
+
+    for (let i = 0; i < numBlocks; i++) {
+        const ptr = i * 256;
+        const chunk = data.slice(ptr, ptr + 256);
+        const blockAddr = startAddr + ptr;
+        
+        // Header
+        const base = i * 512;
+        view.setUint32(base + 0, UF2_MAGIC_START0, true);
+        view.setUint32(base + 4, UF2_MAGIC_START1, true);
+        view.setUint32(base + 8, 0x2000, true); // Flags: familyID present
+        view.setUint32(base + 12, blockAddr, true); // Address
+        view.setUint32(base + 16, 256, true);   // Payload size
+        view.setUint32(base + 20, i, true);     // Block No
+        view.setUint32(base + 24, numBlocks, true); // Num Blocks
+        view.setUint32(base + 28, FAMILY_ID_NRF52840, true); // Family ID
+
+        // Data payload
+        outBuffer.set(chunk, base + 32);
+        
+        // Payload padding (if chunk < 256, though we sliced from full padded buffer usually)
+        // ... handled by data slice filling 0s? No, data is Uint8Array. 
+        // If data.slice returns shorter, we need to pad.
+        // But we initialized fullBuffer with size, so logic above holds except last block?
+        // Actually slice handles bounds gracefully but returns smaller array.
+        // We need to ensure the data area at 32 is zeroed/FFed if short.
+        // outBuffer is 0-initialized.
+        
+        // Magic End
+        view.setUint32(base + 508, UF2_MAGIC_END, true);
+    }
+    return outBuffer;
+  }
+
+  // ---------- Conver Event ----------
+  hexInput.addEventListener("change", () => {
+    if (hexInput.files.length) {
+      convertBtn.disabled = false;
+      convertStatus.textContent = "Ready to convert " + hexInput.files[0].name;
+    }
+  });
+
+  convertBtn.addEventListener("click", async () => {
+    const file = hexInput.files[0];
+    if (!file) return;
+
+    try {
+      convertStatus.textContent = "Reading...";
+      const text = await file.text();
+      
+      convertStatus.textContent = "Parsing Hex...";
+      const { startAddr, data } = parseHex(text);
+      
+      convertStatus.textContent = "Encoding UF2...";
+      const uf2Data = convertToUF2(startAddr, data);
+      
+      // Download
+      const blob = new Blob([uf2Data], { type: "application/octet-stream" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "CURRENT.UF2";
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      convertStatus.innerHTML = "<span style='color:var(--success)'>Success! <b>CURRENT.UF2</b> downloaded.</span>";
+      
+    } catch (e) {
+      console.error(e);
+      convertStatus.innerHTML = "<span style='color:var(--danger)'>Error: " + e.message + "</span>";
+    }
+  });
+
+  function setStatus(kind, title, bodyHtml) {
+    statusBox.classList.remove("good","warn","bad");
+    statusBox.classList.add(kind);
+    statusTitle.textContent = title;
+    statusBody.innerHTML = bodyHtml || "";
+  }
+</script>
+
+</body>
+</html>
