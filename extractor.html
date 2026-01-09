@@ -259,7 +259,7 @@
 
     <div class="hero-actions">
       <button class="btn btn-primary" id="connectBtn">Connect & Download</button>
-      <button class="btn btn-ghost" id="downloadPartialBtn" disabled>Download Partial</button>
+      <button class="btn btn-ghost" id="downloadPartialBtn" disabled title="Use only if the download gets stuck">Rescue Partial Log</button>
       <button class="btn btn-danger" id="disconnectBtn" disabled>Disconnect</button>
     </div>
 
@@ -295,7 +295,7 @@
       <ul class="list">
         <li>If the button does nothing, your browser may not support Web Serial.</li>
         <li>Try a different USB port/cable, then refresh the page and try again.</li>
-        <li>If the download never finishes, click <b>Download Partial</b> and send that file.</li>
+        <li>If the download freezes (progress stops), click <b>Rescue Partial Log</b> to save what we have so far.</li>
       </ul>
     </section>
 
@@ -499,10 +499,10 @@
 
       lastSupportPackage = buildSupportPackage(accumulated);
 
-      downloadText(rawFile, accumulated);
+      // downloadText(rawFile, accumulated); // Skipped to prevent multi-download blocking
       downloadText(supportFile, lastSupportPackage);
 
-      setStatus("good","Complete", "Downloaded two files: <b>raw log</b> and <b>support package</b>.");
+      setStatus("good","Complete", "Downloaded <b>support package</b>. Ready to email.");
       downloadPartialBtn.disabled = false;
 
       // Close port cleanly
@@ -599,10 +599,10 @@
     const support = `RunBridge_SupportPackage_PARTIAL_${ts}.txt`;
     lastSupportPackage = buildSupportPackage(accumulated);
 
-    downloadText(partial, accumulated);
+    // downloadText(partial, accumulated); // Skipped
     downloadText(support, lastSupportPackage);
 
-    setStatus("warn","Partial downloaded", "Send the support package to RunBridge support.");
+    setStatus("warn","Partial downloaded", "Send the support package file to RunBridge support.");
   });
 
 

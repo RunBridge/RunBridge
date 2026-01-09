@@ -303,6 +303,7 @@
 06:27:59.578 -> [6481] [STATE] Watch subscribed -> RUN mode
 06:27:59.578 -> [14605] [SCAN] Found FTMS, RSSI=-45
 06:27:59.578 -> [15431] [SESSION] New session started
+06:27:59.578 -> [15520] [FTMS] Flags: 0x1484
 06:27:59.578 -> [16058] [STALL] Enter. Age=4294966856
 06:27:59.578 -> [16438] [STALL] Exit
 06:27:59.578 -> [16751] [FTMS] Initial rate learned: 880ms
@@ -322,6 +323,51 @@
     "16": "Connection terminated by local host (your device/stack ended it).",
     "3E": "Connection failed to be established / terminated for unknown reasons."
   };
+
+  const FTMS_FLAGS = [
+    { bit: 0x0001, label: "More Data" },
+    { bit: 0x0002, label: "Avg Speed" },
+    { bit: 0x0004, label: "Total Distance" },
+    { bit: 0x0008, label: "Inclination" },
+    { bit: 0x0010, label: "Elevation Gain" },
+    { bit: 0x0020, label: "Instant Pace" },
+    { bit: 0x0040, label: "Avg Pace" },
+    { bit: 0x0080, label: "Expended Energy" },
+    { bit: 0x0100, label: "Heart Rate" },
+    { bit: 0x0200, label: "Metabolic Equiv" },
+    { bit: 0x0400, label: "Elapsed Time" },
+    { bit: 0x0800, label: "Remaining Time" },
+    { bit: 0x1000, label: "Force on Belt" },
+    { bit: 0x2000, label: "Power Output" }
+  ];
+
+  function decodeFtmsFlags(hexStr) {
+    const val = parseInt(hexStr, 16);
+    if (isNaN(val)) return [];
+    return FTMS_FLAGS.filter(f => (val & f.bit) !== 0).map(f => f.label);
+  }
+
+  const RESET_REASONS = [
+    { bit: 0x0001, label: "Reset Pin" },
+    { bit: 0x0002, label: "Watchdog" },
+    { bit: 0x0004, label: "Soft Reset" },
+    { bit: 0x0008, label: "CPU Lockup" },
+    { bit: 0x0010, label: "Wake from OFF" },
+    { bit: 0x0020, label: "Low Power Comp" },
+    { bit: 0x0040, label: "Debug Interface" },
+    { bit: 0x0080, label: "NFC Field" }
+  ];
+
+  function decodeResetReason(hexStr) {
+    const val = parseInt(hexStr, 16);
+    if (isNaN(val)) return "Unknown";
+    // 0 is usually Power-On-Reset (POR) if no bits set, but technically POR isn't a single bit in all docs,
+    // usually checked via other registers. However for nRF52, 0 typically means clean power up or cleared register.
+    if (val === 0) return "Power On"; 
+    
+    const reasons = RESET_REASONS.filter(r => (val & r.bit) !== 0).map(r => r.label);
+    return reasons.length ? reasons.join(", ") : "Unknown";
+  }
 
   function reasonToEnglish(hex) {
     const key = String(hex || "").toUpperCase().padStart(2, "0");
@@ -386,8 +432,9 @@
         marker: markerObj?.msg || "(no session marker found)",
         markerMs: markerObj?.ms ?? null,
         events: [],
-        facts: { bootVersion: null, hardware: null, watchConnected: false, watchSubscribed: false, ftmsConnected: false },
-        flags: { serviceDiscoveryFails: 0, ftmsDisconnects: 0, stallEnter: 0, stallWeirdAge: false, graceExpired: false, ghostTriggered: false, odoResetWarn: false },
+        events: [],
+        facts: { bootVersion: null, hardware: null, resetReason: null, watchConnected: false, watchSubscribed: false, ftmsConnected: false, sessionDistance: null, sessionSource: null },
+        flags: { serviceDiscoveryFails: 0, ftmsDisconnects: 0, stallEnter: 0, stallWeirdAge: false, graceExpired: false, ghostTriggered: false, odoResetWarn: false, spikes: 0, rssiWarnings: 0, odoResets: 0, ftmsFlags: [] },
         issues: [],
         ftmsReasons: [],
         watchReasons: []
@@ -415,6 +462,8 @@
           if (v) s.facts.bootVersion = v[1];
           const hw = ev.msg.match(/Hardware:\s*(.+)$/i);
           if (hw) s.facts.hardware = hw[1].trim();
+          const rr = ev.msg.match(/Reset Reason:\s*(0x[0-9A-F]+)/i);
+          if (rr) s.facts.resetReason = rr[1];
         }
 
         if (ev.tag === "WATCH") {
@@ -434,6 +483,10 @@
             const r = ev.msg.match(/reason=0x([0-9A-Fa-f]+)/);
             if (r) s.ftmsReasons.push({ reason: r[1].toUpperCase(), ms: ev.ms });
           }
+          if (ev.msg.startsWith("Flags:")) {
+            const f = ev.msg.match(/Flags:\s*(0x[0-9A-F]+)/i);
+            if (f) s.flags.ftmsFlags.push(f[1]);
+          }
         }
 
         if (ev.tag === "STALL" && ev.msg.includes("Enter")) {
@@ -444,7 +497,26 @@
 
         if (ev.tag === "GRACE" && ev.msg.includes("Window expired")) s.flags.graceExpired = true;
         if (ev.tag === "GHOST" && ev.msg.includes("Defense triggered")) s.flags.ghostTriggered = true;
-        if (ev.tag === "ODO" && ev.msg.includes("Reset:")) s.flags.odoResetWarn = true;
+        
+        if (ev.tag === "ODO") {
+          if (ev.msg.includes("Reset detected")) s.flags.odoResets++;
+          if (ev.msg.includes("Reset:")) s.flags.odoResetWarn = true;
+        }
+
+        if (ev.tag === "FILTER" && ev.msg.includes("Spike detected")) s.flags.spikes++;
+        
+        if (ev.tag === "RSSI") {
+           if (ev.msg.includes("Disconnect threshold reached") || ev.msg.includes("Bad:")) s.flags.rssiWarnings++;
+        }
+
+        if (ev.tag === "SESSION" && ev.msg.startsWith("Summary:")) {
+          // [SESSION] Summary: 1230m, source=ODO
+          const m = ev.msg.match(/Summary:\s*(\d+)m,\s*source=(\w+)/);
+          if (m) {
+            s.facts.sessionDistance = m[1] + "m";
+            s.facts.sessionSource = m[2];
+          }
+        }
       }
 
       if (s.flags.stallWeirdAge) s.issues.push("STALL age looks invalid (likely unsigned underflow or timestamp/state reset).");
@@ -453,6 +525,11 @@
       if (s.flags.graceExpired) s.issues.push("Grace window expired (TX suspended).");
       if (s.flags.ghostTriggered) s.issues.push("Ghost defense triggered (TX suppressed after extended zero-speed).");
       if (s.flags.odoResetWarn) s.issues.push("Odometer reset baseline warning present.");
+      
+      if (s.flags.spikes > 0) s.issues.push(`Speed spikes detected and filtered (${s.flags.spikes}).`);
+      if (s.flags.rssiWarnings > 0) s.issues.push("RSSI signal issues detected (weak signal or disconnect threshold).");
+      if (s.flags.odoResets > 0) s.issues.push(`Odometer reset detected (${s.flags.odoResets}).`);
+
       if (!s.issues.length) s.issues.push("No obvious issues detected.");
       s.explanations = [];
 
@@ -532,6 +609,8 @@ if (!s.explanations.length) {
       anyWeirdStallAge: sessions.some(s=>s.flags.stallWeirdAge),
       anyGhost: sessions.some(s=>s.flags.ghostTriggered),
       anyGrace: sessions.some(s=>s.flags.graceExpired),
+      anySpikes: sessions.some(s=>s.flags.spikes > 0),
+      anyRssi: sessions.some(s=>s.flags.rssiWarnings > 0),
     };
 
     const flags = [];
@@ -540,6 +619,8 @@ if (!s.explanations.length) {
     if (global.anyGrace) flags.push({ sev:"warn", text:"Grace window expired at least once (TX suspended)." });
     if (global.anyGhost) flags.push({ sev:"warn", text:"Ghost defense triggered at least once (TX suppressed)." });
     if (global.anyWeirdStallAge) flags.push({ sev:"bad", text:"At least one STALL age value looks invalid (very large number)." });
+    if (global.anySpikes) flags.push({ sev:"warn", text:"Speed spikes were detected and filtered." });
+    if (global.anyRssi) flags.push({ sev:"warn", text:"Weak signal/RSSI warnings detected." });
     if (!flags.length) flags.push({ sev:"good", text:"No obvious failure patterns detected." });
 
     return { global, sessions, flags };
@@ -573,6 +654,11 @@ if (s.ftmsReasons.length) {
     lines.push(`        - 0x${r.reason} @ ${r.ms}ms: ${reasonToEnglish(r.reason)}`);
   }
 }
+if (s.flags.ftmsFlags.length) {
+   const last = s.flags.ftmsFlags[s.flags.ftmsFlags.length-1];
+   const decoded = decodeFtmsFlags(last).join(", ");
+   lines.push(`    • FTMS Capabilities (last seen): ${last} (${decoded})`);
+}
 if (s.watchReasons.length) {
   lines.push("    • WATCH disconnects:");
   for (const r of s.watchReasons) {
@@ -602,6 +688,7 @@ if (s.watchReasons.length) {
         <div><b>Hardware:</b> ${escapeHtml(g.hardware.length ? g.hardware.join(", ") : "Unknown")}</div>
         <div><b>FTMS disconnects:</b> ${g.ftmsDisconnects}</div>
         <div><b>Service discovery fails:</b> ${g.serviceDiscoveryFails}</div>
+        <div><b>Spikes filtered:</b> ${a.sessions.reduce((a,s)=>a+s.flags.spikes,0)}</div>
       </div>
     `;
 
@@ -628,8 +715,24 @@ if (top.length) {
 
     sessionBody.innerHTML = "";
     a.sessions.forEach((s, idx) => {
+      const bootInfo = s.facts.bootVersion ? `v${s.facts.bootVersion}` : "v?";
+      // const hwInfo = s.facts.hardware || "hw?"; // unused in compact row
+      
+      let rrInfo = "";
+      if (s.facts.resetReason) {
+        const decoded = decodeResetReason(s.facts.resetReason);
+        rrInfo = `<br><span style="font-size:0.8em; color:#fca5a5" title="Code: ${s.facts.resetReason}">Reset: ${escapeHtml(decoded)}</span>`;
+      }
+
       const watch = `${s.facts.watchConnected ? "Connected" : "—"}${s.facts.watchSubscribed ? " + Subscribed" : ""}`;
       const ftms = `${s.facts.ftmsConnected ? "Connected" : "—"}${s.flags.ftmsDisconnects ? `, Disconnected x${s.flags.ftmsDisconnects}` : ""}`;
+      
+      let ftmsFlagsHtml = "";
+      if (s.flags.ftmsFlags.length) {
+        const lastHex = s.flags.ftmsFlags[s.flags.ftmsFlags.length - 1];
+        const decoded = decodeFtmsFlags(lastHex).join(", ");
+        ftmsFlagsHtml = `<div class="small" style="font-size:0.75rem; color:#93c5fd; margin-top:0.2rem;" title="${escapeHtml(decoded)}">Flags: ${lastHex} <span style="opacity:0.75; font-size:0.9em">ℹ️</span></div>`;
+      }
 
       const issueTag = s.issues.some(x => x.startsWith("No obvious")) ? pill("OK", "good") : pill(`${s.issues.length} item(s)`, "warn");
       const issuesShort = s.issues.filter(x => !x.startsWith("No obvious")).slice(0,2).join(" ");
@@ -639,10 +742,19 @@ if (top.length) {
       tr.innerHTML = `
         <td>${idx+1}</td>
         <td>${escapeHtml(s.marker)}</td>
-        <td>${escapeHtml(s.facts.bootVersion ? "v"+s.facts.bootVersion : "—")}</td>
+        <td>${escapeHtml(bootInfo)} ${rrInfo}</td>
         <td>${escapeHtml(watch)}</td>
-        <td>${escapeHtml(ftms)}</td>
-        <td>${issueTag}<div class="small" style="margin-top:0.35rem;">${escapeHtml(issuesShort || "")}</div></td>
+        <td>
+          ${escapeHtml(ftms)}
+          ${ftmsFlagsHtml}
+        </td>
+        <td>
+          ${issueTag}
+          <div class="small" style="margin-top:0.35rem;">
+            ${s.facts.sessionDistance ? `<b>${s.facts.sessionDistance}</b> (${s.facts.sessionSource})<br>` : ""}
+            ${escapeHtml(issuesShort || "")}
+          </div>
+        </td>
       `;
       tr.addEventListener("click", () => selectSession(idx));
       sessionBody.appendChild(tr);
