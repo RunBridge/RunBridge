@@ -440,7 +440,12 @@
       a.click();
       URL.revokeObjectURL(url);
       
-      convertStatus.innerHTML = "<span style='color:var(--success)'>Success! <b>CURRENT.UF2</b> downloaded.</span>";
+      convertStatus.innerHTML = `
+        <span style='color:var(--success)'>Success! <b>CURRENT.UF2</b> downloaded.</span><br>
+        <span style='color:var(--text-muted); font-size:0.85em'>
+          Payload: ${Math.round(uf2Data.length / 1024)} KB 
+          (Address: 0x${startAddr.toString(16).toUpperCase()} - 0x${(startAddr + data.length).toString(16).toUpperCase()})
+        </span>`;
       
     } catch (e) {
       console.error(e);
