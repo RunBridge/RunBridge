@@ -657,7 +657,7 @@ if (s.ftmsReasons.length) {
 if (s.flags.ftmsFlags.length) {
    const last = s.flags.ftmsFlags[s.flags.ftmsFlags.length-1];
    const decoded = decodeFtmsFlags(last).join(", ");
-   lines.push(`    • FTMS Capabilities (last seen): ${last} (${decoded})`);
+   lines.push(`    • FTMS Capabilities (last seen): ${last} (Instant Speed, ${decoded})`);
 }
 if (s.watchReasons.length) {
   lines.push("    • WATCH disconnects:");
@@ -731,7 +731,7 @@ if (top.length) {
       if (s.flags.ftmsFlags.length) {
         const lastHex = s.flags.ftmsFlags[s.flags.ftmsFlags.length - 1];
         const decoded = decodeFtmsFlags(lastHex).join(", ");
-        ftmsFlagsHtml = `<div class="small" style="font-size:0.75rem; color:#93c5fd; margin-top:0.2rem;" title="${escapeHtml(decoded)}">Flags: ${lastHex} <span style="opacity:0.75; font-size:0.9em">ℹ️</span></div>`;
+        ftmsFlagsHtml = `<div class="small" style="font-size:0.75rem; color:#93c5fd; margin-top:0.2rem;" title="Instant Speed, ${escapeHtml(decoded)}">Flags: ${lastHex} <span style="opacity:0.75; font-size:0.9em">ℹ️</span></div>`;
       }
 
       const issueTag = s.issues.some(x => x.startsWith("No obvious")) ? pill("OK", "good") : pill(`${s.issues.length} item(s)`, "warn");
