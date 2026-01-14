@@ -19,8 +19,10 @@
     </a>
     <nav class="nav-links">
       <a href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="updater.html">Updater</a>
       <a href="extractor.html">Extractor</a>
-      <a href="#" id="privacyLink">Privacy</a>
+      <a href="terms.html">Terms</a>
     </nav>
   </div>
 </header>
@@ -96,7 +98,7 @@
     <div>© 2024–2026 RunBridge</div>
     <div class="footer-links">
       <a href="updater.html">Firmware Updater</a>
-      <a href="#" id="openExtractorFooter">Open Extractor</a>
+      <a href="extractor.html">Log Extractor</a>
       <a href="#" id="copyAllFooter">Copy Support Summary</a>
     </div>
   </div>
@@ -121,7 +123,7 @@
 
   const toExtractor = document.getElementById("toExtractor");
   const openExtractorFooter = document.getElementById("openExtractorFooter");
-  const privacyLink = document.getElementById("privacyLink");
+  // const privacyLink = document.getElementById("privacyLink"); // Removed
   const copyAllFooter = document.getElementById("copyAllFooter");
 
   // ---------- State ----------
@@ -677,16 +679,20 @@ if (top.length) {
     setStatus("Downloaded JSON.");
   });
 
+  /*
   function explainNav(which) {
     alert(`When you host these pages, set this link to your ${which} page URL.`);
   }
   toExtractor.addEventListener("click", (e) => { e.preventDefault(); explainNav("Extractor"); });
   openExtractorFooter.addEventListener("click", (e) => { e.preventDefault(); explainNav("Extractor"); });
+  */
 
+  /*
   privacyLink.addEventListener("click", (e) => {
     e.preventDefault();
     alert("Privacy: This analyzer runs locally in your browser. It does not upload logs anywhere.");
   });
+  */
 </script>
 </body>
 </html>

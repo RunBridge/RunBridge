@@ -19,8 +19,10 @@
     </a>
     <nav class="nav-links">
       <a href="index.html">Home</a>
+      <a href="docs.html">Docs</a>
+      <a href="updater.html">Updater</a>
       <a href="analyzer.html">Analyzer</a>
-      <a href="#" id="privacyLink">Privacy</a>
+      <a href="terms.html">Terms</a>
     </nav>
   </div>
 </header>
@@ -105,9 +107,9 @@
   const statusBody = document.getElementById("statusBody");
   const statusBox = document.getElementById("status");
 
-  const toAnalyzer = document.getElementById("toAnalyzer");
-  const openAnalyzerFooter = document.getElementById("openAnalyzerFooter");
-  const privacyLink = document.getElementById("privacyLink");
+  // const toAnalyzer = document.getElementById("toAnalyzer");
+  // const openAnalyzerFooter = document.getElementById("openAnalyzerFooter");
+  // const privacyLink = document.getElementById("privacyLink");
   const copyLastSupportPkg = document.getElementById("copyLastSupportPkg");
 
   const EXPECTED_ID_PREFIX = "RUNBRIDGE:";
@@ -384,10 +386,12 @@
 
 
 
+  /*
   privacyLink.addEventListener("click", (e) => {
     e.preventDefault();
     alert("Privacy: This tool runs locally in your browser. It does not upload logs anywhere. The downloaded file is created on your machine.");
   });
+  */
 
   copyLastSupportPkg.addEventListener("click", async (e) => {
     e.preventDefault();
