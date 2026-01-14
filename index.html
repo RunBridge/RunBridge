@@ -536,20 +536,22 @@
   <main>
     <section class="hero">
       <div class="hero-content">
-        <div class="hero-kicker">Indoor running, solved</div>
+        <div class="hero-kicker">Specialized Running Tool</div>
         <div class="hero-highlight">
           <span></span>
-          Uses your treadmill's FTMS data as a Garmin footpod
+          Treadmill-derived pace and distance on your Garmin watch
         </div>
         <h1>Use your treadmill's distance directly on your Garmin watch.</h1>
         <p>
-          RunBridge plugs into USB power, connects to your FTMS-enabled treadmill,
-          and exposes speed &amp; distance to your Garmin watch as a standard
-          footpod. No more guessing, no more mismatched distances.
+          RunBridge is a specialized tool that reads treadmill speed and distance from Bluetooth FTMS
+          and broadcasts it as a precise footpod. Get treadmill-derived pace and distance on your watch without footpod calibration or installation.
         </p>
+        <div style="margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+          Tested with Assault Runner Pro + Garmin Fenix 7.
+        </div>
         <div class="hero-actions">
           <a href="#quickstart" class="btn btn-primary">
-            Quick Start Guide
+            How it works
           </a>
           <!-- CHANGED: Link to in-site docs viewer -->
           <a href="docs.html?page=QuickStart" class="btn btn-ghost">
@@ -578,6 +580,30 @@
           <div class="video-placeholder-subtitle">Watch how easy it is to set up and use RunBridge</div>
         </div>
       </div>
+    </section>
+
+    <!-- NEW: Pre-Purchase Filter -->
+    <section class="card" style="border: 1px solid var(--warning); background: rgba(234, 179, 8, 0.05);">
+        <h2 style="color: var(--warning); margin-top: 0;">⚠️ Before You Buy</h2>
+        <p>RunBridge is a specialized tool. Please confirm compatibility:</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+            <div>
+                <strong>1. Checklist</strong>
+                <ul class="quickstart-list" style="margin-top: 0.5rem;">
+                    <li>✅ My treadmill broadcasts <strong>Bluetooth FTMS</strong>.</li>
+                    <li>✅ My Garmin watch supports <strong>pairing a footpod</strong>.</li>
+                    <li>✅ I understand this is for <strong>FTMS treadmills only</strong>.</li>
+                </ul>
+            </div>
+            <div>
+                <strong>2. How to check</strong>
+                <ul class="quickstart-list" style="margin-top: 0.5rem; font-size: 0.9rem;">
+                    <li>Check your treadmill manual for "FTMS" or "Zwift compatibility".</li>
+                    <li>Download a BLE scanner app to see if your treadmill broadcasts.</li>
+                    <li><a href="docs.html?page=Compatibility">Read our full compatibility guide</a>.</li>
+                </ul>
+            </div>
+        </div>
     </section>
 
     <div class="layout-grid">
@@ -609,8 +635,7 @@
               <li>
                 <span class="step-label">Start an indoor run.</span><br />
                 Start an <strong>Indoor Run</strong> activity. Once your
-                treadmill session begins, pace and distance should match
-                what the treadmill reports.
+                treadmill session begins, pace and distance will track the treadmill's reported values during the workout.
               </li>
             </ol>
             <p class="note">
@@ -750,29 +775,64 @@
       <!-- RIGHT COLUMN: COMPATIBILITY, FAQ, SUPPORT -->
       <div>
         <section>
-          <h2>Compatibility</h2>
+          <h2>Comparison & Compatibility</h2>
+          
           <div class="card">
-            <div class="pill">Designed for</div>
-            <ul class="compat-list">
-              <li>Garmin watches that support Footpod / Running Speed &amp; Cadence sensors.</li>
-              <li>Indoor treadmills that broadcast FTMS over Bluetooth.</li>
-              <li>Standard 5V USB power sources (wall adapter, treadmill USB, powered hub).</li>
-            </ul>
+            <div class="pill">Why RunBridge?</div>
+            <p>A specialized, always-ready solution for home treadmills.</p>
+            
+            <table class="led-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>RunBridge</th>
+                        <th>NPE Runn</th>
+                        <th>Stryd</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Sensor Type</strong></td>
+                        <td>Reads FTMS speed/distance</td>
+                        <td>Optical sticker</td>
+                        <td>Foot accelerometer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Power</strong></td>
+                        <td>USB powered</td>
+                        <td>Battery / Hardwire</td>
+                        <td>Battery (Recharge)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Installation</strong></td>
+                        <td>Plug & Play USB</td>
+                        <td>Install on Deck</td>
+                        <td>Clip to Shoe</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Price</strong></td>
+                        <td><strong>$59.99</strong></td>
+                        <td>~$99</td>
+                        <td>~$219+</td>
+                    </tr>
+                </tbody>
+            </table>
+          </div>
 
-            <div class="pill">Not a good fit for</div>
+          <div class="card" style="margin-top: 1rem;">
+            <div class="pill">Compatibility</div>
+            <p><strong>Tested & Confirmed:</strong></p>
             <ul class="compat-list">
-              <li>Non-FTMS treadmills with only proprietary Bluetooth apps.</li>
-              <li>Watches or devices that cannot pair to a Bluetooth footpod.</li>
-              <li>Environments without safe, stable USB power.</li>
+              <li>Assault Runner Pro + Garmin Fenix 7</li>
+            </ul>
+            <p><strong>Likely Compatible (Not Guaranteed):</strong></p>
+            <ul class="compat-list">
+              <li>Any treadmill broadcasting standard Bluetooth FTMS.</li>
+              <li>Any Garmin watch supporting the "Foot Pod" sensor type.</li>
             </ul>
             <p class="note">
-              Full compatibility details (including an optional FTMS check using the nRF Connect app):  
-              <!-- CHANGED: Internal docs viewer -->
-              <a href="docs.html?page=Compatibility">
-                Docs/Compatibility
-              </a><br />
-              Unsure if your treadmill is compatible? Email a photo of the console
-              and model to <a href="mailto:hello@runbridge.dev">hello@runbridge.dev</a>.
+                <strong>Note:</strong> We cannot guarantee compatibility with every treadmill/watch combination. 
+                Please use the <a href="docs.html?page=Compatibility">compatibility guide</a> to check your gear before purchasing.
             </p>
           </div>
         </section>
@@ -816,13 +876,13 @@
           <div class="card">
             <p style="margin-top: 0;">
               RunBridge is a small-batch, hand-assembled hardware product.
-              Every unit is powered on and tested before it ships.
+              Every unit is powered on and function-checked before it ships.
             </p>
             <ul class="compat-list">
               <li><strong>Support:</strong> <a href="mailto:support@runbridge.dev">support@runbridge.dev</a></li>
               <li><strong>General questions:</strong> <a href="mailto:hello@runbridge.dev">hello@runbridge.dev</a></li>
-              <li><strong>Returns:</strong> Please contact support within 30 days of delivery.</li>
-              <li><strong>Warranty:</strong> Covers hardware defects for 6 months from delivery.</li>
+              <li><strong>Returns:</strong> If RunBridge does not work with your treadmill/watch combination, contact support within 14 days of delivery (see Terms).</li>
+              <li><strong>Warranty:</strong> RunBridge is provided “as-is” (see Terms). Every unit is powered on and function-checked before it ships.</li>
             </ul>
             <p class="note">
               Full text:  
@@ -846,12 +906,11 @@
     <div class="footer-inner">
       <div>© <span id="year"></span> RunBridge. All rights reserved.</div>
       <div class="footer-links">
-        <a href="https://github.com/RunBridge/RunBridge" target="_blank" rel="noopener">GitHub</a>
-        <!-- CHANGED: Footer Docs link -->
+        <a href="terms.html">Terms & Conditions</a>
         <a href="docs.html">Docs</a>
         <a href="updater.html">Updater</a>
         <a href="extractor.html">Log Extractor</a>
-        <a href="mailto:hello@runbridge.dev">Contact</a>
+        <a href="mailto:support@runbridge.dev">Support</a>
       </div>
     </div>
   </footer>

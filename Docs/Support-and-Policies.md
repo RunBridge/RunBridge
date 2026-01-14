@@ -1,6 +1,6 @@
 # Support & Policies
 
-RunBridge is a small-batch, hand-assembled hardware product. Each unit is powered on and tested before it ships.
+RunBridge is a small-batch, hand-assembled hardware product. Each unit is powered on and function-checked before it ships.
 
 This page explains how to get help and what to expect if something goes wrong.
 
@@ -23,39 +23,32 @@ We aim to respond **within 1–2 business days**.
 
 ---
 
-## Returns
+## Returns & refunds
 
-If RunBridge doesn’t work with your setup and we can’t fix it together:
+If RunBridge does not work with your treadmill/watch combination and we can’t get it working together:
 
-- Please contact **[support@runbridge.dev](mailto:support@runbridge.dev)** within **30 days** of delivery.
-- We’ll confirm basic troubleshooting and then discuss return options.
-- In most cases:
-  - You are responsible for return shipping.
-  - A refund is issued once the unit is received and inspected.
+- Please contact **[support@runbridge.dev](mailto:support@runbridge.dev)** within **14 days of delivery**.
+- We’ll confirm basic troubleshooting and then provide return instructions.
+- Refunds cover the product purchase price only.
+- **Shipping charges (including original outbound shipping) are non-refundable.**
+- Buyer is responsible for return shipping.
 
-We want this to feel fair for both sides and will handle returns on a reasonable, case-by-case basis.
+Full terms: [Terms & Conditions](../terms.html)
 
 ---
 
-## Warranty
+## Hardware issues (before and after delivery)
 
-RunBridge comes with a **6-month limited warranty** against hardware defects from the date of delivery.
+Every RunBridge unit is powered on and function-checked before it ships.
 
-The warranty covers:
+If you believe your unit has a hardware problem (for example: it won’t power on, won’t advertise, or behaves abnormally):
 
-- Defects in materials or workmanship under normal use
+- Email **[support@runbridge.dev](mailto:support@runbridge.dev)**
+- Include photos and a description of what happened
 
-The warranty does **not** cover:
+We will troubleshoot and assist on a **best-effort basis**.
 
-- Damage from misuse, abuse, or opening / modifying the device
-- Damage from incorrect power sources or electrical faults
-- Cosmetic wear and tear
-
-If you believe your device has a hardware defect, email:
-
-- **[support@runbridge.dev](mailto:support@runbridge.dev)**
-
-Include photos and a description of what happened. If we confirm a defect, we’ll work with you on repair or replacement.
+> Note: RunBridge is provided **“as-is”** and does not include a formal warranty. See the [Terms & Conditions](../terms.html).
 
 ---
 
@@ -67,7 +60,7 @@ RunBridge does **not**:
 - Upload data anywhere by itself
 - Connect to the internet
 
-It simply relays treadmill speed and distance to your Garmin watch over Bluetooth as a sensor.
+It simply relays treadmill speed and distance to your Garmin watch over Bluetooth as a standard BLE sensor.
 
 Your activities are recorded and managed by Garmin, according to their settings and policies.
 

@@ -6,6 +6,19 @@ The system decides what to show based on internal state, with a clear priority o
 
 ---
 
+## What you should see during a normal run
+
+A typical sequence looks like this:
+
+1. Plug in RunBridge → LED cycles briefly, then may go **Off** or **Blue (Scanning)**
+2. Pair / connect watch → **Magenta (Watch Connected)**
+3. Start an Indoor Run → watch subscribes → **Blue (Scanning)** if treadmill not connected yet
+4. Once treadmill is connected → **Solid Green (System Ready)**
+
+During the run, **Solid Green** is the expected state.
+
+---
+
 ## Priority order
 
 From highest priority to lowest:
@@ -49,6 +62,8 @@ If you see this pattern:
 - The FTMS treadmill link is up.
 - The watch is not connected yet.
 
+**This is not an error** — it just means RunBridge is waiting for the watch to connect.
+
 ---
 
 ### 3. Watch Connected
@@ -61,7 +76,9 @@ If you see this pattern:
 This usually means:
 
 - The watch found and connected to the sensor.
-- It hasn’t fully subscribed to the run data yet.
+- It hasn’t subscribed to run data yet.
+
+Garmin typically subscribes once an activity starts.
 
 If it stays here, try:
 
@@ -75,7 +92,7 @@ If it stays here, try:
 > Watch subscribed, searching for treadmill
 
 - **LED:** Slow blink blue  
-  - About 1 second on / 1 second off
+ - About 1 second on / 1 second off
 
 This means:
 
@@ -103,4 +120,3 @@ No active watch or treadmill link. This is normal when:
 If you expect it to be doing something but it’s off:
 
 - Unplug RunBridge, wait a few seconds, and plug back in.
-

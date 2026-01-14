@@ -2,7 +2,7 @@
 
 This guide is for first-time setup. It assumes you already have:
 
-- A RunBridge device (XIAO nRF52840-based)
+- A RunBridge device
 - A Garmin watch that supports footpods / running speed & cadence sensors
 - A treadmill that broadcasts FTMS over Bluetooth
 - A 5V USB power source (wall adapter, treadmill USB port, or powered hub)
@@ -12,9 +12,9 @@ This guide is for first-time setup. It assumes you already have:
 ## 1. Plug in RunBridge
 
 1. Connect the USB-C port on RunBridge to a **5V USB power source**.
-2. The status LED on the XIAO board should come on or start blinking once through each color.
+2. The status LED on the board should light up or blink through colors briefly.
 
-If the LED never lights, try a different USB port or adapter.
+If the LED never lights, try a different USB port, cable, or adapter.
 
 ---
 
@@ -28,7 +28,9 @@ If the LED never lights, try a different USB port or adapter.
 
 You don’t need to pair the treadmill to your phone for RunBridge to work. It just needs to be broadcasting FTMS.
 
-If you want to get a bit more technical and confirm FTMS support, see the
+**Tip:** If your treadmill is already paired to a phone/app, disconnect it first. Some treadmills only allow one Bluetooth connection at a time.
+
+If you want to confirm FTMS support, see the
 [Compatibility](Compatibility.md) page for a quick check using the **nRF Connect** mobile app.
 
 ---
@@ -56,49 +58,16 @@ If you already have another footpod (like Stryd) paired, you may want to tempora
 2. Confirm that the footpod / speed & cadence sensor is connected (usually shown in the sensor list).
 3. When your treadmill workout begins, pace and distance on the watch should follow the treadmill.
 
-You no longer need to manually edit distance at the end of your run.
+In most cases, you won’t need to manually edit treadmill distance after the run.
 
 ---
 
-## 5. LED states (quick view)
+## What you should see (normal LED sequence)
 
-This is a summary. For a more detailed breakdown, see [LED States](LED-States.md).
+A typical first-time setup looks like this:
 
-All LED patterns below refer to the **XIAO nRF52840 RGB LED**:
-
-- **System Ready**  
-  - Solid green  
-  - Meaning: Watch is subscribed and treadmill is connected. Data is flowing.
-
-- **Treadmill Only**  
-  - Double blink red (two quick blinks every ~2 seconds)  
-  - Meaning: Treadmill is connected, waiting for the watch.
-
-- **Watch Connected**  
-  - Fast blink magenta (on/off every ~150 ms)  
-  - Meaning: Watch is connected but not yet subscribed.
-
-- **Scanning**  
-  - Slow blink blue (1 second on / 1 second off)  
-  - Meaning: Watch is subscribed; searching for treadmill.
-
-- **Idle / Sleep**  
-  - LED off  
-  - Meaning: No active connections.
+1. Plug in RunBridge → LED cycles briefly, then may go **Off** or **Blue (Scanning)**
+2. Pair the watch → **Magenta (Watch Connected)**
+3. Start an Indoor Run + treadmill workout → **Solid Green (System Ready)**
 
 During a normal workout, you should end up in **System Ready** (solid green).
-
----
-
-## If something doesn’t work
-
-Start with the [Troubleshooting](Troubleshooting.md) page.  
-If you’re still stuck, email:
-
-- **Support:** [support@runbridge.dev](mailto:support@runbridge.dev)
-
-Feel free to include:
-- Your treadmill model
-- Garmin watch model
-- What the LED is doing
-- Any screenshots or photos that help

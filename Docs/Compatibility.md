@@ -5,6 +5,8 @@ RunBridge sits between your treadmill and your Garmin watch. It relies on two th
 1. An **FTMS-enabled treadmill** that broadcasts over Bluetooth.
 2. A **Garmin watch** that supports external speed/cadence / footpod sensors.
 
+**Tested & confirmed:** Assault Runner Pro + Garmin Fenix 7
+
 ---
 
 ## Supported (in general)
@@ -16,22 +18,24 @@ RunBridge is designed for treadmills whose consoles advertise **FTMS** over Blue
 - Often described as “Bluetooth FTMS”, “FTMS compatible”, or “supports Zwift/third-party apps”.
 - Many modern commercial and prosumer treadmills fall into this category.
 
-If your treadmill works with apps like Zwift or Kinomap over Bluetooth (without extra dongles), there’s a good chance it uses FTMS.
+If your treadmill works with apps like Zwift or Kinomap over Bluetooth (without extra dongles), it’s a **good sign** it uses FTMS.
+
+> Note: Some treadmills only broadcast FTMS once a workout is started.
 
 ### Watches
 
-Most Garmin running and multisport watches that support:
+Most running and multisport watches that support:
 
 - **Foot Pod** sensors, and/or
 - **Running Speed/Cadence** sensors
 
-will work with RunBridge.
+are **likely compatible** with RunBridge.
 
 Check your watch under:
 
 > **Settings → Sensors & Accessories → Add New**
 
-If you see **Foot Pod** or **Running Speed/Cadence**, you should be good.
+If you see **Foot Pod** or **Running Speed/Cadence**, that’s a strong sign your watch supports the sensor type RunBridge broadcasts.
 
 ---
 
@@ -40,13 +44,11 @@ If you see **Foot Pod** or **Running Speed/Cadence**, you should be good.
 RunBridge is **not** a good fit if:
 
 - Your treadmill only supports:
-  - Proprietary app connections (e.g., brand-only apps) with no FTMS exposed.
-  - Bluetooth audio (headphone icon only).
+  - Proprietary app connections (e.g., brand-only apps) with no FTMS exposed
+  - Bluetooth audio (headphone icon only)
 - Your watch:
-  - Does not support external running sensors.
-  - Cannot pair to a Bluetooth footpod or running speed/cadence sensor.
-
-If you’re unsure, feel free to ask.
+  - Does not support external running sensors
+  - Cannot pair to a Bluetooth footpod or running speed/cadence sensor
 
 ---
 
@@ -78,13 +80,13 @@ If you’re comfortable using a phone app, you can roughly confirm FTMS support 
    - You’re interested in a service named **“Fitness Machine”** or with the UUID **0x1826**.
    - Some apps also label this as **FTMS** or **Fitness Machine Service**.
 
-If you see a Fitness Machine / FTMS service (UUID 0x1826), that’s a strong sign your treadmill is using FTMS and is a good match for RunBridge.
+If you see a Fitness Machine / FTMS service (UUID 0x1826), that’s a strong sign your treadmill is a good match for RunBridge.
 
 If you don’t see it:
 
-- The treadmill might not expose FTMS.
-- Or it may hide the service until a specific mode is selected.
-- Or it only talks to a proprietary phone app.
+- The treadmill might not expose FTMS
+- Or it may only advertise FTMS after a specific mode/workout is started
+- Or it only talks to a proprietary phone app
 
 If you’re not sure what you’re seeing, grab a screenshot and email it to  
 [hello@runbridge.dev](mailto:hello@runbridge.dev).
@@ -93,10 +95,10 @@ If you’re not sure what you’re seeing, grab a screenshot and email it to
 
 ## Still not sure?
 
-Send us:
+Before buying (or before spending more time troubleshooting), send us:
 
 - Treadmill brand and model
 - Garmin watch model
 - Any nRF Connect screenshots (optional)
 
-to **[hello@runbridge.dev](mailto:hello@runbridge.dev)** and we’ll tell you if it’s a good match before you buy or before you spend more time troubleshooting.
+to **[hello@runbridge.dev](mailto:hello@runbridge.dev)** and we’ll tell you if it’s a good match.
