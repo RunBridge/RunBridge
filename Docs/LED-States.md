@@ -102,7 +102,7 @@ This means:
 If it never leaves this state:
 
 - Confirm the treadmill is powered on and broadcasting.
-- Check [Compatibility](Compatibility.md).
+- Check [Compatibility](docs.html?page=Compatibility).
 
 ---
 

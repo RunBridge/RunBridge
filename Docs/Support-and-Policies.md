@@ -33,7 +33,7 @@ If RunBridge does not work with your treadmill/watch combination and we can’t 
 - **Shipping charges (including original outbound shipping) are non-refundable.**
 - Buyer is responsible for return shipping.
 
-Full terms: [Terms & Conditions](../terms.html)
+Full terms: [Terms & Conditions](terms.html)
 
 ---
 
@@ -48,7 +48,7 @@ If you believe your unit has a hardware problem (for example: it won’t power o
 
 We will troubleshoot and assist on a **best-effort basis**.
 
-> Note: RunBridge is provided **“as-is”** and does not include a formal warranty. See the [Terms & Conditions](../terms.html).
+> Note: RunBridge is provided **“as-is”** and does not include a formal warranty. See the [Terms & Conditions](terms.html).
 
 ---
 
