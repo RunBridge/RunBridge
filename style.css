@@ -288,7 +288,7 @@ main {
 
 .layout-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1.5rem;
   margin-top: 2.25rem;
 }
@@ -538,7 +538,7 @@ ol.quickstart-list li, .step-list li, .troubleshooting-list li, .list li {
 .led-table th, .led-table td,
 table th, table td {
   text-align: left;
-  padding: 0.4rem 0.5rem;
+  padding: 0.35rem 0.35rem;
   border-bottom: 1px solid var(--border-subtle);
   vertical-align: top;
 }
