@@ -77,8 +77,9 @@
             <th style="width:60px;">#</th>
             <th>Marker</th>
             <th style="width:160px;">Boot</th>
-            <th style="width:220px;">Watch</th>
-            <th style="width:220px;">FTMS</th>
+            <th style="width:180px;">Duration & Distance</th>
+            <th style="width:180px;">Watch</th>
+            <th style="width:180px;">FTMS</th>
             <th>Issues</th>
           </tr>
         </thead>
@@ -268,8 +269,7 @@
         marker: markerObj?.msg || "(no session marker found)",
         markerMs: markerObj?.ms ?? null,
         events: [],
-        events: [],
-        facts: { bootVersion: null, hardware: null, resetReason: null, watchConnected: false, watchSubscribed: false, ftmsConnected: false, sessionDistance: null, sessionSource: null },
+        facts: { bootVersion: null, hardware: null, resetReason: null, watchConnected: false, watchSubscribed: false, ftmsConnected: false, sessionDistance: null, sessionSource: null, durationMs: null, firstEventMs: null, lastEventMs: null },
         flags: { serviceDiscoveryFails: 0, ftmsDisconnects: 0, stallEnter: 0, stallWeirdAge: false, graceExpired: false, ghostTriggered: false, odoResetWarn: false, spikes: 0, rssiWarnings: 0, odoResets: 0, ftmsFlags: [] },
         issues: [],
         ftmsReasons: [],
@@ -282,11 +282,24 @@
 
     for (const ev of events) {
       if (!current) current = newSession(null);
+      
+      // Handle both demo-style session markers and real firmware session starts
       if (ev.kind === "session_marker") {
         if (current.events.length) sessions.push(current);
         current = newSession(ev);
         continue;
       }
+      
+      // Detect [SESSION] New session started OR Resumed existing session as a boundary
+      if (ev.kind === "event" && ev.tag === "SESSION" && 
+          (ev.msg.startsWith("New session started") || ev.msg.startsWith("Resumed existing session"))) {
+        if (current.events.length) sessions.push(current);
+        const sessionType = ev.msg.startsWith("New") ? "New session" : "Resumed session";
+        current = newSession({ msg: `[${ev.ms}] ${sessionType}`, ms: ev.ms });
+        current.events.push(ev); // Include the session start event in its own session
+        continue;
+      }
+      
       current.events.push(ev);
     }
     if (current && current.events.length) sessions.push(current);
@@ -353,6 +366,39 @@
             s.facts.sessionSource = m[2];
           }
         }
+        
+        // Also capture Snapshot which is similar to Summary
+        if (ev.tag === "SESSION" && ev.msg.startsWith("Snapshot")) {
+          const m = ev.msg.match(/Snapshot[^:]*:\s*(\d+)m,\s*source=(\w+)/);
+          if (m) {
+            s.facts.sessionDistance = m[1] + "m";
+            s.facts.sessionSource = m[2];
+          }
+        }
+        
+        // Also capture Progress events (use last one if no Summary/Snapshot)
+        if (ev.tag === "SESSION" && ev.msg.startsWith("Progress:")) {
+          const m = ev.msg.match(/Progress:\s*(\d+)m\s*\((\w+)\)/);
+          if (m) {
+            // Store as potential fallback, but Summary/Snapshot will override
+            s.facts.sessionDistanceProgress = m[1] + "m";
+            s.facts.sessionSourceProgress = m[2];
+          }
+        }
+      }
+      
+      // Calculate session duration from first to last event with timestamps
+      const timedEvents = s.events.filter(e => e.ms != null && !isNaN(e.ms));
+      if (timedEvents.length > 0) {
+        s.facts.firstEventMs = Math.min(...timedEvents.map(e => e.ms));
+        s.facts.lastEventMs = Math.max(...timedEvents.map(e => e.ms));
+        s.facts.durationMs = s.facts.lastEventMs - s.facts.firstEventMs;
+      }
+      
+      // If no Summary/Snapshot was found, use the last Progress event
+      if (!s.facts.sessionDistance && s.facts.sessionDistanceProgress) {
+        s.facts.sessionDistance = s.facts.sessionDistanceProgress;
+        s.facts.sessionSource = s.facts.sessionSourceProgress;
       }
 
       if (s.flags.stallWeirdAge) s.issues.push("STALL age looks invalid (likely unsigned underflow or timestamp/state reset).");
@@ -573,12 +619,27 @@ if (top.length) {
       const issueTag = s.issues.some(x => x.startsWith("No obvious")) ? pill("OK", "good") : pill(`${s.issues.length} item(s)`, "warn");
       const issuesShort = s.issues.filter(x => !x.startsWith("No obvious")).slice(0,2).join(" ");
 
+      // Format duration
+      let durationStr = "—";
+      if (s.facts.durationMs != null) {
+        const mins = Math.floor(s.facts.durationMs / 60000);
+        const secs = Math.floor((s.facts.durationMs % 60000) / 1000);
+        durationStr = `${mins}:${String(secs).padStart(2, '0')}`;
+      }
+      
+      const distanceStr = s.facts.sessionDistance || "—";
+      const sourceTag = s.facts.sessionSource ? `<span class="small" style="opacity:0.7">(${s.facts.sessionSource})</span>` : "";
+      
       const tr = document.createElement("tr");
       tr.className = "click";
       tr.innerHTML = `
         <td>${idx+1}</td>
         <td>${escapeHtml(s.marker)}</td>
         <td>${escapeHtml(bootInfo)} ${rrInfo}</td>
+        <td>
+          <div><b>${durationStr}</b></div>
+          <div class="small" style="margin-top:0.2rem;">${distanceStr} ${sourceTag}</div>
+        </td>
         <td>${escapeHtml(watch)}</td>
         <td>
           ${escapeHtml(ftms)}
@@ -587,7 +648,6 @@ if (top.length) {
         <td>
           ${issueTag}
           <div class="small" style="margin-top:0.35rem;">
-            ${s.facts.sessionDistance ? `<b>${s.facts.sessionDistance}</b> (${s.facts.sessionSource})<br>` : ""}
             ${escapeHtml(issuesShort || "")}
           </div>
         </td>
