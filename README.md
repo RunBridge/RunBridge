@@ -31,8 +31,9 @@ Most end users should start with the docs in this repo:
 - ✅ **Compatibility (including nRF Connect check):** [`Docs/Compatibility.md`](Docs/Compatibility.md)  
 - 💡 **LED States:** [`Docs/LED-States.md`](Docs/LED-States.md)  
 - 📩 **Support & Policies:** [`Docs/Support-and-Policies.md`](Docs/Support-and-Policies.md)  
+- 🔄 **Firmware updater:** [runbridge.dev/updater.html](https://runbridge.dev/updater.html) (or download [`Firmware/CURRENT.UF2`](Firmware/CURRENT.UF2) from this repo)
 
-The public QR code / landing page at **runbridge.dev** points to a streamlined HTML version of these.
+The public QR code / landing page at **runbridge.dev** points to a streamlined HTML version of these docs plus the firmware updater.
 
 ---
 
@@ -209,6 +210,7 @@ Each unit is hand-assembled, loaded with firmware, and test-run before shipping.
 
 - Firmware is **closed-source** and pre-flashed.
 - It is intended to be **appliance-style** for end users — no routine firmware updates are required.
+- The latest firmware binary (**CURRENT.UF2**) is available in this repository under [`Firmware/`](Firmware/) and on the [web site Updater page](https://runbridge.dev/updater.html). You can update your device via USB drag-and-drop (double-tap Reset to enter update mode, then copy the UF2 file onto the device drive).
 - If a critical issue is ever found, update instructions will be published in the Docs and on the GitHub repo.
 
 Internally, the firmware includes:
@@ -219,7 +221,7 @@ Internally, the firmware includes:
 - A cadence estimation layer based on treadmill speed
 - LED state machine to make it obvious what’s going on (see [`Docs/LED-States.md`](Docs/LED-States.md))
 
-This repository **does not** contain firmware source code.
+This repository contains the firmware **binary** (UF2) for updates but **does not** contain firmware source code.
 
 ---
 
@@ -228,8 +230,8 @@ This repository **does not** contain firmware source code.
 - **Hardware:** Stable (XIAO nRF52840 + 3D-printed enclosure)  
 - **Firmware:** Stable release for FTMS → RSC bridging  
 - **Docs & UX:** Public user docs live under `Docs/` and on the GitHub Pages site  
-- **Storefront:** Planned via **Tindie** for small-batch sales  
-- **Shipping:** Currently planned as **U.S.-only**, small batches assembled and flashed on demand
+- **Storefront:** Available via **Etsy** (runbridge.etsy.com) for small-batch sales  
+- **Shipping:** Currently planned as **U.S. & Canada only**, small batches assembled and flashed on demand
 
 As this is a small personal project, availability may be limited.
 
