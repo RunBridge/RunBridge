@@ -2,7 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://runbridge.dev/</loc></url>
   <url><loc>https://runbridge.dev/docs.html</loc></url>
-  <url><loc>https://runbridge.dev/docs.html?page=Support-and-Policies</loc></url>
-  <url><loc>https://runbridge.dev/docs.html?page=Compatibility</loc></url>
+  <url><loc>https://runbridge.dev/docs.html?page=QuickStart</loc></url>
   <url><loc>https://runbridge.dev/docs.html?page=Troubleshooting</loc></url>
+  <url><loc>https://runbridge.dev/docs.html?page=Compatibility</loc></url>
+  <url><loc>https://runbridge.dev/docs.html?page=LED-States</loc></url>
+  <url><loc>https://runbridge.dev/docs.html?page=Support-and-Policies</loc></url>
+  <url><loc>https://runbridge.dev/updater.html</loc></url>
+  <url><loc>https://runbridge.dev/extractor.html</loc></url>
+  <url><loc>https://runbridge.dev/analyzer.html</loc></url>
+  <url><loc>https://runbridge.dev/terms.html</loc></url>
 </urlset>
