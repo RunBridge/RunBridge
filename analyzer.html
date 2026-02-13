@@ -149,6 +149,7 @@
 06:27:59.578 -> [31751] [ODO] Baseline: Treadmill=16m, Offset=16m
 06:27:59.578 -> [2189883] Motion STOP
 06:27:59.578 -> [2198863] [GHOST] Defense triggered, suspending TX
+06:27:59.578 -> [2198863] [SESSION] Snapshot (trigger=GHOST): 563m, source=ODO, odoTrusted=1, treadmillConnected=1, ftmsStale=1
 06:27:59.578 -> [2216269] [WATCH] Disconnected, reason=0x13
 `.trim();
 
@@ -243,9 +244,21 @@
     return line.replace(/^\d{2}:\d{2}:\d{2}\.\d+\s*->\s*/,"").trim();
   }
 
+  function isNonLogLine(raw) {
+    if (!raw) return true;
+    if (/^===/.test(raw)) return true;  // section markers from extractor/firmware dump
+    if (/^(distance_m|source|trigger)=/.test(raw)) return true;  // last_session.txt block
+    const skip = [
+      "RunBridge Support Package", "-------------------------", "Generated:", "Browser:", "Device:", "Note:",
+      "Paste any notes below", "NOTES:", "----- RAW LOG", "----- RAW LOG (sanitized"
+    ];
+    return skip.some(s => raw.startsWith(s));
+  }
+
   function parseLine(line) {
     const raw = stripSerialPrefix(line);
     if (!raw) return null;
+    if (isNonLogLine(raw)) return null;
 
     const sessionMatch = raw.match(/^---\s*SESSION START\s*@\s*(\d+)\s*ms\s*---/i);
     if (sessionMatch) return { kind: "session_marker", ms: Number(sessionMatch[1]), tag: "SESSION_MARK", msg: raw };
@@ -269,7 +282,7 @@
         marker: markerObj?.msg || "(no session marker found)",
         markerMs: markerObj?.ms ?? null,
         events: [],
-        facts: { bootVersion: null, hardware: null, resetReason: null, watchConnected: false, watchSubscribed: false, ftmsConnected: false, sessionDistance: null, sessionSource: null, durationMs: null, firstEventMs: null, lastEventMs: null },
+        facts: { bootVersion: null, hardware: null, resetReason: null, watchConnected: false, watchSubscribed: false, ftmsConnected: false, sessionDistance: null, sessionSource: null, sessionSnapshotTrigger: null, durationMs: null, firstEventMs: null, lastEventMs: null },
         flags: { serviceDiscoveryFails: 0, ftmsDisconnects: 0, stallEnter: 0, stallWeirdAge: false, graceExpired: false, ghostTriggered: false, odoResetWarn: false, spikes: 0, rssiWarnings: 0, odoResets: 0, ftmsFlags: [] },
         issues: [],
         ftmsReasons: [],
@@ -367,13 +380,15 @@
           }
         }
         
-        // Also capture Snapshot which is similar to Summary
+        // Also capture Snapshot which is similar to Summary (incl. GHOST with odoTrusted, treadmillConnected, ftmsStale)
         if (ev.tag === "SESSION" && ev.msg.startsWith("Snapshot")) {
           const m = ev.msg.match(/Snapshot[^:]*:\s*(\d+)m,\s*source=(\w+)/);
           if (m) {
             s.facts.sessionDistance = m[1] + "m";
             s.facts.sessionSource = m[2];
           }
+          const triggerM = ev.msg.match(/trigger=(\w+)/);
+          if (triggerM) s.facts.sessionSnapshotTrigger = triggerM[1];
         }
         
         // Also capture Progress events (use last one if no Summary/Snapshot)
@@ -400,7 +415,20 @@
         s.facts.sessionDistance = s.facts.sessionDistanceProgress;
         s.facts.sessionSource = s.facts.sessionSourceProgress;
       }
+    }
 
+    // Carry forward boot version/hardware/reset from previous session when this session has no BOOT (e.g. "New session" / "Resumed" without reboot)
+    let lastKnown = { bootVersion: null, hardware: null, resetReason: null };
+    for (const s of sessions) {
+      if (!s.facts.bootVersion && lastKnown.bootVersion) s.facts.bootVersion = lastKnown.bootVersion;
+      if (!s.facts.hardware && lastKnown.hardware) s.facts.hardware = lastKnown.hardware;
+      if (!s.facts.resetReason && lastKnown.resetReason) s.facts.resetReason = lastKnown.resetReason;
+      if (s.facts.bootVersion) lastKnown.bootVersion = s.facts.bootVersion;
+      if (s.facts.hardware) lastKnown.hardware = s.facts.hardware;
+      if (s.facts.resetReason) lastKnown.resetReason = s.facts.resetReason;
+    }
+
+    for (const s of sessions) {
       if (s.flags.stallWeirdAge) s.issues.push("STALL age looks invalid (likely unsigned underflow or timestamp/state reset).");
       if (s.flags.ftmsDisconnects) s.issues.push(`FTMS disconnected ${s.flags.ftmsDisconnects} time(s).`);
       if (s.flags.serviceDiscoveryFails >= 2) s.issues.push(`Repeated FTMS service discovery failures (${s.flags.serviceDiscoveryFails}).`);
@@ -483,7 +511,7 @@ if (!s.explanations.length) {
 
     const global = {
       totalSessions: sessions.length,
-      totalLines: lines.length,
+      totalLines: events.length,
       versions: [...new Set(sessions.map(s => s.facts.bootVersion).filter(Boolean))],
       hardware: [...new Set(sessions.map(s => s.facts.hardware).filter(Boolean))],
       ftmsDisconnects: sessions.reduce((a,s)=>a+s.flags.ftmsDisconnects,0),
@@ -628,7 +656,8 @@ if (top.length) {
       }
       
       const distanceStr = s.facts.sessionDistance || "—";
-      const sourceTag = s.facts.sessionSource ? `<span class="small" style="opacity:0.7">(${s.facts.sessionSource})</span>` : "";
+      const triggerTag = s.facts.sessionSnapshotTrigger ? ` <span class="small" style="opacity:0.7">(${s.facts.sessionSnapshotTrigger})</span>` : "";
+      const sourceTag = s.facts.sessionSource && !s.facts.sessionSnapshotTrigger ? `<span class="small" style="opacity:0.7">(${s.facts.sessionSource})</span>` : (s.facts.sessionSource ? ` <span class="small" style="opacity:0.7">${s.facts.sessionSource}</span>` : "");
       
       const tr = document.createElement("tr");
       tr.className = "click";
@@ -638,7 +667,7 @@ if (top.length) {
         <td>${escapeHtml(bootInfo)} ${rrInfo}</td>
         <td>
           <div><b>${durationStr}</b></div>
-          <div class="small" style="margin-top:0.2rem;">${distanceStr} ${sourceTag}</div>
+          <div class="small" style="margin-top:0.2rem;">${distanceStr}${triggerTag}${sourceTag}</div>
         </td>
         <td>${escapeHtml(watch)}</td>
         <td>

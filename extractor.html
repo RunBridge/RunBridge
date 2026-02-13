@@ -80,7 +80,7 @@
 
     <section class="card">
       <div class="pill">Live capture</div>
-      <div class="small">We stop automatically once we detect <code class="kbd">=== CURRENT LOG END ===</code>.</div>
+      <div class="small">We stop automatically once we detect <code class="kbd">=== END LAST SESSION ===</code> (after current log and last-session summary).</div>
       <div class="mono" id="console" aria-label="Console output"></div>
     </section>
   </div>
@@ -251,27 +251,32 @@
         if (done) break;
         if (!value) continue;
 
-        const chunk = decoder.decode(value);
+        // stream: true keeps multi-byte UTF-8 across chunk boundaries so no row truncation
+        const chunk = decoder.decode(value, { stream: true });
         accumulated += chunk;
         appendConsole(chunk);
 
         // Enable partial download as soon as any data arrives
         if (accumulated.length > 0) downloadPartialBtn.disabled = false;
 
-        // End marker your firmware prints
-        if (accumulated.includes("=== CURRENT LOG END ===")) {
+        // Stop after full dump: current log + last session summary (firmware sends these after CURRENT LOG END)
+        if (accumulated.includes("=== END LAST SESSION ===")) {
           keepReading = false;
           break;
         }
       }
+      // Flush any incomplete multi-byte UTF-8 sequence held by the decoder
+      accumulated += decoder.decode();
     } catch (e) {
       setStatus("bad","Read error", String(e));
     } finally {
       try { reader.releaseLock(); } catch(e) {}
     }
 
-    // If we reached end marker, export files
-    if (accumulated.includes("=== CURRENT LOG END ===")) {
+    // Export when we have a complete dump: prefer full (current + last session), else current log only (legacy firmware)
+    const hasFullDump = accumulated.includes("=== END LAST SESSION ===");
+    const hasCurrentLogOnly = accumulated.includes("=== CURRENT LOG END ===");
+    if (hasFullDump || hasCurrentLogOnly) {
       const ts = tsForFilename();
       const rawFile = `RunBridge_Log_${ts}.txt`;
       const supportFile = `RunBridge_SupportPackage_${ts}.txt`;
@@ -281,7 +286,10 @@
       // downloadText(rawFile, accumulated); // Skipped to prevent multi-download blocking
       downloadText(supportFile, lastSupportPackage);
 
-      setStatus("good","Complete", "Downloaded <b>support package</b>. Ready to email.");
+      const statusMsg = hasFullDump
+        ? "Downloaded <b>support package</b> (current log + last session summary). Ready to email."
+        : "Downloaded <b>support package</b> (current log). Ready to email.";
+      setStatus("good","Complete", statusMsg);
       downloadPartialBtn.disabled = false;
 
       // Close port cleanly
