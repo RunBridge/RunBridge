@@ -31,9 +31,9 @@ Most end users should start with the docs in this repo:
 - ✅ **Compatibility (including nRF Connect check):** [`Docs/Compatibility.md`](Docs/Compatibility.md)  
 - 💡 **LED States:** [`Docs/LED-States.md`](Docs/LED-States.md)  
 - 📩 **Support & Policies:** [`Docs/Support-and-Policies.md`](Docs/Support-and-Policies.md)  
-- 🔄 **Firmware updater:** [runbridge.dev/updater.html](https://runbridge.dev/updater.html) (or download [`Firmware/CURRENT.UF2`](Firmware/CURRENT.UF2) from this repo)
+- 🔄 **Firmware:** [runbridge.dev/updater.html](https://runbridge.dev/updater.html) — firmware updates are provided by support as needed on an individual basis
 
-The public QR code / landing page at **runbridge.dev** points to a streamlined HTML version of these docs plus the firmware updater.
+The public QR code / landing page at **runbridge.dev** points to a streamlined HTML version of these docs plus the firmware page (support-provided updates).
 
 ---
 
@@ -210,8 +210,7 @@ Each unit is hand-assembled, loaded with firmware, and test-run before shipping.
 
 - Firmware is **closed-source** and pre-flashed.
 - It is intended to be **appliance-style** for end users — no routine firmware updates are required.
-- The latest firmware binary (**CURRENT.UF2**) is available in this repository under [`Firmware/`](Firmware/) and on the [web site Updater page](https://runbridge.dev/updater.html). You can update your device via USB drag-and-drop (double-tap Reset to enter update mode, then copy the UF2 file onto the device drive).
-- If a critical issue is ever found, update instructions will be published in the Docs and on the GitHub repo.
+- **Firmware updates are not publicly distributed.** They are provided by support as needed on an individual basis. If you need an update, contact support (see the [web site](https://runbridge.dev/updater.html) or support email). When support provides a UF2 file, you can install it via USB drag-and-drop (double-tap Reset to enter update mode, then copy the file onto the device drive).
 
 Internally, the firmware includes:
 
@@ -221,7 +220,7 @@ Internally, the firmware includes:
 - A cadence estimation layer based on treadmill speed
 - LED state machine to make it obvious what’s going on (see [`Docs/LED-States.md`](Docs/LED-States.md))
 
-This repository contains the firmware **binary** (UF2) for updates but **does not** contain firmware source code.
+This repository **does not** contain firmware binaries or source code; firmware updates are provided by support as needed.
 
 ---
 

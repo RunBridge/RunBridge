@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>RunBridge – Firmware Updater</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Update your RunBridge firmware via Web Serial or Drag-and-Drop." />
+  <meta name="description" content="RunBridge firmware updates are provided by support as needed." />
   <link rel="stylesheet" href="style.css" />
 
 </head>
@@ -15,7 +15,7 @@
       <img src="Docs/runbridge-logo.png" alt="RunBridge logo" class="logo-img" />
       <div>
         <div>RunBridge <span class="logo-subtitle">Support</span></div>
-        <div class="logo-subtitle">Firmware Updater</div>
+        <div class="logo-subtitle">Firmware</div>
       </div>
     </a>
     <nav class="nav-links">
@@ -30,38 +30,34 @@
 <main>
   <div class="hero">
     <div class="hero-kicker">Device Management</div>
-    <h1>Update RunBridge Firmware</h1>
+    <h1>RunBridge Firmware Updates</h1>
     <p>
-      Flash the latest features and fixes to your RunBridge device via USB Drag-and-Drop.
+      Firmware updates are <strong>not</strong> available for public download. They are provided by support as needed on an individual basis.
     </p>
 
-    <!-- END USER: DOWNLOAD & UPDATE -->
-    <div class="hero-actions">
-       <div style="width: 100%;">
-         <div class="pill">Step 1</div>
-         <div style="margin-bottom: 0.5rem; color: var(--text-muted);">
-            Download the latest firmware file.
-         </div>
-         <a href="Firmware/CURRENT.UF2" download="CURRENT.UF2" class="btn btn-primary" style="text-decoration:none;">
-            Download Firmware (CURRENT.UF2)
-         </a>
-       </div>
-    </div>
-
-    <!-- INSTRUCTIONS -->
-     <div id="status" class="status warn" style="margin-top: 2rem;">
+    <div id="status" class="status good" style="margin-top: 1.5rem;">
       <div class="status-dot"></div>
       <div>
-        <div class="status-title" id="statusTitle">Step 2: Install Update</div>
+        <div class="status-title" id="statusTitle">How to get an update</div>
         <div class="status-body" id="statusBody">
-           1. Plug in RunBridge.<br>
-           2. <b>Double-tap Reset</b> quickly using a toothpick or other small object to enter update mode.<br>
-              <img src="Docs/runbridge-button.png" alt="RunBridge Reset Button Location" style="max-width: 100%; width: 320px; border-radius: 8px; margin: 0.5rem 0 1rem; border: 1px solid var(--border-subtle); background: white; padding: 1rem;">
-              <br>
-           3. A new USB drive will appear on your computer (often named <b>RUNBRIDGE</b>, <b>XIAO-SENSE</b>, or just <b>USB Drive</b>). Open this drive.<br>
-           4. Drag the downloaded <b>CURRENT.UF2</b> file into it (replace existing file if asked).
+          If you need a firmware update (for example to address a compatibility issue), contact <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>. Support will provide the appropriate firmware file and instructions when an update is warranted for your situation.
         </div>
       </div>
+    </div>
+
+    <div class="card" style="margin-top: 1.5rem;">
+      <div class="pill">If support sends you a firmware file</div>
+      <p style="margin-bottom: 0.75rem; color: var(--text-muted); font-size: 0.95rem;">
+        When support provides a <b>.UF2</b> file, install it as follows:
+      </p>
+      <ol class="step-list" style="margin: 0;">
+        <li>Plug in RunBridge.</li>
+        <li><b>Double-tap Reset</b> quickly (toothpick or small object) to enter update mode.</li>
+        <li>
+          <img src="Docs/runbridge-button.png" alt="RunBridge Reset Button Location" style="max-width: 100%; width: 320px; border-radius: 8px; margin: 0.5rem 0 1rem; border: 1px solid var(--border-subtle); background: white; padding: 1rem;">
+        </li>
+        <li>A USB drive will appear (e.g. <b>RUNBRIDGE</b>, <b>XIAO-SENSE</b>). Open it and drag the <b>.UF2</b> file onto the drive (replace if asked).</li>
+      </ol>
     </div>
   </div>
 
@@ -128,7 +124,7 @@
     </details>
 
     <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-subtle); border-radius: 8px; font-size: 0.9rem; color: var(--text-muted);">
-      <strong>When to Update:</strong> Your RunBridge comes with the latest firmware pre-installed. Only update if you're experiencing issues or directed by support. Future firmware updates will be listed here with detailed changelogs.
+      <strong>When to Update:</strong> Your RunBridge comes with firmware pre-installed. Firmware updates are provided by support as needed on an individual basis—contact <a href="mailto:support@runbridge.dev">support@runbridge.dev</a> if you need an update.
     </div>
   </div>
 </main>
