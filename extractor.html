@@ -84,6 +84,21 @@
       <div class="mono" id="console" aria-label="Console output"></div>
     </section>
   </div>
+
+  <!-- DEVELOPER TOOLS: Serial command (collapsed, single line like Hex Convert on updater) -->
+  <br>
+  <details style="color: var(--text-muted); cursor:pointer;">
+    <summary>Developer Tools (Serial Command)</summary>
+    <div class="card" style="margin-top: 1rem; border-color: var(--border-subtle); cursor:default;">
+      <p class="small" style="margin-bottom: 0.5rem;">Send a single character (e.g. <code class="kbd">?</code> <code class="kbd">D</code> <code class="kbd">C</code>) or short string. Output appears in the console above when connected.</p>
+      <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+        <button class="btn btn-primary" id="devToolsConnectBtn">Connect</button>
+        <button class="btn btn-danger" id="devToolsDisconnectBtn" disabled>Disconnect</button>
+        <input type="text" id="serialCmdInput" placeholder="e.g. D C ?" maxlength="32" style="width:10rem; padding:0.4rem 0.5rem; border:1px solid var(--border-subtle); border-radius:6px; font-family:inherit;" />
+        <button class="btn btn-ghost" id="serialCmdSend" disabled style="border:1px solid var(--border-subtle);" title="Enabled when connected">Send</button>
+      </div>
+    </div>
+  </details>
 </main>
 
 <footer>
@@ -111,6 +126,10 @@
   // const openAnalyzerFooter = document.getElementById("openAnalyzerFooter");
   // const privacyLink = document.getElementById("privacyLink");
   const copyLastSupportPkg = document.getElementById("copyLastSupportPkg");
+  const serialCmdInput = document.getElementById("serialCmdInput");
+  const serialCmdSend = document.getElementById("serialCmdSend");
+  const devToolsConnectBtn = document.getElementById("devToolsConnectBtn");
+  const devToolsDisconnectBtn = document.getElementById("devToolsDisconnectBtn");
 
   const EXPECTED_ID_PREFIX = "RUNBRIDGE:";
   const ID_DETECT_TIMEOUT_MS = 1200;   // quick, but not too aggressive
@@ -124,6 +143,7 @@
   let accumulated = "";
   let lastSupportPackage = "";
   let deviceIdentLine = "";
+  let autoDownloadOnLogEnd = true;  // false when connected via Developer Tools (serial-only)
 
   function findIdentityLine(text) {
     // Look for a line containing RUNBRIDGE:...
@@ -225,9 +245,80 @@
 
     connectBtn.disabled = false;
     disconnectBtn.disabled = true;
+    devToolsConnectBtn.disabled = false;
+    devToolsDisconnectBtn.disabled = true;
     downloadPartialBtn.disabled = accumulated.length === 0;
+    setSerialCommandEnabled(false);
 
     setStatus("warn","Disconnected", "You can reconnect and download again.");
+  }
+
+  async function doConnect(requestLogs) {
+    if (!supportsWebSerial()) {
+      setStatus("bad","Not supported", "This browser does not support Web Serial. Use Chrome or Edge.");
+      return;
+    }
+
+    accumulated = "";
+    consoleEl.textContent = "";
+    deviceIdentLine = "";
+
+    try {
+      setStatus("warn","Waiting for device", "Select the RunBridge device from the popup.");
+
+      const filters = [ { usbVendorId: 0x2886 } ];
+      const existingPorts = await navigator.serial.getPorts();
+      if (existingPorts.length === 1) {
+        port = existingPorts[0];
+        setStatus("warn","Reconnecting", "Using previously connected device…");
+      } else {
+        port = await navigator.serial.requestPort({ filters });
+      }
+
+      await port.open({ baudRate: 115200 });
+      try {
+        await port.setSignals({ dataTerminalReady: true, requestToSend: true });
+      } catch (_) {}
+
+      connectBtn.disabled = true;
+      disconnectBtn.disabled = false;
+      devToolsConnectBtn.disabled = true;
+      devToolsDisconnectBtn.disabled = false;
+      downloadPartialBtn.disabled = true;
+      setSerialCommandEnabled(true);
+
+      setStatus("warn","Connected", "Checking device identity…");
+
+      autoDownloadOnLogEnd = requestLogs;
+      const readPromise = readLoop();
+      const ok = await identifyDeviceOrWarn();
+
+      if (!ok) {
+        setStatus(
+          "bad",
+          "Wrong device selected?",
+          "I couldn't find a <b>RUNBRIDGE:</b> identity line. You may have picked the wrong serial device. " +
+          "Try disconnecting and selecting the RunBridge dongle again."
+        );
+        downloadPartialBtn.disabled = accumulated.length === 0;
+        await disconnect();
+        return;
+      }
+
+      setStatus("warn","RunBridge detected", `Device: <b>${deviceIdentLine}</b>` + (requestLogs ? "<br>Requesting logs…" : "<br>You can send commands below."));
+
+      if (requestLogs) await sendCommand("d");
+
+    } catch (err) {
+      setStatus("bad","Connection error", err?.message ? err.message : String(err));
+      connectBtn.disabled = false;
+      disconnectBtn.disabled = true;
+      devToolsConnectBtn.disabled = false;
+      devToolsDisconnectBtn.disabled = true;
+      downloadPartialBtn.disabled = accumulated.length === 0;
+      try { if (port) await port.close(); } catch(e) {}
+      port = null;
+    }
   }
 
   async function sendCommand(ch) {
@@ -238,6 +329,19 @@
     } finally {
       writer.releaseLock();
     }
+  }
+
+  async function sendCommandString(str) {
+    if (!str || !port) return;
+    const trimmed = String(str).trim();
+    for (const c of trimmed) {
+      await sendCommand(c);
+      await new Promise(r => setTimeout(r, 30));
+    }
+  }
+
+  function setSerialCommandEnabled(connected) {
+    serialCmdSend.disabled = !connected;
   }
 
   async function readLoop() {
@@ -259,8 +363,8 @@
         // Enable partial download as soon as any data arrives
         if (accumulated.length > 0) downloadPartialBtn.disabled = false;
 
-        // Stop after full dump: current log + last session summary (firmware sends these after CURRENT LOG END)
-        if (accumulated.includes("=== END LAST SESSION ===")) {
+        // Stop after full dump only when we're in "Connect & Download" mode (auto-download); in Dev Tools mode keep reading
+        if (autoDownloadOnLogEnd && accumulated.includes("=== END LAST SESSION ===")) {
           keepReading = false;
           break;
         }
@@ -273,10 +377,10 @@
       try { reader.releaseLock(); } catch(e) {}
     }
 
-    // Export when we have a complete dump: prefer full (current + last session), else current log only (legacy firmware)
+    // Export when we have a complete dump (only in "Connect & Download" mode; Dev Tools connection does not auto-download)
     const hasFullDump = accumulated.includes("=== END LAST SESSION ===");
     const hasCurrentLogOnly = accumulated.includes("=== CURRENT LOG END ===");
-    if (hasFullDump || hasCurrentLogOnly) {
+    if (autoDownloadOnLogEnd && (hasFullDump || hasCurrentLogOnly)) {
       const ts = tsForFilename();
       const rawFile = `RunBridge_Log_${ts}.txt`;
       const supportFile = `RunBridge_SupportPackage_${ts}.txt`;
@@ -297,87 +401,34 @@
       port = null;
       connectBtn.disabled = false;
       disconnectBtn.disabled = true;
+      devToolsConnectBtn.disabled = false;
+      devToolsDisconnectBtn.disabled = true;
+      setSerialCommandEnabled(false);
     }
   }
 
-  connectBtn.addEventListener("click", async () => {
-    if (!supportsWebSerial()) {
-      setStatus("bad","Not supported", "This browser does not support Web Serial. Use Chrome or Edge.");
-      return;
-    }
+  connectBtn.addEventListener("click", () => doConnect(true));
 
-    accumulated = "";
-    consoleEl.textContent = "";
-    deviceIdentLine = ""; // Reset identity on every connect
-
-    try {
-      setStatus("warn","Waiting for device", "Select the RunBridge device from the popup.");
-
-      // USB VID filter for Seeed XIAO nRF52840
-      const filters = [
-        { usbVendorId: 0x2886 }, // Seeed Technology
-      ];
-
-      // Try to auto-reconnect to a previously-granted port first
-      const existingPorts = await navigator.serial.getPorts();
-      if (existingPorts.length === 1) {
-        port = existingPorts[0];
-        setStatus("warn","Reconnecting", "Using previously connected device…");
-      } else {
-        // Show picker filtered to Seeed devices only
-        port = await navigator.serial.requestPort({ filters });
-      }
-
-      await port.open({ baudRate: 115200 });
-
-      // Best-effort DTR/RTS toggling — helps some USB serial bridges,
-      // but silently ignored if the device doesn't support it.
-      try {
-        await port.setSignals({ dataTerminalReady: true, requestToSend: true });
-      } catch (_) {
-        // ignore unsupported signal toggling
-      }
-
-      connectBtn.disabled = true;
-      disconnectBtn.disabled = false;
-      downloadPartialBtn.disabled = true;
-
-      setStatus("warn","Connected", "Checking device identity…");
-
-      // Start reading immediately so we capture the ID response
-      const readPromise = readLoop();
-
-      // Ask device to identify itself
-      const ok = await identifyDeviceOrWarn();
-
-      if (!ok) {
-        setStatus(
-          "bad",
-          "Wrong device selected?",
-          "I couldn't find a <b>RUNBRIDGE:</b> identity line. You may have picked the wrong serial device. " +
-          "Try disconnecting and selecting the RunBridge dongle again."
-        );
-        downloadPartialBtn.disabled = accumulated.length === 0;
-        await disconnect();
-        return;
-      }
-
-      // If identified, show it, then request logs
-      setStatus("warn","RunBridge detected", `Device: <b>${deviceIdentLine}</b><br>Requesting logs…`);
-
-      await sendCommand("d");
-
-    } catch (err) {
-      setStatus("bad","Connection error", err?.message ? err.message : String(err));
-      connectBtn.disabled = false;
-      disconnectBtn.disabled = true;
-      downloadPartialBtn.disabled = accumulated.length === 0;
-      try { if (port) await port.close(); } catch(e) {}
-      port = null;
-    }
-  });
+  devToolsConnectBtn.addEventListener("click", () => doConnect(false));
 
   disconnectBtn.addEventListener("click", disconnect);
+  devToolsDisconnectBtn.addEventListener("click", disconnect);
+
+  serialCmdSend.addEventListener("click", async () => {
+    const cmd = serialCmdInput.value;
+    if (!cmd.trim() || !port) return;
+    serialCmdSend.disabled = true;
+    try {
+      await sendCommandString(cmd);
+    } catch (e) {
+      appendConsole("\n[Send error: " + String(e) + "]\n");
+    } finally {
+      serialCmdSend.disabled = !port;
+    }
+  });
+  serialCmdInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") serialCmdSend.click();
+  });
 
   downloadPartialBtn.addEventListener("click", () => {
     if (!accumulated) return;
