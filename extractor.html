@@ -90,7 +90,25 @@
   <details style="color: var(--text-muted); cursor:pointer;">
     <summary>Developer Tools (Serial Command)</summary>
     <div class="card" style="margin-top: 1rem; border-color: var(--border-subtle); cursor:default;">
-      <p class="small" style="margin-bottom: 0.5rem;">Send a single character (e.g. <code class="kbd">?</code> <code class="kbd">D</code> <code class="kbd">C</code>) or short string. Output appears in the console above when connected.</p>
+      <p class="small" style="margin-bottom: 0.5rem;"><b>Serial command reference</b></p>
+      <div class="small" style="overflow-x: auto; margin-bottom: 0.75rem;">
+        <table style="width:100%; border-collapse: collapse; font-size: 0.9em;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border-subtle);">
+              <th style="text-align:left; padding: 0.25rem 0.5rem 0.25rem 0;">Command</th>
+              <th style="text-align:left; padding: 0.25rem 0.5rem;">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="padding: 0.25rem 0.5rem 0.25rem 0;"><code class="kbd">?</code></td><td style="padding: 0.25rem 0.5rem;">Identity — single-line device info for autodetect</td></tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="padding: 0.25rem 0.5rem 0.25rem 0;"><code class="kbd">D</code> / <code class="kbd">d</code></td><td style="padding: 0.25rem 0.5rem;">Dump logs — stream archive, current log, and last-session summary to Serial</td></tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="padding: 0.25rem 0.5rem 0.25rem 0;"><code class="kbd">C</code> / <code class="kbd">c</code></td><td style="padding: 0.25rem 0.5rem;">Clear logs — erase current log and archive on internal flash</td></tr>
+            <tr style="border-bottom: 1px solid var(--border-subtle);"><td style="padding: 0.25rem 0.5rem 0.25rem 0;"><code class="kbd">S</code> / <code class="kbd">s</code></td><td style="padding: 0.25rem 0.5rem;">Strict FTMS toggle — switch CP policy (BEST_EFFORT ↔ REQUIRED); saved to flash</td></tr>
+            <tr><td style="padding: 0.25rem 0.5rem 0.25rem 0;"><code class="kbd">Z</code></td><td style="padding: 0.25rem 0.5rem;">Factory reset — format internal storage and reboot (recovery only)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small" style="margin-bottom: 0.5rem;">Send a single character or short string. Output appears in the console above when connected.</p>
       <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
         <button class="btn btn-primary" id="devToolsConnectBtn">Connect</button>
         <button class="btn btn-danger" id="devToolsDisconnectBtn" disabled>Disconnect</button>

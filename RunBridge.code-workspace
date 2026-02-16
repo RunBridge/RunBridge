@@ -5,7 +5,12 @@
 		},
 		{
 			"path": "../AssaultBridge"
+		},
+		{
+			"path": "../libraries"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "RunBridge"
+	}
 }
