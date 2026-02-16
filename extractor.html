@@ -420,6 +420,7 @@
     serialCmdSend.disabled = true;
     try {
       await sendCommandString(cmd);
+      serialCmdInput.value = "";
     } catch (e) {
       appendConsole("\n[Send error: " + String(e) + "]\n");
     } finally {
