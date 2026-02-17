@@ -565,6 +565,7 @@ th {
 .led-green { background: var(--success); }
 .led-off { background: transparent; border: 1px solid var(--border-subtle); }
 .led-purple { background: #a855f7; }
+.led-amber { background: var(--warning); }
 
 /* --- FAQ --- */
 

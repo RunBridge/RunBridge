@@ -24,14 +24,16 @@ During the run, **Solid Green** is the expected state.
 From highest priority to lowest:
 
 1. **System Ready**  
-   *(Watch subscribed + treadmill connected)*
+   *(Watch subscribed + treadmill connected + data flowing)*
 2. **Treadmill Only**  
    *(Connected to treadmill, waiting for watch)*
 3. **Watch Connected**  
    *(Connected to watch, not yet subscribed)*
-4. **Scanning**  
+4. **Waiting for data**  
+   *(Watch subscribed + treadmill connected, but no speed/distance packets yet)*
+5. **Scanning**  
    *(Watch subscribed, searching for treadmill)*
-5. **Idle / Sleep**  
+6. **Idle / Sleep**  
    *(No connections)*
 
 Whichever condition is true at the highest priority “wins” and sets the LED.
@@ -42,11 +44,11 @@ Whichever condition is true at the highest priority “wins” and sets the LED.
 
 ### 1. System Ready
 
-> Watch subscribed + treadmill connected
+> Watch subscribed + treadmill connected + data flowing
 
 - **LED:** Solid green
 
-This is the “happy path” during a run. Data is flowing from treadmill → RunBridge → watch.
+This is the “happy path” during a run. Data is actually flowing from treadmill → RunBridge → watch. Solid green only appears when the treadmill is sending speed/distance; if the link is up but no packets are received (e.g. belt not started), you’ll see **amber** instead.
 
 ---
 
@@ -66,7 +68,23 @@ If you see this pattern:
 
 ---
 
-### 3. Watch Connected
+### 3. Waiting for data
+
+> Watch subscribed + treadmill connected, but no speed/distance packets yet
+
+- **LED:** Slow blink amber (orange/yellow)
+
+RunBridge is connected to both the watch and the treadmill, but the treadmill is not yet sending FTMS speed/distance data. Common causes:
+
+- The treadmill only broadcasts data when the belt is moving — **try starting the belt**.
+- Some treadmills require a workout to be started on the console first.
+- The treadmill may need a moment after connection before it streams.
+
+This state was added so “connected but no data” is clearly visible instead of the LED staying off.
+
+---
+
+### 4. Watch Connected
 
 > Connected to watch, but not yet subscribed
 
@@ -87,7 +105,7 @@ If it stays here, try:
 
 ---
 
-### 4. Scanning
+### 5. Scanning
 
 > Watch subscribed, searching for treadmill
 
@@ -106,7 +124,7 @@ If it never leaves this state:
 
 ---
 
-### 5. Idle / Sleep
+### 6. Idle / Sleep
 
 > No connections
 

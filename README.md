@@ -84,9 +84,10 @@ RunBridge uses the XIAO’s RGB LED to show state. Full details are in [`Docs/LE
 
 | LED Pattern (XIAO)         | Meaning                                           |
 |----------------------------|---------------------------------------------------|
-| **Solid green**            | System Ready – watch subscribed + treadmill connected |
+| **Solid green**            | System Ready – watch subscribed + treadmill connected + data flowing |
 | **Double blink red**       | Treadmill Only – FTMS treadmill connected, waiting for watch |
 | **Fast blink magenta**     | Watch Connected – watch connected, not yet subscribed |
+| **Slow blink amber**       | Waiting for data – connected to both, no speed/distance yet (e.g. start the belt) |
 | **Slow blink blue**        | Scanning – watch subscribed, searching for treadmill |
 | **Off**                    | Idle / Sleep – no active connections              |
 
@@ -208,6 +209,7 @@ Each unit is hand-assembled, loaded with firmware, and test-run before shipping.
 
 ## Firmware
 
+- **Current release:** 3.2.1 (February 2026). See [runbridge.dev/updater.html](https://runbridge.dev/updater.html) for version history.
 - Firmware is **closed-source** and pre-flashed.
 - It is intended to be **appliance-style** for end users — no routine firmware updates are required.
 - **Firmware updates are not publicly distributed.** They are provided by support as needed on an individual basis. If you need an update, contact support (see the [web site](https://runbridge.dev/updater.html) or support email). When support provides a UF2 file, you can install it via USB drag-and-drop (double-tap Reset to enter update mode, then copy the file onto the device drive).

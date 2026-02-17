@@ -91,9 +91,47 @@
   <!-- VERSION LISTING & CHANGELOG -->
   <div class="card" style="margin-top: 2rem;">
     <div class="pill">Version History</div>
-    <h3 style="margin-top: 0.5rem; font-size: 1.1rem;">Current Version: 3.1.3</h3>
+    <h3 style="margin-top: 0.5rem; font-size: 1.1rem;">Current Version: 3.2.1</h3>
     
     <details open style="margin-top: 1rem;">
+      <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
+        📦 Version 3.2.1 – Spirit fix, logging, distance
+        <span style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
+          (February 2026)
+        </span>
+      </summary>
+      <div style="margin-top: 1rem; padding-left: 1.5rem; border-left: 3px solid var(--primary); color: var(--text-standard);">
+        <p style="margin-top: 0; color: var(--text-muted); font-style: italic;">
+          Improves compatibility with Spirit and similar treadmills; better logging and distance sync.
+        </p>
+        <h4 style="font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem;">✨ Highlights</h4>
+        <ul style="margin: 0.5rem 0; line-height: 1.6;">
+          <li>Spirit treadmill compatibility fix (CCCD write behavior)</li>
+          <li>Larger log files and archive for support diagnostics</li>
+          <li>Odometer interpolation so watch distance tracks treadmill display more closely</li>
+        </ul>
+      </div>
+    </details>
+
+    <details style="margin-top: 0.75rem;">
+      <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
+        📦 Version 3.2.0 – Spirit support, green = data flowing, amber LED
+        <span style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
+          (February 2026)
+        </span>
+      </summary>
+      <div style="margin-top: 1rem; padding-left: 1.5rem; border-left: 3px solid var(--primary); color: var(--text-standard);">
+        <ul style="margin: 0.5rem 0; line-height: 1.6;">
+          <li>Solid green only when data is actually flowing (no “lying green” if treadmill stalls)</li>
+          <li>New <strong>amber slow blink</strong>: connected to watch and treadmill but no speed/distance data yet (e.g. start the belt)</li>
+          <li>Spirit/Dyaco treadmill support (FTMS Control Point handshake, subscription order)</li>
+          <li>Improved first-connection stability and distance sync for Assault Runner</li>
+          <li>Watchdog and logging improvements for diagnostics</li>
+        </ul>
+      </div>
+    </details>
+
+    <details style="margin-top: 0.75rem;">
       <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
         📦 Version 3.1.3 – Initial Public Release
         <span style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
@@ -104,7 +142,6 @@
         <p style="margin-top: 0; color: var(--text-muted); font-style: italic;">
           First stable release for public distribution.
         </p>
-        
         <h4 style="font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem;">✨ Features</h4>
         <ul style="margin: 0.5rem 0; line-height: 1.6;">
           <li>FTMS treadmill bridge for Garmin watches</li>
@@ -113,7 +150,6 @@
           <li>Distance banking for mid-session odometer resets</li>
           <li>Early odometer capture for reliable session summaries</li>
         </ul>
-
         <h4 style="font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem;">🔧 Technical Details</h4>
         <ul style="margin: 0.5rem 0; line-height: 1.6;">
           <li>Bluetooth Low Energy (BLE) dual-mode operation</li>
