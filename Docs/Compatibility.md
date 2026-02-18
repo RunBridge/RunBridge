@@ -6,6 +6,7 @@ RunBridge sits between your treadmill and your Garmin watch. It relies on two th
 2. A **Garmin watch** that supports external speed/cadence / footpod sensors.
 
 **Developed Using:** Assault Runner Pro + Garmin Fenix 7
+
 **Confirmed working with:** Spirit XT685
 
 ---
