@@ -12,11 +12,17 @@
   <meta charset="utf-8" />
   <title>RunBridge – Bluetooth FTMS Treadmill to Garmin Footpod Bridge</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RunBridge reads Bluetooth FTMS from treadmills and broadcasts it as a Garmin-compatible footpod so your indoor runs get accurate pace and distance." />
+  <meta name="description" content="Get accurate treadmill pace and distance on your Garmin watch — no shoe pod required. USB device that sends treadmill data to Garmin via Bluetooth FTMS." />
   <meta property="og:title" content="RunBridge – Treadmill to Garmin Footpod Bridge">
-  <meta property="og:description" content="RunBridge reads Bluetooth FTMS from treadmills and broadcasts it as a Garmin footpod for accurate indoor run pace and distance.">
+  <meta property="og:description" content="Get accurate treadmill pace and distance on your Garmin watch — no shoe pod required. Plug in, pair once, and run.">
   <meta property="og:url" content="https://runbridge.dev/">
   <meta property="og:type" content="website">
+  <meta property="og:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta property="og:image:alt" content="RunBridge device — Bluetooth treadmill to Garmin footpod bridge">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RunBridge – Treadmill to Garmin Footpod Bridge">
+  <meta name="twitter:description" content="Get accurate treadmill pace and distance on your Garmin watch — no shoe pod required. Plug in, pair once, and run.">
+  <meta name="twitter:image" content="https://runbridge.dev/Docs/runbridge-front.png">
   <link rel="canonical" href="https://runbridge.dev/" />
   <link rel="icon" type="image/png" href="Docs/runbridge-logo.png" />
   <link rel="stylesheet" href="style.css" />
@@ -26,7 +32,7 @@
     "@type": "Product",
     "name": "RunBridge",
     "image": "https://runbridge.dev/Docs/runbridge-front.png",
-    "description": "RunBridge reads Bluetooth FTMS from treadmills and broadcasts it as a Garmin-compatible footpod.",
+    "description": "RunBridge reads Bluetooth FTMS from treadmills and broadcasts it as a Garmin-compatible footpod. No shoe pod required — get real treadmill pace and distance on your Garmin watch.",
     "brand": {
       "@type": "Brand",
       "name": "RunBridge"
@@ -46,35 +52,80 @@
         "reviewBody": "This is exactly what I needed and the seller could not have been more accommodating. I can finally run on my treadmill and have my garmin know exactly how far I went!"
       }
     ],
-    "offers": {
-      "@type": "Offer",
-      "url": "https://runbridge.etsy.com",
-      "priceCurrency": "USD",
-      "price": "59.99",
-      "priceValidUntil": "2026-12-31",
-      "availability": "https://schema.org/InStock",
-      "shippingDetails": {
-        "@type": "OfferShippingDetails",
-        "shippingRate": {
-          "@type": "MonetaryAmount",
-          "value": "0",
-          "currency": "USD"
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "RunBridge assembled",
+        "url": "https://runbridge.etsy.com",
+        "priceCurrency": "USD",
+        "price": "59.99",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock",
+        "shippingDetails": {
+          "@type": "OfferShippingDetails",
+          "shippingRate": {
+            "@type": "MonetaryAmount",
+            "value": "0",
+            "currency": "USD"
+          },
+          "deliveryTime": {
+            "@type": "ShippingDeliveryTime",
+            "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 3, "unitCode": "DAY" },
+            "transitTime": { "@type": "QuantitativeValue", "minValue": 3, "maxValue": 7, "unitCode": "DAY" }
+          },
+          "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" }
         },
-        "deliveryTime": {
-          "@type": "ShippingDeliveryTime",
-          "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 3, "unitCode": "DAY" },
-          "transitTime": { "@type": "QuantitativeValue", "minValue": 3, "maxValue": 7, "unitCode": "DAY" }
-        },
-        "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" }
+        "hasMerchantReturnPolicy": {
+          "@type": "MerchantReturnPolicy",
+          "applicableCountry": "US",
+          "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+          "merchantReturnDays": 14,
+          "returnFees": "https://schema.org/FreeReturn"
+        }
       },
-      "hasMerchantReturnPolicy": {
-        "@type": "MerchantReturnPolicy",
-        "applicableCountry": "US",
-        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-        "merchantReturnDays": 14,
-        "returnFees": "https://schema.org/FreeReturn"
+      {
+        "@type": "Offer",
+        "name": "RunBridge DIY kit",
+        "url": "https://runbridge.etsy.com",
+        "priceCurrency": "USD",
+        "price": "25",
+        "priceValidUntil": "2026-12-31",
+        "availability": "https://schema.org/InStock",
+        "description": "Firmware, parts list for the chip, STL file for 3D-printing the case, and build instructions. Digital delivery. For DIY builders and international customers."
       }
-    }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does this store or upload any of my data?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. RunBridge simply relays speed and distance from your treadmill to your watch as a standard BLE sensor. Your activities live in Garmin Connect, just like a normal run."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I update the firmware?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Firmware updates are not publicly available for download. They are provided by support as needed on an individual basis—contact support@runbridge.dev if you need an update. RunBridge ships ready to use."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if it doesn't work with my setup?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reach out to support@runbridge.dev. If we can't get it working with your treadmill and watch, we'll work with you on a return or refund according to the Support & Policies."
+        }
+      }
+    ]
   }
   </script>
 </head>
@@ -103,28 +154,30 @@
   <main>
     <section class="hero hero-landing">
       <div class="hero-content">
-        <div class="hero-kicker">Specialized Running Tool</div>
+        <div class="hero-kicker">Indoor Running Tool for Garmin Watches</div>
         <div class="hero-highlight">
           <span></span>
-          Treadmill-derived pace and distance on your Garmin watch
+          Your treadmill's pace and distance. On your Garmin. Automatically.
         </div>
-        <h1>Use your treadmill's distance directly on your Garmin watch.</h1>
+        <h1>Get accurate treadmill pace and distance on your Garmin watch — no shoe pod required.</h1>
         <p>
-          RunBridge is a specialized tool that reads treadmill speed and distance from Bluetooth FTMS
-          and broadcasts it as a footpod. Get treadmill-derived pace and distance on your watch without
-          footpod calibration or installation.
+          RunBridge is a small USB device that connects your treadmill to your Garmin watch. 
+          It reads the speed and distance directly from your treadmill over Bluetooth and 
+          sends it to your watch as a footpod — so your indoor runs show real treadmill 
+          distance in Garmin Connect, not an estimate.
+        </p>
+        <p style="font-size: 0.95rem; color: var(--text-muted);">
+          Works with any Bluetooth FTMS treadmill and any Garmin watch that supports 
+          footpod pairing — including Fenix, Forerunner, Vivoactive, and Epix series. 
+          Just plug in, pair once, and run.
         </p>
         <div style="margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-muted);">
-          Tested with Assault Runner Pro + Garmin Fenix 7.
+          Built using Assault Runner Pro + Garmin Fenix 7. Assembled and shipped from the U.S.
         </div>
         <div class="hero-actions">
-          <a href="https://runbridge.etsy.com" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
-            Buy it Now
-          </a>
           <a href="#quickstart" class="btn btn-ghost">
             How it works
           </a>
-          <!-- CHANGED: Link to in-site docs viewer -->
           <a href="docs.html?page=QuickStart" class="btn btn-ghost">
             View Full Quick Start
           </a>
@@ -134,10 +187,36 @@
           <div>Questions? <a href="mailto:support@runbridge.dev">support@runbridge.dev</a></div>
         </div>
       </div>
-      
+    
       <div class="hero-visual">
         <div class="product-showcase">
-          <img src="Docs/runbridge-front.png" alt="RunBridge device front view showing USB-C port" class="product-img-main" loading="eager" />
+          <img src="Docs/runbridge-front.png" alt="RunBridge device — Bluetooth treadmill to Garmin footpod bridge" class="product-img-main" loading="eager" />
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="diy-kit">
+      <h2>Get RunBridge</h2>
+      <p>Choose assembled (shipped from the U.S.) or build it yourself with our DIY kit.</p>
+      <p style="margin: 0.75rem 0 0; padding: 0.5rem 0.75rem; background: rgba(37, 99, 235, 0.08); border: 1px solid var(--accent); border-radius: 6px; font-size: 0.95rem;">
+        Use code <strong>SAVE10</strong> for 10% off through March 31.
+      </p>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+        <div style="border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1.25rem;">
+          <h3 style="margin-top: 0; font-size: 1.1rem;">Assembled — $59.99</h3>
+          <p style="margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--text-muted);">Ready to use. Shipped from the U.S.</p>
+          <a href="https://runbridge.etsy.com" class="btn btn-primary" target="_blank" rel="noopener noreferrer" style="width: 100%; box-sizing: border-box; text-align: center;">Buy on Etsy</a>
+        </div>
+        <div style="border: 1px solid var(--border-subtle); border-radius: 8px; padding: 1.25rem;">
+          <h3 style="margin-top: 0; font-size: 1.1rem;">DIY kit — $25</h3>
+          <p style="margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--text-muted);">For builders and international customers. Digital delivery.</p>
+          <ul style="margin: 0 0 0.75rem; padding-left: 1.25rem; font-size: 0.9rem; color: var(--text-muted);">
+            <li>Firmware</li>
+            <li>Ordering information for the chip</li>
+            <li>STL file link for 3D-printing the case</li>
+            <li>Build instructions</li>
+          </ul>
+          <a href="https://runbridge.etsy.com" class="btn btn-ghost" target="_blank" rel="noopener noreferrer" style="width: 100%; box-sizing: border-box; text-align: center;">Get DIY kit on Etsy</a>
         </div>
       </div>
     </section>
@@ -399,7 +478,7 @@
                       </tr>
                       <tr>
                           <td><strong>Price</strong></td>
-                          <td><strong>$59.99</strong></td>
+                          <td><strong>Assembled $59.99 / DIY $25</strong></td>
                           <td>~$99</td>
                           <td>~$219+</td>
                           <td>~$40</td>
@@ -411,9 +490,10 @@
 
           <div class="card" style="margin-top: 1rem;">
             <div class="pill">Compatibility</div>
-            <p><strong>Tested & Confirmed:</strong></p>
             <ul class="compat-list">
-              <li>Assault Runner Pro + Garmin Fenix 7</li>
+              <li><strong>Developed Using:</strong> Assault Runner Pro + Garmin Fenix 7 Pro Sapphire Solar</li>
+              <li><strong>Confirmed Treadmills:</strong> Spirit XT685, Domyos T900D</li>
+              <li><strong>Confirmed Watches:</strong> Epix 2</li>
             </ul>
             <p><strong>Likely Compatible (Not Guaranteed):</strong></p>
             <ul class="compat-list">
