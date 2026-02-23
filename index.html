@@ -31,12 +31,49 @@
       "@type": "Brand",
       "name": "RunBridge"
     },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "bestRating": "5",
+      "reviewCount": "1"
+    },
+    "review": [
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Rhys Jacob" },
+        "datePublished": "2026-02-17",
+        "name": "Rhys Review",
+        "reviewBody": "This is exactly what I needed and the seller could not have been more accommodating. I can finally run on my treadmill and have my garmin know exactly how far I went!"
+      }
+    ],
     "offers": {
       "@type": "Offer",
       "url": "https://runbridge.etsy.com",
       "priceCurrency": "USD",
       "price": "59.99",
-      "availability": "https://schema.org/InStock"
+      "priceValidUntil": "2026-12-31",
+      "availability": "https://schema.org/InStock",
+      "shippingDetails": {
+        "@type": "OfferShippingDetails",
+        "shippingRate": {
+          "@type": "MonetaryAmount",
+          "value": "0",
+          "currency": "USD"
+        },
+        "deliveryTime": {
+          "@type": "ShippingDeliveryTime",
+          "handlingTime": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 3, "unitCode": "DAY" },
+          "transitTime": { "@type": "QuantitativeValue", "minValue": 3, "maxValue": 7, "unitCode": "DAY" }
+        },
+        "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "US" }
+      },
+      "hasMerchantReturnPolicy": {
+        "@type": "MerchantReturnPolicy",
+        "applicableCountry": "US",
+        "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+        "merchantReturnDays": 14,
+        "returnFees": "https://schema.org/FreeReturn"
+      }
     }
   }
   </script>
