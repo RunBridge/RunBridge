@@ -11,4 +11,7 @@
   <url><loc>https://runbridge.dev/extractor.html</loc></url>
   <url><loc>https://runbridge.dev/analyzer.html</loc></url>
   <url><loc>https://runbridge.dev/terms.html</loc></url>
+  <url><loc>https://runbridge.dev/compliance/</loc></url>
+  <url><loc>https://runbridge.dev/compliance/declaration/</loc></url>
+  <url><loc>https://runbridge.dev/compliance/regulatory/</loc></url>
 </urlset>
