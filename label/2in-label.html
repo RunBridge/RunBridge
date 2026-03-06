@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RunBridge 2-inch Circle Label</title>
+    <style>
+        /* Physical page size for 2" × 2" label (printer / die-cut circle) */
+        @page {
+            size: 2in 2in;
+            margin: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 2in;
+            height: 2in;
+            min-width: 2in;
+            min-height: 2in;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Safe zone: keep content inside so nothing is cut off by circular die-cut */
+        .safe-zone {
+            width: 1.35in;
+            height: 1.35in;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 1.2in;
+            max-height: 0.35in;
+            object-fit: contain;
+        }
+
+        .address-block {
+            font-size: 8.5pt;
+            line-height: 1.3;
+            font-weight: bold;
+            color: black;
+        }
+
+        .compliance-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding-top: 2px;
+        }
+
+        .ce-mark {
+            font-size: 18pt;
+            font-weight: bold;
+            letter-spacing: -1px;
+        }
+
+        .ukca-mark {
+            font-size: 14pt;
+            font-weight: bold;
+            letter-spacing: -0.5px;
+        }
+
+        .weee-bin {
+            height: 0.28in;
+            width: auto;
+        }
+
+        /* FCC ID for US compliance (small so it fits) */
+        .fcc-id {
+            font-size: 6pt;
+            color: black;
+            margin-top: 1px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="safe-zone">
+        <!-- Use RunBridgeLogo.jpg in this folder for high-res print, or ../Docs/runbridge-logo.png -->
+        <img src="../Docs/runbridge-logo.png" class="logo" alt="RunBridge" />
+
+        <div class="address-block">
+            RunBridge<br>
+            Seymour, Indiana USA<br>
+            runbridge.dev
+        </div>
+
+        <div class="compliance-row">
+            <div class="ce-mark">CE</div>
+            <div class="ukca-mark">UKCA</div>
+            <svg class="weee-bin" viewBox="0 0 100 120" aria-hidden="true">
+                <path d="M 20 30 L 25 100 L 75 100 L 80 30 Z" fill="none" stroke="black" stroke-width="7"/>
+                <line x1="10" y1="25" x2="90" y2="25" stroke="black" stroke-width="7"/>
+                <line x1="35" y1="25" x2="35" y2="15" stroke="black" stroke-width="7"/>
+                <line x1="65" y1="25" x2="65" y2="15" stroke="black" stroke-width="7"/>
+                <line x1="31" y1="15" x2="69" y2="15" stroke="black" stroke-width="7"/>
+                <line x1="20" y1="35" x2="80" y2="95" stroke="black" stroke-width="7"/>
+                <line x1="80" y1="35" x2="20" y2="95" stroke="black" stroke-width="7"/>
+                <rect x="15" y="108" width="70" height="12" fill="black"/>
+            </svg>
+        </div>
+
+        <div class="fcc-id">FCC ID: Z4T-XIAONRF52840</div>
+    </div>
+
+</body>
+</html>
