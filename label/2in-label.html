@@ -40,49 +40,55 @@
             text-align: center;
         }
 
-        .logo {
+        /* Logo with transparent background: full logo fits in box, no crop */
+        .logo-wrap {
             max-width: 1.2in;
-            max-height: 0.35in;
+            max-height: 0.4in;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .logo-wrap .logo {
+            max-width: 100%;
+            max-height: 100%;
             object-fit: contain;
+            object-position: center;
         }
 
         .address-block {
-            font-size: 8.5pt;
-            line-height: 1.3;
-            font-weight: bold;
+            font-size: 8pt;
+            line-height: 1.25;
+            font-weight: 600;
             color: black;
         }
 
         .compliance-row {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
+            gap: 0.12in;
             width: 100%;
             padding-top: 2px;
         }
 
-        .ce-mark {
-            font-size: 18pt;
-            font-weight: bold;
-            letter-spacing: -1px;
-        }
-
-        .ukca-mark {
-            font-size: 14pt;
-            font-weight: bold;
-            letter-spacing: -0.5px;
-        }
-
-        .weee-bin {
-            height: 0.28in;
+        /* Official marks: min 5 mm; typical on 2" labels 6–7 mm. Do not stretch or change proportions. */
+        .compliance-row .mark {
             width: auto;
+            object-fit: contain;
         }
 
-        /* FCC ID for US compliance (small so it fits) */
-        .fcc-id {
-            font-size: 6pt;
-            color: black;
-            margin-top: 1px;
+        .compliance-row .mark.ce {
+            height: 0.26in;   /* ~6.6 mm */
+        }
+
+        .compliance-row .mark.ukca {
+            height: 0.26in;  /* ~6.6 mm */
+        }
+
+        .compliance-row .mark.weee {
+            height: 0.28in;  /* ~7 mm */
         }
 
         @media print {
@@ -97,31 +103,23 @@
 <body>
 
     <div class="safe-zone">
-        <!-- Use RunBridgeLogo.jpg in this folder for high-res print, or ../Docs/runbridge-logo.png -->
-        <img src="../Docs/runbridge-logo.png" class="logo" alt="RunBridge" />
+        <!-- RunBridge logo (transparent background) -->
+        <div class="logo-wrap">
+            <img src="RunBridgeLogo-nobg.png" class="logo" alt="RunBridge" />
+        </div>
 
         <div class="address-block">
             RunBridge<br>
-            Seymour, Indiana USA<br>
+            Seymour, Indiana, USA<br>
             runbridge.dev
         </div>
 
+        <!-- Official artwork: CE (EC/Wikimedia), UKCA (GOV.UK/Wikimedia), WEEE (Wikimedia). Do not modify. -->
         <div class="compliance-row">
-            <div class="ce-mark">CE</div>
-            <div class="ukca-mark">UKCA</div>
-            <svg class="weee-bin" viewBox="0 0 100 120" aria-hidden="true">
-                <path d="M 20 30 L 25 100 L 75 100 L 80 30 Z" fill="none" stroke="black" stroke-width="7"/>
-                <line x1="10" y1="25" x2="90" y2="25" stroke="black" stroke-width="7"/>
-                <line x1="35" y1="25" x2="35" y2="15" stroke="black" stroke-width="7"/>
-                <line x1="65" y1="25" x2="65" y2="15" stroke="black" stroke-width="7"/>
-                <line x1="31" y1="15" x2="69" y2="15" stroke="black" stroke-width="7"/>
-                <line x1="20" y1="35" x2="80" y2="95" stroke="black" stroke-width="7"/>
-                <line x1="80" y1="35" x2="20" y2="95" stroke="black" stroke-width="7"/>
-                <rect x="15" y="108" width="70" height="12" fill="black"/>
-            </svg>
+            <img src="ce-mark.svg" alt="CE" class="mark ce" />
+            <img src="ukca-mark.svg" alt="UKCA" class="mark ukca" />
+            <img src="weee-bin.svg" alt="WEEE" class="mark weee" />
         </div>
-
-        <div class="fcc-id">FCC ID: Z4T-XIAONRF52840</div>
     </div>
 
 </body>
