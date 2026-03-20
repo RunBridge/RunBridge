@@ -60,7 +60,7 @@
     <div class="card firmware-guide" style="margin-top: 1.5rem;">
       <div class="pill">If support sends you a firmware file</div>
       <p class="guide-lead">
-        RunBridge uses a <b>Seeed XIAO nRF52840</b> module. Updating firmware means copying a single <b>.uf2</b> file to the board’s <b>UF2 bootloader</b> drive (it is not a normal USB stick). Official hardware context: <a href="https://wiki.seeedstudio.com/XIAO_BLE/">Seeed XIAO nRF52840</a>.
+        RunBridge uses a <b>Seeed XIAO nRF52840</b> module. Updating firmware means copying a single <b>.uf2</b> file to the board’s <b>UF2 bootloader</b> drive (it is not a normal USB stick).
       </p>
 
       <p style="margin: 0 0 0.35rem; font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Before you start</p>
@@ -88,7 +88,7 @@
 
       <p style="margin: 0 0 0.35rem; font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Reset button (all computers)</p>
       <p class="guide-lead" style="margin-bottom: 0.5rem;">
-        <b>Double-tap Reset</b> means press the small <b>Reset</b> button <b>twice quickly</b> (about as fast as a double-click). Use something gentle that won’t scratch the board—a toothpick, plastic pick, or fingernail. If you are too slow, the board just reboots normally; try again with two quicker taps.
+        <b>Double-tap Reset</b> means press the small <b>Reset</b> button <b>twice quickly</b> (about as fast as a double-click). Use something gentle that won’t scratch the board—a toothpick, plastic pick, or similar. If you are too slow, the board just reboots normally; try again with two quicker taps.
       </p>
       <p style="margin: 0;">
         <img src="Docs/runbridge-button.png" alt="RunBridge Reset button location next to the USB connector" width="320" style="max-width: 100%; width: 320px; height: auto; border-radius: 8px; border: 1px solid var(--border-subtle); background: white; padding: 1rem;">
@@ -96,7 +96,7 @@
 
       <h2 id="windows">Windows</h2>
       <ol class="step-list" style="margin: 0;">
-        <li>Save the <b>.uf2</b> file somewhere easy to find, such as <b>Downloads</b> or your <b>Desktop</b>. If you downloaded it from email or the web and Windows “blocked” it: right-click the file → <b>Properties</b> → check <b>Unblock</b> (if shown) → <b>OK</b>.</li>
+        <li>Save the <b>.uf2</b> file somewhere easy to find, such as <b>Downloads</b> or your <b>Desktop</b>. If you downloaded it from email and Windows “blocked” it: right-click the file → <b>Properties</b> → check <b>Unblock</b> (if shown) → <b>OK</b>.</li>
         <li>Plug RunBridge into the PC. Open <b>File Explorer</b> (folder icon on the taskbar). Select <b>This PC</b> in the left sidebar so you can see drives.</li>
         <li><b>Double-tap Reset</b> on RunBridge (see photo above). Within a few seconds, a <b>new removable drive</b> should appear. Its name can vary. Common examples include <b>RUNBRIDGE</b> or <b>XIAO-SENSE</b>, but use whichever <b>new</b> small drive appears right after the double-tap.</li>
         <li>Open that drive. Drag your <b>.uf2</b> file into the window, or copy and paste it there. The drive contains a file named <b>CURRENT.UF2</b>. When Windows asks to <b>replace</b> that file, choose <b>Replace</b>—replacing <b>CURRENT.UF2</b> with the firmware support sent you is <b>normal, expected, and safe</b>.</li>
