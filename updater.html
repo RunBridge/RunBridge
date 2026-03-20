@@ -12,7 +12,7 @@
   <meta charset="utf-8" />
   <title>RunBridge – Firmware Updater</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="RunBridge firmware updates are provided by support as needed." />
+  <meta name="description" content="Install RunBridge firmware from a .UF2 file on Windows or Mac: UF2 bootloader, copy quirks, Mac USB approval, and verify version via the Extractor." />
   <link rel="canonical" href="https://runbridge.dev/updater.html" />
   <link rel="stylesheet" href="style.css" />
 
@@ -41,7 +41,10 @@
     <div class="hero-kicker">Device Management</div>
     <h1>RunBridge Firmware Updates</h1>
     <p>
-      Firmware updates are <strong>not</strong> available for public download. They are provided by support as needed on an individual basis.
+      Firmware updates are <strong>not</strong> available for public download. They are provided by support as needed on an individual basis. <strong>Most customers never need a firmware change</strong> unless support asks you to install one for compatibility or diagnostics.
+    </p>
+    <p class="guide-lead" style="margin-top: 0.75rem;">
+      These steps require a <strong>Windows or Mac computer</strong> and a <strong>reliable USB data connection</strong> to RunBridge. A built-in USB port (A or C) or a <strong>reliable adapter</strong> both work—many laptops only have USB-C, which is fine with a good cable and dongle. <strong>Phones and tablets are not recommended</strong> for copying <b>.uf2</b> files or using the Extractor.
     </p>
 
     <div id="status" class="status good" style="margin-top: 1.5rem;">
@@ -54,40 +57,103 @@
       </div>
     </div>
 
-    <div class="card" style="margin-top: 1.5rem;">
+    <div class="card firmware-guide" style="margin-top: 1.5rem;">
       <div class="pill">If support sends you a firmware file</div>
-      <p style="margin-bottom: 0.75rem; color: var(--text-muted); font-size: 0.95rem;">
-        When support provides a <b>.UF2</b> file, install it as follows:
+      <p class="guide-lead">
+        RunBridge uses a <b>Seeed XIAO nRF52840</b> module. Updating firmware means copying a single <b>.uf2</b> file to the board’s <b>UF2 bootloader</b> drive (it is not a normal USB stick). Official hardware context: <a href="https://wiki.seeedstudio.com/XIAO_BLE/">Seeed XIAO nRF52840</a>.
       </p>
+
+      <p style="margin: 0 0 0.35rem; font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Before you start</p>
+      <ul class="step-list" style="margin: 0 0 0.5rem;">
+        <li>You have the <b>.uf2</b> file from support (download or email attachment).</li>
+        <li>Use a <b>USB cable that supports data</b> (many are charge-only) and a <b>reliable adapter</b> if your computer needs one; avoid flaky hubs if you can.</li>
+        <li>To <b>check the firmware version</b> afterward, use <b>Chrome or Edge</b> on a desktop with the <a href="extractor.html">Extractor</a> page (see below).</li>
+      </ul>
+
+      <div class="doc-jump">
+        <span style="color: var(--text-muted);">Jump to:</span>
+        <a href="#windows">Windows</a>
+        <span style="color: var(--border-subtle);">·</span>
+        <a href="#macos">macOS</a>
+        <span style="color: var(--border-subtle);">·</span>
+        <a href="#confirm-version">Confirm version</a>
+      </div>
+
+      <div class="doc-callout" role="note">
+        <strong>Important: this “drive” is special.</strong>
+        After the bootloader receives the firmware, RunBridge <b>disconnects and reboots on purpose</b>—often while your computer is still copying. On <b>Windows</b> and <b>Mac</b> you may see a message that the copy <b>failed</b>, <b>stopped</b>, or <b>did not complete</b>. That can be <b>normal</b>.
+        <br /><br />
+        <strong>Signs the update likely worked:</strong> the bootloader drive <b>disappears</b> from File Explorer or Finder, and RunBridge <b>reconnects</b> for normal use (you may hear the usual USB connect sound on Windows). If the drive never appears or the file never transfers, try the steps under Troubleshooting—not every “error” means a problem.
+      </div>
+
+      <p style="margin: 0 0 0.35rem; font-weight: 600; color: var(--text-main); font-size: 0.95rem;">Reset button (all computers)</p>
+      <p class="guide-lead" style="margin-bottom: 0.5rem;">
+        <b>Double-tap Reset</b> means press the small <b>Reset</b> button <b>twice quickly</b> (about as fast as a double-click). Use something gentle that won’t scratch the board—a toothpick, plastic pick, or fingernail. If you are too slow, the board just reboots normally; try again with two quicker taps.
+      </p>
+      <p style="margin: 0;">
+        <img src="Docs/runbridge-button.png" alt="RunBridge Reset button location next to the USB connector" width="320" style="max-width: 100%; width: 320px; height: auto; border-radius: 8px; border: 1px solid var(--border-subtle); background: white; padding: 1rem;">
+      </p>
+
+      <h2 id="windows">Windows</h2>
       <ol class="step-list" style="margin: 0;">
-        <li>Plug in RunBridge.</li>
-        <li><b>Double-tap Reset</b> quickly (toothpick or small object) to enter update mode.</li>
-        <li>
-          <img src="Docs/runbridge-button.png" alt="RunBridge Reset Button Location" style="max-width: 100%; width: 320px; border-radius: 8px; margin: 0.5rem 0 1rem; border: 1px solid var(--border-subtle); background: white; padding: 1rem;">
-        </li>
-        <li>A USB drive will appear (e.g. <b>RUNBRIDGE</b>, <b>XIAO-SENSE</b>). Open it and drag the <b>.UF2</b> file onto the drive (replace if asked).</li>
+        <li>Save the <b>.uf2</b> file somewhere easy to find, such as <b>Downloads</b> or your <b>Desktop</b>. If you downloaded it from email or the web and Windows “blocked” it: right-click the file → <b>Properties</b> → check <b>Unblock</b> (if shown) → <b>OK</b>.</li>
+        <li>Plug RunBridge into the PC. Open <b>File Explorer</b> (folder icon on the taskbar). Select <b>This PC</b> in the left sidebar so you can see drives.</li>
+        <li><b>Double-tap Reset</b> on RunBridge (see photo above). Within a few seconds, a <b>new removable drive</b> should appear. Its name can vary. Common examples include <b>RUNBRIDGE</b> or <b>XIAO-SENSE</b>, but use whichever <b>new</b> small drive appears right after the double-tap.</li>
+        <li>Open that drive. Drag your <b>.uf2</b> file into the window, or copy and paste it there. The drive contains a file named <b>CURRENT.UF2</b>. When Windows asks to <b>replace</b> that file, choose <b>Replace</b>—replacing <b>CURRENT.UF2</b> with the firmware support sent you is <b>normal, expected, and safe</b>.</li>
+        <li>Wait a moment. The drive may <b>vanish</b> while Windows still shows a copy dialog—see the yellow note above. If the drive disappears and RunBridge reconnects, the update probably succeeded even if Windows reported an error.</li>
+        <li>After a short wait, the RGB LED should show a <b>brief boot color cycle</b> when the firmware starts. After that, the LED may be <b>off</b> until normal device activity begins (examples in <a href="docs.html?page=LED-States">LED States</a>).</li>
+        <li>If you <b>never</b> see that boot color cycle after USB power, <b>unplug</b> RunBridge, wait a few seconds, and <b>plug it back in</b>, then watch the LED again (this is more common on Mac but helps on Windows too).</li>
+      </ol>
+
+      <h2 id="macos">macOS</h2>
+      <ol class="step-list" style="margin: 0;">
+        <li>Save the <b>.uf2</b> file to <b>Downloads</b> or <b>Desktop</b>.</li>
+        <li>Plug RunBridge into your Mac. If macOS shows a prompt to <b>allow</b> or <b>trust a new USB accessory</b>, choose <b>Allow</b> (wording varies by macOS version). If you tapped <b>Don’t Allow</b> by mistake, open <b>System Settings</b> → <b>General</b> or <b>Privacy &amp; Security</b> and look for USB or accessory settings to approve the device, or unplug and plug in again and allow when prompted.</li>
+        <li>Open <b>Finder</b>. In the sidebar under <b>Locations</b>, watch for your Mac and any removable volumes.</li>
+        <li><b>Double-tap Reset</b> on RunBridge. Within a few seconds, a <b>new volume</b> should appear. Its name can vary. Common examples include <b>RUNBRIDGE</b> or <b>XIAO-SENSE</b>, but use whichever <b>new</b> volume appears right after the double-tap. If macOS asks again to allow a USB accessory, <b>Allow</b>—the bootloader looks like a different device to the system.</li>
+        <li>Drag your <b>.uf2</b> file onto that volume, or open the volume and copy the file inside. You may see a Finder message that the copy could not be completed; if the volume <b>disappears</b> and the device reconnects, the flash may still have succeeded (see the yellow note above).</li>
+        <li>After updating, the RGB LED should show a <b>brief boot color cycle</b> when the firmware starts. After that, the LED may be <b>off</b> until normal device activity begins (examples in <a href="docs.html?page=LED-States">LED States</a>).</li>
+        <li>If you <b>never</b> see that boot color cycle, or you are unsure the update finished, <b>unplug</b> RunBridge, wait a few seconds, and <b>plug it back in</b>—macOS often needs this clean USB cycle—then check the LED again.</li>
       </ol>
     </div>
+  </div>
+
+  <div class="card" id="confirm-version">
+    <div class="pill">Confirm the firmware version</div>
+    <p class="guide-lead" style="margin-top: 0.5rem;">
+      The Extractor <strong>does not install firmware</strong>—it only talks to RunBridge over USB so you can <b>confirm the version</b> and <b>collect logs</b> for support. After a successful update (and a USB replug on Mac if needed), you can confirm what is installed:
+    </p>
+    <ol class="step-list" style="margin: 0;">
+      <li>Open the <a href="extractor.html"><b>Extractor</b></a> in <b>Google Chrome</b> or <b>Microsoft Edge</b> on a desktop computer (Web Serial is required).</li>
+      <li>Plug in RunBridge and connect using the page’s connect button. When prompted, pick the serial device for RunBridge (names may mention <b>RunBridge</b>, <b>nRF52</b>, or USB serial).</li>
+      <li>Expand <b>Developer Tools (Serial Command)</b>. In the command box, type <b>d</b> and send it (or press Enter). The device streams a log dump; in that text, look for a line starting with <b>RUNBRIDGE:v</b> followed by the version, and lines such as <b>[BOOT] RunBridge</b> with the version number.</li>
+    </ol>
+    <p class="guide-lead" style="margin-bottom: 0;">
+      The Extractor’s command table describes <b>d</b> as a log dump—that output is where the firmware version appears. See <a href="extractor.html">Extractor</a> for the full serial command reference.
+    </p>
   </div>
 
   <div class="card">
     <div class="pill">Troubleshooting</div>
     <ul class="step-list">
-      <li><b>Drive not showing?</b> Try a different USB cable or adjust your double-tap speed.</li>
-      <li><b>Replacing file?</b> Yes, it is safe to overwrite the existing CURRENT.UF2.</li>
-      <li><b>Device stuck in DFU?</b> If the LED stays pulsing, simply drag the <b>CURRENT.UF2</b> file onto the drive again to restore it.</li>
+      <li><b>Bootloader drive never appears?</b> Try the <b>double-tap</b> again (faster), a <b>different USB cable</b> (data-capable), and another USB port. Avoid flaky hubs if possible.</li>
+      <li><b>Mac: drive missing after plugging in?</b> Make sure you <b>allowed</b> the USB accessory when prompted (on first plug and again after double-tap Reset). Unplug, wait a few seconds, reconnect, and approve if asked.</li>
+      <li><b>Copy “failed” but the drive disappeared?</b> The update may have <b>succeeded anyway</b>; unplug/replug (especially on Mac) and check LEDs or verify with the Extractor <b>d</b> command.</li>
+      <li><b>Replacing CURRENT.UF2?</b> Yes. The bootloader drive shows a file named <b>CURRENT.UF2</b>. Replacing it with the <b>.uf2</b> support gave you is <b>expected and safe</b>.</li>
+      <li><b>Still in update mode after copying?</b> If the small bootloader drive <b>stays mounted</b> and the RGB LED keeps the <b>bootloader pulsing pattern</b> instead of returning to <b>normal RunBridge behavior</b> (see <a href="docs.html?page=LED-States">LED States</a>—especially the brief <b>boot color cycle</b> when the device starts), copy the same support-provided <b>.uf2</b> onto that drive again—choose <b>Replace</b> if asked about <b>CURRENT.UF2</b>. If it still will not leave update mode, contact support.</li>
+      <li><b>Still stuck?</b> Contact <a href="mailto:support@runbridge.dev">support@runbridge.dev</a> with what you tried and what you see on screen.</li>
     </ul>
   </div>
 
-  <!-- DEVELOPER TOOLS -->
+  <!-- Internal: hex→UF2 (RunBridge engineering only; not for customers) -->
   <br>
   <details style="color: var(--text-muted); cursor:pointer;">
-    <summary>Developer Tools (Hex Converter)</summary>
+    <summary>Internal developer tool — Hex to UF2 (not for customer firmware installs)</summary>
     
     <div class="card" style="margin-top: 1rem; border-color: var(--border-subtle); cursor:default;">
-      <div class="pill">Tool: Hex to UF2 Converter</div>
-      <p style="font-size:0.9rem;">
-        Developer Utility: Convert raw Arduino .hex exports to release-ready .uf2 files.
+      <div class="pill warn">Internal only: Hex → UF2 converter</div>
+      <p style="font-size:0.9rem; color: var(--text-muted);">
+        <strong>RunBridge engineering use only.</strong> Customers get ready-to-copy <b>.uf2</b> files from support—do not use this tool unless you are building firmware from source. It converts raw Arduino <b>.hex</b> exports into UF2 for the nRF52840.
       </p>
       <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
         <input type="file" id="hexInput" accept=".hex" />
@@ -99,8 +165,11 @@
 
   <!-- VERSION LISTING & CHANGELOG -->
   <div class="card" style="margin-top: 2rem;">
-    <div class="pill">Version History</div>
-    <h3 style="margin-top: 0.5rem; font-size: 1.1rem;">Current Version: 3.2.1</h3>
+    <div class="pill">Version history (reference only)</div>
+    <p class="guide-lead" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
+      These notes describe firmware <b>revisions support may reference</b> when helping you. They are <strong>not</strong> a catalog of downloads—firmware files are <strong>only</strong> sent by support when appropriate.
+    </p>
+    <h3 style="margin-top: 0.5rem; font-size: 1.1rem;">Shipping reference: 3.2.1</h3>
     
     <details open style="margin-top: 1rem;">
       <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
@@ -111,7 +180,7 @@
       </summary>
       <div style="margin-top: 1rem; padding-left: 1.5rem; border-left: 3px solid var(--primary); color: var(--text-standard);">
         <p style="margin-top: 0; color: var(--text-muted); font-style: italic;">
-          Improves compatibility with Spirit and similar treadmills; better logging and distance sync.
+          Improves compatibility with Spirit and similar treadmills; better logging and distance sync. Existing customers receive this build from support when recommended—not from a public download.
         </p>
         <h4 style="font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem;">✨ Highlights</h4>
         <ul style="margin: 0.5rem 0; line-height: 1.6;">
@@ -124,14 +193,14 @@
 
     <details style="margin-top: 0.75rem;">
       <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
-        📦 Version 3.1.3 – Initial Public Release
+        📦 Version 3.1.3 – Initial shipping baseline
         <span style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
           (January 2026)
         </span>
       </summary>
       <div style="margin-top: 1rem; padding-left: 1.5rem; border-left: 3px solid var(--primary); color: var(--text-standard);">
         <p style="margin-top: 0; color: var(--text-muted); font-style: italic;">
-          First stable release for public distribution.
+          Baseline firmware for early RunBridge units; updates are issued by support when needed, not distributed as a public download.
         </p>
         <h4 style="font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem;">✨ Features</h4>
         <ul style="margin: 0.5rem 0; line-height: 1.6;">
@@ -145,24 +214,19 @@
         <ul style="margin: 0.5rem 0; line-height: 1.6;">
           <li>Bluetooth Low Energy (BLE) dual-mode operation</li>
           <li>Built-in serial logging for debugging</li>
-          <li>Web-based firmware updater support</li>
+          <li>UF2 updates via USB when support provides a firmware file</li>
         </ul>
       </div>
     </details>
 
     <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-subtle); border-radius: 8px; font-size: 0.9rem; color: var(--text-muted);">
-      <strong>When to Update:</strong> Your RunBridge comes with firmware pre-installed. Firmware updates are provided by support as needed on an individual basis—contact <a href="mailto:support@runbridge.dev">support@runbridge.dev</a> if you need an update.
+      <strong>When to update:</strong> Your RunBridge ships with firmware installed. <strong>Most people never need a change.</strong> If support recommends an update for your unit, they will send the correct <b>.uf2</b>—contact <a href="mailto:support@runbridge.dev">support@runbridge.dev</a> if you were asked to install one and need help.
     </div>
   </div>
 </main>
 
 <script type="module">
-  // ---------- UI ----------
-  const statusBox = document.getElementById("status");
-  const statusTitle = document.getElementById("statusTitle");
-  const statusBody = document.getElementById("statusBody");
-  
-  // Converter UI
+  // Converter UI (internal tool — see page copy)
   const hexInput = document.getElementById("hexInput");
   const convertBtn = document.getElementById("convertBtn");
   const convertStatus = document.getElementById("convertStatus");
@@ -254,72 +318,87 @@
         view.setUint32(base + 24, numBlocks, true); // Num Blocks
         view.setUint32(base + 28, FAMILY_ID_NRF52840, true); // Family ID
 
-        // Data payload
+        // Data payload (256 bytes per UF2 block). The output buffer is zero-initialized, so the
+        // final block is zero-padded when chunk.length < 256—standard for UF2 and accepted by bootloaders.
         outBuffer.set(chunk, base + 32);
-        
-        // Payload padding (if chunk < 256, though we sliced from full padded buffer usually)
-        // ... handled by data slice filling 0s? No, data is Uint8Array. 
-        // If data.slice returns shorter, we need to pad.
-        // But we initialized fullBuffer with size, so logic above holds except last block?
-        // Actually slice handles bounds gracefully but returns smaller array.
-        // We need to ensure the data area at 32 is zeroed/FFed if short.
-        // outBuffer is 0-initialized.
-        
+
         // Magic End
         view.setUint32(base + 508, UF2_MAGIC_END, true);
     }
     return outBuffer;
   }
 
-  // ---------- Conver Event ----------
-  hexInput.addEventListener("change", () => {
-    if (hexInput.files.length) {
-      convertBtn.disabled = false;
-      convertStatus.textContent = "Ready to convert " + hexInput.files[0].name;
-    }
-  });
+  // ---------- Convert (file input); omit listeners if internal tool markup is removed ----------
+  if (hexInput && convertBtn && convertStatus) {
+    hexInput.addEventListener("change", () => {
+      const files = hexInput.files;
+      if (files && files.length > 0) {
+        convertBtn.disabled = false;
+        convertStatus.textContent = "Ready to convert " + files[0].name;
+      } else {
+        convertBtn.disabled = true;
+        convertStatus.textContent = "";
+      }
+    });
 
-  convertBtn.addEventListener("click", async () => {
-    const file = hexInput.files[0];
-    if (!file) return;
+    convertBtn.addEventListener("click", async () => {
+      const files = hexInput.files;
+      if (!files || !files[0]) return;
+      const file = files[0];
 
-    try {
-      convertStatus.textContent = "Reading...";
-      const text = await file.text();
-      
-      convertStatus.textContent = "Parsing Hex...";
-      const { startAddr, data } = parseHex(text);
-      
-      convertStatus.textContent = "Encoding UF2...";
-      const uf2Data = convertToUF2(startAddr, data);
-      
-      // Download
-      const blob = new Blob([uf2Data], { type: "application/octet-stream" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "CURRENT.UF2";
-      a.click();
-      URL.revokeObjectURL(url);
-      
-      convertStatus.innerHTML = `
-        <span style='color:var(--success)'>Success! <b>CURRENT.UF2</b> downloaded.</span><br>
-        <span style='color:var(--text-muted); font-size:0.85em'>
-          Payload: ${Math.round(uf2Data.length / 1024)} KB 
-          (Address: 0x${startAddr.toString(16).toUpperCase()} - 0x${(startAddr + data.length).toString(16).toUpperCase()})
-        </span>`;
-      
-    } catch (e) {
-      console.error(e);
-      convertStatus.innerHTML = "<span style='color:var(--danger)'>Error: " + e.message + "</span>";
-    }
-  });
+      let baseName = file.name.replace(/\.hex$/i, "");
+      if (baseName === file.name) baseName = file.name.replace(/\.[^./\\]+$/, "");
+      if (!baseName) baseName = "firmware";
+      const downloadName = baseName + ".uf2";
 
-  function setStatus(kind, title, bodyHtml) {
-    statusBox.classList.remove("good","warn","bad");
-    statusBox.classList.add(kind);
-    statusTitle.textContent = title;
-    statusBody.innerHTML = bodyHtml || "";
+      try {
+        convertStatus.textContent = "Reading...";
+        const text = await file.text();
+
+        convertStatus.textContent = "Parsing Hex...";
+        const { startAddr, data } = parseHex(text);
+
+        convertStatus.textContent = "Encoding UF2...";
+        const uf2Data = convertToUF2(startAddr, data);
+
+        const blob = new Blob([uf2Data], { type: "application/octet-stream" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = downloadName;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 2500);
+
+        convertStatus.replaceChildren();
+        const line1 = document.createElement("div");
+        line1.style.color = "var(--success)";
+        const bold = document.createElement("b");
+        bold.textContent = downloadName;
+        line1.append("Success! ", bold, " downloaded.");
+        const line2 = document.createElement("div");
+        line2.style.color = "var(--text-muted)";
+        line2.style.fontSize = "0.85em";
+        line2.textContent =
+          "Payload: " +
+          Math.ceil(uf2Data.length / 1024) +
+          " KB (Address: 0x" +
+          startAddr.toString(16).toUpperCase() +
+          " - 0x" +
+          (startAddr + data.length).toString(16).toUpperCase() +
+          ")";
+        convertStatus.append(line1, line2);
+      } catch (e) {
+        console.error(e);
+        convertStatus.replaceChildren();
+        const err = document.createElement("span");
+        err.style.color = "var(--danger)";
+        err.textContent = "Error: " + (e && e.message ? e.message : String(e));
+        convertStatus.appendChild(err);
+      }
+    });
   }
 </script>
 

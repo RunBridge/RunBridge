@@ -286,6 +286,53 @@ main {
   margin-top: 1rem;
 }
 
+/* Updater: beginner-friendly firmware guide */
+.doc-callout {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  background: rgba(234, 179, 8, 0.08);
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.doc-callout strong {
+  color: #fde68a;
+}
+
+.doc-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  align-items: center;
+  margin: 0.75rem 0 1rem;
+  font-size: 0.95rem;
+}
+
+#confirm-version {
+  scroll-margin-top: 5rem;
+}
+
+.firmware-guide h2 {
+  font-size: 1.15rem;
+  margin: 1.25rem 0 0.5rem;
+  color: var(--text-main);
+  scroll-margin-top: 5rem;
+}
+
+.firmware-guide h2:first-of-type {
+  margin-top: 0.75rem;
+}
+
+.guide-lead {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0 0 0.75rem;
+  line-height: 1.55;
+}
+
 .layout-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
