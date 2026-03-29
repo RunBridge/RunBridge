@@ -346,10 +346,7 @@
       if (!files || !files[0]) return;
       const file = files[0];
 
-      let baseName = file.name.replace(/\.hex$/i, "");
-      if (baseName === file.name) baseName = file.name.replace(/\.[^./\\]+$/, "");
-      if (!baseName) baseName = "firmware";
-      const downloadName = baseName + ".uf2";
+      const downloadName = "CURRENT.UF2";
 
       try {
         convertStatus.textContent = "Reading...";
