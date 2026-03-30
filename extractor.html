@@ -89,7 +89,7 @@
 
     <section class="card">
       <div class="pill">Live capture</div>
-      <div class="small">We stop automatically once we detect <code class="kbd">=== END LAST SESSION ===</code> (after current log and last-session summary).</div>
+      <div class="small">We stop when the firmware finishes a dump: <code class="kbd">--- END ---</code> (current builds) or legacy <code class="kbd">=== END LAST SESSION ===</code>.</div>
       <div class="mono" id="console" aria-label="Console output"></div>
     </section>
   </div>
@@ -158,7 +158,9 @@
   const devToolsConnectBtn = document.getElementById("devToolsConnectBtn");
   const devToolsDisconnectBtn = document.getElementById("devToolsDisconnectBtn");
 
-  const EXPECTED_ID_PREFIX = "RUNBRIDGE:";
+  // Identity: production RunBridge uses RUNBRIDGE:; pre-production / fork builds may use
+  // TESTBRIDGE: or another *BRIDGE: prefix (see DEVICE_ID_LINE in firmware).
+  const ID_LINE_REGEX = /^[A-Z][A-Z0-9_]*BRIDGE:/i;
   const ID_DETECT_TIMEOUT_MS = 1200;   // quick, but not too aggressive
   const ID_DETECT_MIN_BYTES = 10;
 
@@ -173,13 +175,19 @@
   let autoDownloadOnLogEnd = true;  // false when connected via Developer Tools (serial-only)
 
   function findIdentityLine(text) {
-    // Look for a line containing RUNBRIDGE:...
     const lines = text.split(/\r?\n/);
     for (const line of lines) {
       const cleaned = line.trim();
-      if (cleaned.startsWith(EXPECTED_ID_PREFIX)) return cleaned;
+      if (ID_LINE_REGEX.test(cleaned)) return cleaned;
     }
-      return "";
+    return "";
+  }
+
+  /** True when a dumpLogs() output has finished (supports both legacy and current firmware markers). */
+  function serialDumpComplete(text) {
+    return text.includes("=== END LAST SESSION ===")
+      || text.includes("=== CURRENT LOG END ===")
+      || text.includes("--- END ---");
   }
 
   async function identifyDeviceOrWarn() {
@@ -324,8 +332,8 @@
         setStatus(
           "bad",
           "Wrong device selected?",
-          "I couldn't find a <b>RUNBRIDGE:</b> identity line. You may have picked the wrong serial device. " +
-          "Try disconnecting and selecting the RunBridge dongle again."
+          "I couldn't find an identity line like <b>RUNBRIDGE:</b> or <b>TESTBRIDGE:</b> (from serial <code>?</code>). " +
+          "You may have picked the wrong USB serial device. Try another port or cable."
         );
         downloadPartialBtn.disabled = accumulated.length === 0;
         await disconnect();
@@ -391,7 +399,7 @@
         if (accumulated.length > 0) downloadPartialBtn.disabled = false;
 
         // Stop after full dump only when we're in "Connect & Download" mode (auto-download); in Dev Tools mode keep reading
-        if (autoDownloadOnLogEnd && accumulated.includes("=== END LAST SESSION ===")) {
+        if (autoDownloadOnLogEnd && serialDumpComplete(accumulated)) {
           keepReading = false;
           break;
         }
@@ -405,8 +413,11 @@
     }
 
     // Export when we have a complete dump (only in "Connect & Download" mode; Dev Tools connection does not auto-download)
-    const hasFullDump = accumulated.includes("=== END LAST SESSION ===");
-    const hasCurrentLogOnly = accumulated.includes("=== CURRENT LOG END ===");
+    const hasFullDump = accumulated.includes("=== END LAST SESSION ===")
+      || (accumulated.includes("--- LAST SESSION ---") && serialDumpComplete(accumulated));
+    const hasCurrentLogOnly = accumulated.includes("=== CURRENT LOG END ===")
+      || (serialDumpComplete(accumulated) && !accumulated.includes("--- LAST SESSION ---")
+          && !accumulated.includes("=== END LAST SESSION ==="));
     if (autoDownloadOnLogEnd && (hasFullDump || hasCurrentLogOnly)) {
       const ts = tsForFilename();
       const rawFile = `RunBridge_Log_${ts}.txt`;
