@@ -169,9 +169,30 @@
     <p class="guide-lead" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
       These notes describe firmware <b>revisions support may reference</b> when helping you. They are <strong>not</strong> a catalog of downloads—firmware files are <strong>only</strong> sent by support when appropriate.
     </p>
-    <h3 style="margin-top: 0.5rem; font-size: 1.1rem;">Shipping reference: 3.2.1</h3>
+    <h3 style="margin-top: 0.5rem; font-size: 1.1rem;">Shipping reference: 3.2.5</h3>
     
     <details open style="margin-top: 1rem;">
+      <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
+        📦 Version 3.2.5 – Horizon FTMS parsing and motion stability
+        <span style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
+          (March 2026)
+        </span>
+      </summary>
+      <div style="margin-top: 1rem; padding-left: 1.5rem; border-left: 3px solid var(--primary); color: var(--text-standard);">
+        <p style="margin-top: 0; color: var(--text-muted); font-style: italic;">
+          Improves reliability on treadmills that send short or alternating FTMS packets (including many Horizon models): odometer trust and distance sync are established more consistently, and motion state stays stable instead of flickering. Existing customers receive this build from support when recommended—not from a public download.
+        </p>
+        <h4 style="font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem;">✨ Highlights</h4>
+        <ul style="margin: 0.5rem 0; line-height: 1.6;">
+          <li><strong>Tolerant tail parsing.</strong> Truncated packets (e.g. speed and distance present but optional trailing fields cut off) are no longer dropped entirely; the parser continues so odometer trust and distance logic still run. Truncation is rate-limited in logs for support.</li>
+          <li><strong>Alternating zero-speed packets.</strong> When a packet has no odometer and reports zero speed, the bridge can hold the last non-zero speed if odometer trust is already set or there was recent motion—reducing Motion START/STOP flipping on alternating-packet treadmills.</li>
+          <li><strong>Rate-limited hold logs.</strong> Repeated “hold speed” messages are throttled so support logs stay readable on those treadmills.</li>
+          <li><strong>AvgSpeed truncation.</strong> If average-speed bytes are missing but the odometer is still present, parsing continues to the odometer instead of stopping early.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details style="margin-top: 0.75rem;">
       <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
         📦 Version 3.2.1 – Spirit fix, logging, distance
         <span style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">

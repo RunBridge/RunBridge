@@ -60,7 +60,7 @@ See the full guide at [`Docs/QuickStart.md`](Docs/QuickStart.md). High level:
    If your treadmill or console has a Bluetooth toggle, make sure **Bluetooth is turned on**.
 
 2. **Pair Your Watch (one-time)**  
-   - **Garmin (e.g., Fenix 7):**  
+   - **Garmin (e.g., Fenix 7 Pro, Epix):**  
      `Settings → Sensors & Accessories → Add New → Foot Pod`  
      Select **RunBridge**.
    - Other brands: look for **Footpod** or **Running Speed/Cadence** sensor options.
@@ -99,9 +99,10 @@ During a normal run you should end up in **solid green** most of the time.
 
 RunBridge targets watches that support external footpod / running speed & cadence sensors.
 
-Confirmed working:
+Confirmed in project testing (see [`Docs/Compatibility.md`](Docs/Compatibility.md) for detail):
 
-- **Garmin Fenix 7** (Fenix 7 Pro Sapphire Solar variant)
+- **Garmin Fenix 7 Pro Sapphire Solar** (primary development watch)
+- **Garmin Epix 2**
 
 RunBridge uses standard BLE RSC, which is supported by many modern GPS running watches. Other Garmin, COROS, Suunto, and Polar models *should* work if they support external footpod / RSC sensors, but they have not been individually verified.
 
@@ -115,7 +116,9 @@ If you test with a different watch, please report your results.
 
 RunBridge has been tested and confirmed working with:
 
-- **AssaultRunner Pro** (FTMS-enabled console)
+- **Assault Runner Pro** (FTMS-enabled console; primary development treadmill)
+- **Spirit XT685**
+- **Domyos T900D**
 
 In principle, RunBridge should work with any treadmill that:
 
@@ -209,7 +212,7 @@ Each unit is hand-assembled, loaded with firmware, and test-run before shipping.
 
 ## Firmware
 
-- **Current release:** 3.2.1 (February 2026). See [runbridge.dev/updater.html](https://runbridge.dev/updater.html) for version history.
+- **Current release:** 3.2.5 (March 2026). See [runbridge.dev/updater.html](https://runbridge.dev/updater.html) for version history.
 - Firmware is **closed-source** and pre-flashed.
 - It is intended to be **appliance-style** for end users — no routine firmware updates are required.
 - **Firmware updates are not publicly distributed.** They are provided by support as needed on an individual basis. If you need an update, contact support (see the [web site](https://runbridge.dev/updater.html) or support email). When support provides a UF2 file, you can install it via USB drag-and-drop (double-tap Reset to enter update mode, then copy the file onto the device drive).

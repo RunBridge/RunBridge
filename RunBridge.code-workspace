@@ -8,9 +8,6 @@
 		},
 		{
 			"path": "../libraries"
-		},
-		{
-			"path": "../FactoryReset"
 		}
 	],
 	"settings": {
