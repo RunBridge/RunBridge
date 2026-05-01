@@ -169,9 +169,37 @@
     <p class="guide-lead" style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
       These notes describe firmware <b>revisions support may reference</b> when helping you. They are <strong>not</strong> a catalog of downloads—firmware files are <strong>only</strong> sent by support when appropriate.
     </p>
-    <h3 style="margin-top: 0.5rem; font-size: 1.1rem;">Shipping reference: 3.2.5</h3>
+    <h3 style="margin-top: 0.5rem; font-size: 1.1rem;">Shipping reference: 4.0.1</h3>
     
     <details open style="margin-top: 1rem;">
+      <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
+        📦 Version 4.0.1 – Current production firmware
+        <span style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
+          (May 2026)
+        </span>
+      </summary>
+      <div style="margin-top: 1rem; padding-left: 1.5rem; border-left: 3px solid var(--primary); color: var(--text-standard);">
+        <p style="margin-top: 0; color: var(--text-muted); font-style: italic;">
+          This is the firmware installed on <strong>new RunBridge units</strong>. Version 4 is a major refresh focused on smoother real-world runs: working with more treadmills, improving speed and distance stability, and recovering more gracefully when Bluetooth interruptions happen.
+        </p>
+    
+        <h4 style="font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem;">What Version 4 improves</h4>
+        <ul style="margin: 0.5rem 0; line-height: 1.6;">
+          <li><strong>Broader treadmill support.</strong> Updated Bluetooth treadmill handling, tested on more real-world models including Spirit, AssaultRunner, Technogym, and Horizon-style FTMS behavior.</li>
+          <li><strong>More dependable live data.</strong> RunBridge listens for speed and distance updates in a more reliable way so compatible treadmills can send workout data more consistently.</li>
+          <li><strong>Better handling of treadmill quirks.</strong> Some brands report speed, distance, or session data a little differently. Version 4 handles more of those differences to reduce freezes, dropouts, and distance drift.</li>
+          <li><strong>Smoother speed and distance.</strong> Refined filtering and session logic help reporting stay steady through belt starts, stops, and short gaps in treadmill data.</li>
+          <li><strong>Friendlier reconnects.</strong> Improved behavior when the treadmill, RunBridge, and your watch need to find each other again during setup or after an interruption.</li>
+          <li><strong>Customer-ready defaults.</strong> Standard firmware is tuned for normal use, with heavy diagnostic logging turned off so the device is not constantly writing debug data to internal storage.</li>
+        </ul>
+    
+        <p style="margin-bottom: 0; color: var(--text-muted);">
+          If your RunBridge is already working normally, updating is optional. If you are having compatibility issues, Version 4.0.1 is the recommended firmware to install.
+        </p>
+      </div>
+    </details>
+
+    <details style="margin-top: 0.75rem;">
       <summary style="cursor: pointer; font-weight: 600; color: var(--primary); padding: 0.5rem 0;">
         📦 Version 3.2.5 – Horizon FTMS parsing and motion stability
         <span style="margin-left: 0.5rem; font-size: 0.85rem; color: var(--text-muted); font-weight: normal;">
