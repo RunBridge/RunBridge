@@ -11,6 +11,9 @@
 		},
 		{
 			"path": "../../Treadmill Simulator"
+		},
+		{
+			"path": "../../../RunBridge-Companion"
 		}
 	],
 	"settings": {

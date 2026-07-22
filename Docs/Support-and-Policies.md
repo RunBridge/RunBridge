@@ -64,6 +64,8 @@ It simply relays treadmill speed and distance to your Garmin watch over Bluetoot
 
 Your activities are recorded and managed by Garmin, according to their settings and policies.
 
+Full details for the hardware device, Companion app, and website: [Privacy Policy](privacy/).
+
 ---
 
 ## Safety & disclaimer
