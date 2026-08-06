@@ -267,6 +267,49 @@ main {
   cursor: not-allowed;
 }
 
+/* --- Store badges --- */
+
+.store-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0;
+}
+
+.store-badges a {
+  display: inline-flex;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.store-badges img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+/* Google Play generic badge has extra transparent padding */
+.store-badges img.store-badge-google {
+  height: 58px;
+  margin: -9px -12px;
+}
+
+/* Store badges rendered from Markdown in docs.html */
+#doc-content a img[src*="badges/google-play"] {
+  height: 58px;
+  width: auto;
+  vertical-align: middle;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+}
+
+#doc-content a img[src*="badges/app-store"] {
+  height: 40px;
+  width: auto;
+  vertical-align: middle;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+}
+
 /* --- Cards & Layout Components --- */
 
 .card {

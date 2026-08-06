@@ -31,7 +31,7 @@ You don’t need to pair the treadmill to your phone for RunBridge to work. It j
 **Tip:** If your treadmill is already paired to a phone/app, disconnect it first. Some treadmills only allow one Bluetooth connection at a time.
 
 If you want to confirm FTMS support, see the
-[Compatibility](docs.html?page=Compatibility) page for a quick check using the **nRF Connect** mobile app.
+[Compatibility](docs.html?page=Compatibility) page for a quick check using **RunBridge Companion** (nRF Connect is also documented there as a fallback).
 
 ---
 

@@ -53,9 +53,35 @@ RunBridge is **not** a good fit if:
 
 ---
 
-## Quick FTMS check with nRF Connect (optional)
+## Recommended: check with RunBridge Companion
 
-If you’re comfortable using a phone app, you can roughly confirm FTMS support using **nRF Connect for Mobile** by Nordic Semiconductor (free on iOS and Android).
+The easiest way to confirm FTMS support is **RunBridge Companion** (free on Android and iOS). It scans for nearby Bluetooth treadmills, lets you confirm manufacturer and model, checks for FTMS / Treadmill Data / live notifications, guides a short movement check while **you** stay in control of the treadmill, and shows a clear compatibility result with a confidence level.
+
+Important:
+
+- The app never controls treadmill speed, incline, start, or stop
+- Nothing is uploaded automatically
+- Diagnostics stay on your device until you choose to share them
+
+[![Get it on Google Play](Docs/badges/google-play.png)](https://play.google.com/store/apps/details?id=dev.runbridge.companion)
+[![Download on the App Store](Docs/badges/app-store.svg)](https://apps.apple.com/app/runbridge-companion/id6795531707)
+
+### Steps
+
+1. Install **RunBridge Companion** from the store link above for your phone.
+2. Stand near the treadmill, power it on, and enable Bluetooth.
+3. Scan for nearby treadmills and select yours.
+4. Confirm manufacturer and model if prompted.
+5. Follow the in-app FTMS / live-data check (and the short movement check if offered).
+6. Read the compatibility result and confidence level.
+
+If the result is unclear, you can save diagnostics on the device and optionally share a ZIP with support.
+
+---
+
+## Alternative: Quick FTMS check with nRF Connect
+
+If you prefer not to use RunBridge Companion, you can roughly confirm FTMS support using **nRF Connect for Mobile** by Nordic Semiconductor (free on iOS and Android).
 
 ### Steps
 
@@ -100,6 +126,6 @@ Before buying (or before spending more time troubleshooting), send us:
 
 - Treadmill brand and model
 - Garmin watch model
-- Any nRF Connect screenshots (optional)
+- A RunBridge Companion result / screenshot, or nRF Connect screenshots (optional)
 
 to **[hello@runbridge.dev](mailto:hello@runbridge.dev)** and we’ll tell you if it’s a good match.

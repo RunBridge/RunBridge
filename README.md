@@ -28,7 +28,7 @@ Most end users should start with the docs in this repo:
 
 - 👉 **Quick Start:** [`Docs/QuickStart.md`](Docs/QuickStart.md)  
 - 🛠️ **Troubleshooting:** [`Docs/Troubleshooting.md`](Docs/Troubleshooting.md)  
-- ✅ **Compatibility (including nRF Connect check):** [`Docs/Compatibility.md`](Docs/Compatibility.md)  
+- ✅ **Compatibility (including RunBridge Companion check):** [`Docs/Compatibility.md`](Docs/Compatibility.md)  
 - 💡 **LED States:** [`Docs/LED-States.md`](Docs/LED-States.md)  
 - 📩 **Support & Policies:** [`Docs/Support-and-Policies.md`](Docs/Support-and-Policies.md)  
 - 🔄 **Firmware:** [runbridge.dev/updater.html](https://runbridge.dev/updater.html) — firmware updates are provided by support as needed on an individual basis
@@ -135,19 +135,16 @@ Compatibility with untested models is **not guaranteed**.
 
 ---
 
-## Checking FTMS with nRF Connect
+## Checking FTMS with RunBridge Companion
 
-A quick way to sanity-check your treadmill is with **nRF Connect for Mobile** (free on iOS / Android). Full instructions are in [`Docs/Compatibility.md`](Docs/Compatibility.md); short version:
+The recommended way to sanity-check your treadmill is **RunBridge Companion** (free). It scans for nearby treadmills, checks FTMS / live data, and shows a clear compatibility result. Full details are in [`Docs/Compatibility.md`](Docs/Compatibility.md).
 
-1. Install **“nRF Connect for Mobile”** on your phone.
-2. Stand near the treadmill, power it on, and enable Bluetooth.
-3. In nRF Connect, open the **Scanner** tab and tap **Scan**.
-4. Identify your treadmill and connect to it.
-5. Look for a service named **“Fitness Machine”** or with UUID **`0x1826`**.
+[![Get it on Google Play](Docs/badges/google-play.png)](https://play.google.com/store/apps/details?id=dev.runbridge.companion)
+[![Download on the App Store](Docs/badges/app-store.svg)](https://apps.apple.com/app/runbridge-companion/id6795531707)
 
-If you see a Fitness Machine / FTMS service, that’s a strong sign your treadmill is a good candidate for RunBridge (but not a guarantee).
+Prefer not to use Companion? The Compatibility page also documents an optional **nRF Connect** fallback for spotting the Fitness Machine service (`0x1826`).
 
-If you’re not sure what you’re seeing, grab a screenshot and email it to  
+If you’re not sure what you’re seeing, grab a screenshot (or Companion result) and email it to  
 `hello@runbridge.dev`.
 
 ---
