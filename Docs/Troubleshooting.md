@@ -49,7 +49,7 @@ If it still never appears, email [support@runbridge.dev](mailto:support@runbridg
 **Checklist:**
 
 1. **Check treadmill compatibility.**  
-   See [Compatibility](docs.html?page=Compatibility). You need an FTMS-enabled treadmill.
+   See [Compatibility](/guides/check-compatibility/). You need an FTMS-enabled treadmill.
 
 2. **Make sure the treadmill is actually broadcasting:**
    - Some consoles only send FTMS once you start a workout and press Start.
@@ -96,7 +96,7 @@ If the difference is large and consistent, we’d like to see logs or a video. E
 
 ## 4. LED pattern looks wrong or frozen
 
-If the LED is on but in a pattern that doesn’t match the [LED States](docs.html?page=LED-States) page:
+If the LED is on but in a pattern that doesn’t match the [LED States](/guides/led-states/) page:
 
 1. Unplug RunBridge.
 2. Wait 5 seconds.
@@ -124,4 +124,4 @@ No problem. Send:
 
 to **[support@runbridge.dev](mailto:support@runbridge.dev)**.
 
-We’ll walk through it with you and, if it ultimately won’t work with your setup, we’ll work out a return or refund according to the [Support & Policies](docs.html?page=Support-and-Policies).
+We’ll walk through it with you and, if it ultimately won’t work with your setup, we’ll work out a return or refund according to the [Support & Policies](/guides/support-and-policies/).

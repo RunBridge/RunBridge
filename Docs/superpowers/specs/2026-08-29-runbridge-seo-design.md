@@ -31,6 +31,7 @@ All public claims must be supported by repository evidence or by current first-p
 - No invented testimonials, customer totals, review scores, partnerships, certifications, performance measurements, or competitor specifications may be added.
 - Current visible prices are $49 for the assembled device and $20 for the DIY kit. Structured data and visible copy must match those prices.
 - Version 4.0.1 is the current production firmware reference. Older versions remain historical/support information.
+- The Inventory application compatibility registry is an approved evidence source. Named treadmill records that are not explicitly marked incompatible may be published, but their visible label must preserve the difference between lab testing, explicit customer confirmation, and customer field history with no reported issue.
 
 ## Audit Findings and Priorities
 
@@ -113,20 +114,33 @@ Generated output must never overwrite the firmware updater, extractor, analyzer,
 ### Initial compatibility pages
 
 - `/compatibility/assault-runner-pro/`
+- `/compatibility/bowflex-t9/`
+- `/compatibility/darwin-tm30/`
+- `/compatibility/domyos-run500/`
 - `/compatibility/spirit-xt685/`
 - `/compatibility/domyos-t900d/`
 - `/compatibility/horizon-7-4-at/`
+- `/compatibility/horizon-t202-26/`
+- `/compatibility/horizon-treadxp/`
+- `/compatibility/odin-t620/`
+- `/compatibility/sole-f80/`
+- `/compatibility/sole-f85/`
+- `/compatibility/technogym-excite-run-700-unity/`
 
 No Technogym MyRun page will be generated because the repository does not contain sufficient model-specific evidence.
 
+The `Kayoba / Unknown` customer record may appear in an aggregate compatibility count or evidence note, but it does not receive a model page because no stable model name exists. The explicit incompatible records for Peloton Tread+ Cross Training and Woodway 4Front (2016) appear in a clearly labeled known-incompatibilities section of the compatibility hub and do not receive positive compatibility pages.
+
 ### Documentation
 
-- `/docs/`
-- `/docs/quick-start/`
-- `/docs/troubleshooting/`
-- `/docs/check-compatibility/`
-- `/docs/led-states/`
-- `/docs/support-and-policies/`
+- `/guides/`
+- `/guides/quick-start/`
+- `/guides/troubleshooting/`
+- `/guides/check-compatibility/`
+- `/guides/led-states/`
+- `/guides/support-and-policies/`
+
+The public prefix is `/guides/` because the repository already contains an uppercase `Docs` source directory. Keeping generated lowercase `/docs/` pages beside it is unreliable from a case-insensitive Windows checkout to a case-sensitive static host.
 
 Existing functional URLs remain in place:
 
@@ -163,7 +177,9 @@ Each record contains only fields supported by available evidence:
 Allowed evidence classifications are:
 
 - `runbridge_tested` — directly tested in RunBridge development;
-- `confirmed_working` — explicitly confirmed by existing project records, without inventing a more specific provenance;
+- `customer_confirmed` — explicitly confirmed by a customer or by a record combining lab and customer evidence;
+- `customer_field_history` — supplied to a customer on firmware 4.0.1 with no reported compatibility failure; this is not presented as a direct test or explicit customer confirmation;
+- `confirmed_working` — explicitly confirmed by existing public project records whose more specific provenance was not recorded;
 - `firmware_evidence` — firmware history documents model-specific behavior or a compatibility correction, but the page does not claim first-party testing;
 - `expected_ftms` — expected from observed standards behavior and always labeled untested;
 - `unsupported` — verified not to provide the required behavior;
@@ -174,9 +190,13 @@ The generator displays a plain-language explanation beside every status. Records
 Initial records use these claims:
 
 - **AssaultRunner Pro:** `runbridge_tested`; primary development treadmill.
-- **Spirit XT685:** `confirmed_working`; extensive XT685/Spirit firmware behavior and compatibility corrections are documented.
+- **Spirit XT685:** `customer_confirmed`; database records both lab and customer evidence, plus extensive XT685/Spirit firmware behavior and compatibility corrections.
 - **Domyos T900D:** `confirmed_working`; existing public documentation confirms the model, while the page explicitly states that detailed console, firmware, and testing provenance were not recorded.
-- **Horizon 7.4 AT:** `firmware_evidence`; firmware history documents alternating FTMS packets, Garmin pace-source flipping, distance drift, and the relevant fixes. The page does not call it RunBridge-tested.
+- **Horizon 7.4 AT:** `customer_confirmed`; the customer record is compatible and firmware history documents alternating FTMS packets, Garmin pace-source flipping, distance drift, and the relevant fixes.
+- **Darwin TM30:** `customer_confirmed`; the customer record is marked compatible on firmware 4.0.1.
+- **Technogym Excite Run 700 Unity:** `customer_confirmed`; the customer record is marked compatible on firmware 4.0.1.
+- **BowFlex T9, Domyos Run500, Horizon T202-26, Horizon TreadXP, Odin T620, Sole F80, and Sole F85:** `customer_field_history`; customer deployments are recorded and no compatibility failure was reported on firmware 4.0.1. These pages state that absence of a reported issue is weaker evidence than a direct compatibility test.
+- **Sole F80:** one page covers both the unspecified model year and the recorded 2026 variant without claiming that every historical F80 console is identical.
 
 ## Homepage Design
 

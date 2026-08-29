@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RunBridge LED Status Guide</title>
+  <meta name="description" content="Understand RunBridge LED colors and patterns while connecting a treadmill and Garmin watch.">
+  <link rel="canonical" href="https://runbridge.dev/guides/led-states/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RunBridge">
+  <meta property="og:title" content="RunBridge LED Status Guide">
+  <meta property="og:description" content="Understand RunBridge LED colors and patterns while connecting a treadmill and Garmin watch.">
+  <meta property="og:url" content="https://runbridge.dev/guides/led-states/">
+  <meta property="og:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta property="og:image:alt" content="RunBridge treadmill-to-Garmin bridge device">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RunBridge LED Status Guide">
+  <meta name="twitter:description" content="Understand RunBridge LED colors and patterns while connecting a treadmill and Garmin watch.">
+  <meta name="twitter:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" type="image/png" href="/Docs/runbridge-logo-128.png">
+  <link rel="stylesheet" href="/style.css?v=20260829-2">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","name":"RunBridge LED status guide","headline":"RunBridge LED status guide","description":"Understand RunBridge LED colors and patterns while connecting a treadmill and Garmin watch.","url":"https://runbridge.dev/guides/led-states/","author":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"},"publisher":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://runbridge.dev/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://runbridge.dev/guides/"},{"@type":"ListItem","position":3,"name":"RunBridge LED status guide","item":"https://runbridge.dev/guides/led-states/"}]}</script>
+</head>
+<body class="content-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="logo" href="/" aria-label="RunBridge home">
+        <img src="/Docs/runbridge-logo-128.png" alt="" class="logo-img" width="30" height="30">
+        <span>RunBridge<small>Treadmill → Garmin bridge</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="/compatibility/">Compatibility</a>
+        <a href="/runbridge-companion/">Companion</a>
+        <a href="/garmin-treadmill-accuracy/">Garmin Guides</a>
+        <a href="/guides/">Guides</a>
+        <a href="/#get-runbridge">Get RunBridge</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content">
+    <div class="page-shell doc-shell">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/guides/">Guides</a></li><li aria-current="page">RunBridge LED status guide</li></ol></nav>
+      <h1>RunBridge LED status guide</h1>
+
+      <div class="prose"><p>RunBridge uses the <strong>XIAO nRF52840’s RGB LED</strong> to show what it’s doing.</p>
+<p>The system decides what to show based on internal state, with a clear priority order.</p>
+<hr>
+<h2>What you should see during a normal run</h2>
+<p>A typical sequence looks like this:</p>
+<ol>
+<li>Plug in RunBridge → LED cycles briefly, then may go <strong>Off</strong> or <strong>Blue (Scanning)</strong></li>
+<li>Pair / connect watch → <strong>Magenta (Watch Connected)</strong></li>
+<li>Start an Indoor Run → watch subscribes → <strong>Blue (Scanning)</strong> if treadmill not connected yet</li>
+<li>Once treadmill is connected → <strong>Solid Green (System Ready)</strong></li>
+</ol>
+<p>During the run, <strong>Solid Green</strong> is the expected state.</p>
+<hr>
+<h2>Priority order</h2>
+<p>From highest priority to lowest:</p>
+<ol>
+<li><strong>System Ready</strong><br><em>(Watch subscribed + treadmill connected + data flowing)</em></li>
+<li><strong>Treadmill Only</strong><br><em>(Connected to treadmill, waiting for watch)</em></li>
+<li><strong>Watch Connected</strong><br><em>(Connected to watch, not yet subscribed)</em></li>
+<li><strong>Waiting for data</strong><br><em>(Watch subscribed + treadmill connected, but no speed/distance packets yet)</em></li>
+<li><strong>Scanning</strong><br><em>(Watch subscribed, searching for treadmill)</em></li>
+<li><strong>Idle / Sleep</strong><br><em>(No connections)</em></li>
+</ol>
+<p>Whichever condition is true at the highest priority “wins” and sets the LED.</p>
+<hr>
+<h2>Visual patterns (XIAO nRF52840)</h2>
+<h3>1. System Ready</h3>
+<blockquote>
+<p>Watch subscribed + treadmill connected + data flowing</p>
+</blockquote>
+<ul>
+<li><strong>LED:</strong> Solid green</li>
+</ul>
+<p>This is the “happy path” during a run. Data is actually flowing from treadmill → RunBridge → watch. Solid green only appears when the treadmill is sending speed/distance; if the link is up but no packets are received (e.g. belt not started), you’ll see <strong>amber</strong> instead.</p>
+<hr>
+<h3>2. Treadmill Only</h3>
+<blockquote>
+<p>Connected to treadmill, waiting for watch</p>
+</blockquote>
+<ul>
+<li><strong>LED:</strong> Double blink red  <ul>
+<li>Two short red blinks about every 2 seconds</li>
+</ul>
+</li>
+</ul>
+<p>If you see this pattern:</p>
+<ul>
+<li>The FTMS treadmill link is up.</li>
+<li>The watch is not connected yet.</li>
+</ul>
+<p><strong>This is not an error</strong> — it just means RunBridge is waiting for the watch to connect.</p>
+<hr>
+<h3>3. Waiting for data</h3>
+<blockquote>
+<p>Watch subscribed + treadmill connected, but no speed/distance packets yet</p>
+</blockquote>
+<ul>
+<li><strong>LED:</strong> Slow blink amber (orange/yellow)</li>
+</ul>
+<p>RunBridge is connected to both the watch and the treadmill, but the treadmill is not yet sending FTMS speed/distance data. Common causes:</p>
+<ul>
+<li>The treadmill only broadcasts data when the belt is moving — <strong>try starting the belt</strong>.</li>
+<li>Some treadmills require a workout to be started on the console first.</li>
+<li>The treadmill may need a moment after connection before it streams.</li>
+</ul>
+<p>This state was added so “connected but no data” is clearly visible instead of the LED staying off.</p>
+<hr>
+<h3>4. Watch Connected</h3>
+<blockquote>
+<p>Connected to watch, but not yet subscribed</p>
+</blockquote>
+<ul>
+<li><strong>LED:</strong> Fast blink magenta  <ul>
+<li>On/off roughly every 150 ms</li>
+</ul>
+</li>
+</ul>
+<p>This usually means:</p>
+<ul>
+<li>The watch found and connected to the sensor.</li>
+<li>It hasn’t subscribed to run data yet.</li>
+</ul>
+<p>Garmin typically subscribes once an activity starts.</p>
+<p>If it stays here, try:</p>
+<ul>
+<li>Starting an Indoor Run activity.</li>
+<li>Checking the watch sensor settings.</li>
+</ul>
+<hr>
+<h3>5. Scanning</h3>
+<blockquote>
+<p>Watch subscribed, searching for treadmill</p>
+</blockquote>
+<ul>
+<li><strong>LED:</strong> Slow blink blue  </li>
+<li>About 1 second on / 1 second off</li>
+</ul>
+<p>This means:</p>
+<ul>
+<li>The watch side is ready.</li>
+<li>RunBridge is scanning for an FTMS treadmill to connect to.</li>
+</ul>
+<p>If it never leaves this state:</p>
+<ul>
+<li>Confirm the treadmill is powered on and broadcasting.</li>
+<li>Check <a href="/guides/check-compatibility/">Compatibility</a>.</li>
+</ul>
+<hr>
+<h3>6. Idle / Sleep</h3>
+<blockquote>
+<p>No connections</p>
+</blockquote>
+<ul>
+<li><strong>LED:</strong> Off</li>
+</ul>
+<p>No active watch or treadmill link. This is normal when:</p>
+<ul>
+<li>You just powered it on and nothing’s connected yet.</li>
+<li>You finished a run and everything disconnected.</li>
+</ul>
+<p>If you expect it to be doing something but it’s off:</p>
+<ul>
+<li>Unplug RunBridge, wait a few seconds, and plug back in.</li>
+</ul>
+</div><nav class="doc-next" aria-label="Documentation links"><a href="/guides/">All guides</a><a href="/compatibility/">Treadmill compatibility</a><a href="/runbridge-companion/">Companion app</a></nav>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 RunBridge. Independently developed and privacy focused.</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="/terms.html">Terms</a><a href="/privacy/">Privacy</a><a href="/compliance/">Compliance</a><a href="/guides/">Guides</a><a href="mailto:support@runbridge.dev">Support</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

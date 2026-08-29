@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RunBridge Troubleshooting Guide</title>
+  <meta name="description" content="Troubleshoot treadmill, RunBridge and Garmin connections using status lights and focused checks.">
+  <link rel="canonical" href="https://runbridge.dev/guides/troubleshooting/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RunBridge">
+  <meta property="og:title" content="RunBridge Troubleshooting Guide">
+  <meta property="og:description" content="Troubleshoot treadmill, RunBridge and Garmin connections using status lights and focused checks.">
+  <meta property="og:url" content="https://runbridge.dev/guides/troubleshooting/">
+  <meta property="og:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta property="og:image:alt" content="RunBridge treadmill-to-Garmin bridge device">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RunBridge Troubleshooting Guide">
+  <meta name="twitter:description" content="Troubleshoot treadmill, RunBridge and Garmin connections using status lights and focused checks.">
+  <meta name="twitter:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" type="image/png" href="/Docs/runbridge-logo-128.png">
+  <link rel="stylesheet" href="/style.css?v=20260829-2">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","name":"RunBridge troubleshooting","headline":"RunBridge troubleshooting","description":"Troubleshoot treadmill, RunBridge and Garmin connections using status lights and focused checks.","url":"https://runbridge.dev/guides/troubleshooting/","author":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"},"publisher":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://runbridge.dev/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://runbridge.dev/guides/"},{"@type":"ListItem","position":3,"name":"RunBridge troubleshooting","item":"https://runbridge.dev/guides/troubleshooting/"}]}</script>
+</head>
+<body class="content-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="logo" href="/" aria-label="RunBridge home">
+        <img src="/Docs/runbridge-logo-128.png" alt="" class="logo-img" width="30" height="30">
+        <span>RunBridge<small>Treadmill → Garmin bridge</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="/compatibility/">Compatibility</a>
+        <a href="/runbridge-companion/">Companion</a>
+        <a href="/garmin-treadmill-accuracy/">Garmin Guides</a>
+        <a href="/guides/">Guides</a>
+        <a href="/#get-runbridge">Get RunBridge</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content">
+    <div class="page-shell doc-shell">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/guides/">Guides</a></li><li aria-current="page">RunBridge troubleshooting</li></ol></nav>
+      <h1>RunBridge troubleshooting</h1>
+
+      <div class="prose"><p>Most issues fall into a few patterns. Work through the sections below from top to bottom.</p>
+<hr>
+<h2>1. My watch doesn’t see RunBridge</h2>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>RunBridge never shows up when adding a sensor.</li>
+<li>Garmin search just spins or finds other devices but not RunBridge.</li>
+</ul>
+<p><strong>Checklist:</strong></p>
+<ol>
+<li><p><strong>Is the LED on or blinking?</strong></p>
+<ul>
+<li>If completely <strong>off</strong>, the device is idle:<ul>
+<li>Unplug RunBridge, wait 5 seconds, plug it back in.</li>
+<li>Try a different USB port / adapter.</li>
+</ul>
+</li>
+<li>If you see any blink pattern, it’s powered.</li>
+</ul>
+</li>
+<li><p><strong>Be in the right Garmin menu:</strong></p>
+<ul>
+<li>Go to<br><strong>Settings → Sensors &amp; Accessories → Add New → Foot Pod</strong><br>(or “Running Speed/Cadence” on some models).</li>
+</ul>
+</li>
+<li><p><strong>Move the watch closer:</strong></p>
+<ul>
+<li>Stand within a couple of feet of RunBridge.</li>
+<li>Avoid having your phone actively connected to lots of BLE devices.</li>
+</ul>
+</li>
+<li><p><strong>Reboot the watch:</strong></p>
+<ul>
+<li>Power the watch off and on, then try to scan again.</li>
+</ul>
+</li>
+</ol>
+<p>If it still never appears, email <a href="mailto:support@runbridge.dev">support@runbridge.dev</a> with:</p>
+<ul>
+<li>Watch model</li>
+<li>Treadmill model</li>
+<li>What the LED is doing</li>
+</ul>
+<hr>
+<h2>2. Distance doesn’t change on the watch</h2>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>RunBridge is paired as a footpod.</li>
+<li>Treadmill is running.</li>
+<li>Distance on the watch stays at 0.00 or only moves slightly.</li>
+</ul>
+<p><strong>Checklist:</strong></p>
+<ol>
+<li><p><strong>Check treadmill compatibility.</strong><br>See <a href="/guides/check-compatibility/">Compatibility</a>. You need an FTMS-enabled treadmill.</p>
+</li>
+<li><p><strong>Make sure the treadmill is actually broadcasting:</strong></p>
+<ul>
+<li>Some consoles only send FTMS once you start a workout and press Start.</li>
+<li>If the belt isn’t moving, some treadmills send zero speed.</li>
+</ul>
+</li>
+<li><p><strong>Make sure the footpod is active for your activity:</strong></p>
+<ul>
+<li>During an <strong>Indoor Run</strong>, go into the activity settings and confirm:<ul>
+<li>The footpod sensor is enabled.</li>
+<li>Pace source may need to be set to the footpod on some watches.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Remove competing sensors temporarily:</strong></p>
+<ul>
+<li>If you also use Stryd or another footpod, try disabling it for a test run so Garmin has only one footpod choice.</li>
+</ul>
+</li>
+</ol>
+<p>If you still get no movement, capture:</p>
+<ul>
+<li>A short video of the treadmill running and the watch screen</li>
+<li>LED state on RunBridge<br>and send it to <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>.</li>
+</ul>
+<hr>
+<h2>3. Distance doesn’t match the treadmill</h2>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Distance changes, but it’s clearly off vs the treadmill display over a full run.</li>
+</ul>
+<p><strong>Checklist:</strong></p>
+<ol>
+<li><p><strong>Double-check which source Garmin is using:</strong></p>
+<ul>
+<li>If you have multiple sensors, Garmin may be using something else.</li>
+<li>Temporarily disable / forget other footpods and test again.</li>
+</ul>
+</li>
+<li><p><strong>Ensure you stayed in System Ready:</strong></p>
+<ul>
+<li>During the run, LED should be solid green</li>
+<li>If it kept bouncing between states (fast blink, scanning), the connection to treadmill or watch may be unstable.</li>
+</ul>
+</li>
+<li><p><strong>Check treadmill behavior:</strong></p>
+<ul>
+<li>Some treadmills pause their internal distance when belt speed goes to 0 temporarily.</li>
+<li>Very short on/off intervals can cause odd results.</li>
+</ul>
+</li>
+</ol>
+<p>If the difference is large and consistent, we’d like to see logs or a video. Email <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>.</p>
+<hr>
+<h2>4. LED pattern looks wrong or frozen</h2>
+<p>If the LED is on but in a pattern that doesn’t match the <a href="/guides/led-states/">LED States</a> page:</p>
+<ol>
+<li>Unplug RunBridge.</li>
+<li>Wait 5 seconds.</li>
+<li>Plug it back in and try the sequence again:<ul>
+<li>Power RunBridge</li>
+<li>Power treadmill</li>
+<li>Pair from Garmin</li>
+<li>Start Indoor Run</li>
+</ul>
+</li>
+</ol>
+<p>If the LED is still in a strange or stuck state, grab:</p>
+<ul>
+<li>A short video or photos</li>
+<li>Watch &amp; treadmill models<br>and send to <a href="mailto:support@runbridge.dev">support@runbridge.dev</a>.</li>
+</ul>
+<hr>
+<h2>5. Nothing here helped</h2>
+<p>No problem. Send:</p>
+<ul>
+<li>Treadmill brand and model</li>
+<li>Garmin watch model</li>
+<li>What the LED is doing (color + blink pattern)</li>
+<li>Brief description of what happens</li>
+</ul>
+<p>to <strong><a href="mailto:support@runbridge.dev">support@runbridge.dev</a></strong>.</p>
+<p>We’ll walk through it with you and, if it ultimately won’t work with your setup, we’ll work out a return or refund according to the <a href="/guides/support-and-policies/">Support &amp; Policies</a>.</p>
+</div><nav class="doc-next" aria-label="Documentation links"><a href="/guides/">All guides</a><a href="/compatibility/">Treadmill compatibility</a><a href="/runbridge-companion/">Companion app</a></nav>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 RunBridge. Independently developed and privacy focused.</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="/terms.html">Terms</a><a href="/privacy/">Privacy</a><a href="/compliance/">Compliance</a><a href="/guides/">Guides</a><a href="mailto:support@runbridge.dev">Support</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

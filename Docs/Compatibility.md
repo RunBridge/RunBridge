@@ -5,9 +5,9 @@ RunBridge sits between your treadmill and your Garmin watch. It relies on two th
 1. An **FTMS-enabled treadmill** that broadcasts over Bluetooth.
 2. A **Garmin watch** that supports external speed/cadence / footpod sensors.
 
-- **Developed Using:** Assault Runner Pro + Garmin Fenix 7 Pro Sapphire Solar
-- **Confirmed Treadmills:** Spirit XT685, Domyos T900D
-- **Confirmed Watches:** Epix 2
+- **Developed using:** AssaultRunner Pro + Garmin Fenix 7 Pro Sapphire Solar
+- **Recorded treadmill evidence:** See the [model compatibility database](/compatibility/) for current, evidence-labeled records.
+- **Recorded additional watch:** Garmin Epix 2
 ---
 
 ## Supported (in general)
@@ -25,12 +25,12 @@ If your treadmill works with apps like Zwift or Kinomap over Bluetooth (without 
 
 ### Watches
 
-Most running and multisport watches that support:
+A watch must support:
 
 - **Foot Pod** sensors, and/or
 - **Running Speed/Cadence** sensors
 
-are **likely compatible** with RunBridge.
+RunBridge does not publish a blanket Garmin-model claim. Check the sensor menu on the watch you plan to use:
 
 Check your watch under:
 
@@ -55,7 +55,7 @@ RunBridge is **not** a good fit if:
 
 ## Recommended: check with RunBridge Companion
 
-The easiest way to confirm FTMS support is **RunBridge Companion** (free on Android and iOS). It scans for nearby Bluetooth treadmills, lets you confirm manufacturer and model, checks for FTMS / Treadmill Data / live notifications, guides a short movement check while **you** stay in control of the treadmill, and shows a clear compatibility result with a confidence level.
+The easiest way to confirm FTMS support is [RunBridge Companion](/runbridge-companion/) (free on Android and iOS). It scans for nearby Bluetooth treadmills, lets you confirm manufacturer and model, checks for FTMS / Treadmill Data / live notifications, guides a short movement check while **you** stay in control of the treadmill, and shows a clear compatibility result with a confidence level.
 
 Important:
 
@@ -63,8 +63,10 @@ Important:
 - Nothing is uploaded automatically
 - Diagnostics stay on your device until you choose to share them
 
-[![Get it on Google Play](Docs/badges/google-play.png)](https://play.google.com/store/apps/details?id=dev.runbridge.companion)
-[![Download on the App Store](Docs/badges/app-store.svg)](https://apps.apple.com/app/runbridge-companion/id6795531707)
+<div class="store-badges" aria-label="Download RunBridge Companion">
+  <a href="https://play.google.com/store/apps/details?id=dev.runbridge.companion" aria-label="Get RunBridge Companion on Google Play"><img class="store-badge-google" src="/Docs/badges/google-play.png" alt="Get it on Google Play" width="150" height="58"></a>
+  <a href="https://apps.apple.com/app/runbridge-companion/id6795531707" aria-label="Download RunBridge Companion on the App Store"><img class="store-badge-apple" src="/Docs/badges/app-store.svg" alt="Download on the App Store" width="120" height="40"></a>
+</div>
 
 ### Steps
 

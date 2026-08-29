@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RunBridge Quick Start Guide</title>
+  <meta name="description" content="Set up RunBridge with a compatible FTMS treadmill and pair it to your Garmin watch.">
+  <link rel="canonical" href="https://runbridge.dev/guides/quick-start/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RunBridge">
+  <meta property="og:title" content="RunBridge Quick Start Guide">
+  <meta property="og:description" content="Set up RunBridge with a compatible FTMS treadmill and pair it to your Garmin watch.">
+  <meta property="og:url" content="https://runbridge.dev/guides/quick-start/">
+  <meta property="og:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta property="og:image:alt" content="RunBridge treadmill-to-Garmin bridge device">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RunBridge Quick Start Guide">
+  <meta name="twitter:description" content="Set up RunBridge with a compatible FTMS treadmill and pair it to your Garmin watch.">
+  <meta name="twitter:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" type="image/png" href="/Docs/runbridge-logo-128.png">
+  <link rel="stylesheet" href="/style.css?v=20260829-2">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","name":"RunBridge quick start","headline":"RunBridge quick start","description":"Set up RunBridge with a compatible FTMS treadmill and pair it to your Garmin watch.","url":"https://runbridge.dev/guides/quick-start/","author":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"},"publisher":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://runbridge.dev/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://runbridge.dev/guides/"},{"@type":"ListItem","position":3,"name":"RunBridge quick start","item":"https://runbridge.dev/guides/quick-start/"}]}</script>
+</head>
+<body class="content-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="logo" href="/" aria-label="RunBridge home">
+        <img src="/Docs/runbridge-logo-128.png" alt="" class="logo-img" width="30" height="30">
+        <span>RunBridge<small>Treadmill → Garmin bridge</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="/compatibility/">Compatibility</a>
+        <a href="/runbridge-companion/">Companion</a>
+        <a href="/garmin-treadmill-accuracy/">Garmin Guides</a>
+        <a href="/guides/">Guides</a>
+        <a href="/#get-runbridge">Get RunBridge</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content">
+    <div class="page-shell doc-shell">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/guides/">Guides</a></li><li aria-current="page">RunBridge quick start</li></ol></nav>
+      <h1>RunBridge quick start</h1>
+
+      <div class="prose"><p>This guide is for first-time setup. It assumes you already have:</p>
+<ul>
+<li>A RunBridge device</li>
+<li>A Garmin watch that supports footpods / running speed &amp; cadence sensors</li>
+<li>A treadmill that broadcasts FTMS over Bluetooth</li>
+<li>A 5V USB power source (wall adapter, treadmill USB port, or powered hub)</li>
+</ul>
+<hr>
+<h2>1. Plug in RunBridge</h2>
+<ol>
+<li>Connect the USB-C port on RunBridge to a <strong>5V USB power source</strong>.</li>
+<li>The status LED on the board should light up or blink through colors briefly.</li>
+</ol>
+<p>If the LED never lights, try a different USB port, cable, or adapter.</p>
+<hr>
+<h2>2. Turn on your treadmill</h2>
+<ol>
+<li>Power on your treadmill console.</li>
+<li>Make sure Bluetooth is enabled.</li>
+<li>Some treadmills only broadcast FTMS once a workout is started, so you may need to:<ul>
+<li>Start a basic manual workout, or</li>
+<li>Press “Start” so the belt is ready to move.</li>
+</ul>
+</li>
+</ol>
+<p>You don’t need to pair the treadmill to your phone for RunBridge to work. It just needs to be broadcasting FTMS.</p>
+<p><strong>Tip:</strong> If your treadmill is already paired to a phone/app, disconnect it first. Some treadmills only allow one Bluetooth connection at a time.</p>
+<p>If you want to confirm FTMS support, see the
+<a href="/guides/check-compatibility/">Compatibility</a> page for a quick check using <strong>RunBridge Companion</strong> (nRF Connect is also documented there as a fallback).</p>
+<hr>
+<h2>3. Pair RunBridge on your Garmin watch</h2>
+<p>On most Garmin watches, the path is:</p>
+<blockquote>
+<p><strong>Settings → Sensors &amp; Accessories → Add New → Foot Pod</strong><br><em>(or “Running Speed/Cadence” on some models)</em></p>
+</blockquote>
+<p>Then:</p>
+<ol>
+<li>Wait for the watch to scan for devices.</li>
+<li>Choose the device named <strong>RunBridge</strong>.</li>
+<li>Save / confirm the new sensor.</li>
+</ol>
+<p>If you already have another footpod (like Stryd) paired, you may want to temporarily disable it so Garmin prefers RunBridge.</p>
+<hr>
+<h2>4. Start an indoor run</h2>
+<ol>
+<li>On your watch, choose an <strong>Indoor Run</strong> activity.</li>
+<li>Confirm that the footpod / speed &amp; cadence sensor is connected (usually shown in the sensor list).</li>
+<li>When your treadmill workout begins, pace and distance on the watch should follow the treadmill.</li>
+</ol>
+<p>In most cases, you won’t need to manually edit treadmill distance after the run.</p>
+<hr>
+<h2>What you should see (normal LED sequence)</h2>
+<p>A typical first-time setup looks like this:</p>
+<ol>
+<li>Plug in RunBridge → LED cycles briefly, then may go <strong>Off</strong> or <strong>Blue (Scanning)</strong></li>
+<li>Pair the watch → <strong>Magenta (Watch Connected)</strong></li>
+<li>Start an Indoor Run + treadmill workout → <strong>Solid Green (System Ready)</strong></li>
+</ol>
+<p>During a normal workout, you should end up in <strong>System Ready</strong> (solid green).</p>
+</div><nav class="doc-next" aria-label="Documentation links"><a href="/guides/">All guides</a><a href="/compatibility/">Treadmill compatibility</a><a href="/runbridge-companion/">Companion app</a></nav>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 RunBridge. Independently developed and privacy focused.</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="/terms.html">Terms</a><a href="/privacy/">Privacy</a><a href="/compliance/">Compliance</a><a href="/guides/">Guides</a><a href="mailto:support@runbridge.dev">Support</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

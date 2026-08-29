@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to Connect a Bluetooth Treadmill to Garmin | RunBridge</title>
+  <meta name="description" content="Learn how FTMS treadmills report workout data, why Garmin watches may not read it directly, and how RunBridge connects compatible treadmills.">
+  <link rel="canonical" href="https://runbridge.dev/connect-treadmill-to-garmin/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="RunBridge">
+  <meta property="og:title" content="How to Connect a Bluetooth Treadmill to Garmin | RunBridge">
+  <meta property="og:description" content="Learn how FTMS treadmills report workout data, why Garmin watches may not read it directly, and how RunBridge connects compatible treadmills.">
+  <meta property="og:url" content="https://runbridge.dev/connect-treadmill-to-garmin/">
+  <meta property="og:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta property="og:image:alt" content="RunBridge treadmill-to-Garmin bridge device">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Connect a Bluetooth Treadmill to Garmin | RunBridge">
+  <meta name="twitter:description" content="Learn how FTMS treadmills report workout data, why Garmin watches may not read it directly, and how RunBridge connects compatible treadmills.">
+  <meta name="twitter:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" type="image/png" href="/Docs/runbridge-logo-128.png">
+  <link rel="stylesheet" href="/style.css?v=20260829-2">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","name":"How to connect a Bluetooth treadmill to Garmin","headline":"How to connect a Bluetooth treadmill to Garmin","description":"Learn how FTMS treadmills report workout data, why Garmin watches may not read it directly, and how RunBridge connects compatible treadmills.","url":"https://runbridge.dev/connect-treadmill-to-garmin/","author":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"},"publisher":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://runbridge.dev/"},{"@type":"ListItem","position":2,"name":"How to connect a Bluetooth treadmill to Garmin","item":"https://runbridge.dev/connect-treadmill-to-garmin/"}]}</script>
+</head>
+<body class="content-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="logo" href="/" aria-label="RunBridge home">
+        <img src="/Docs/runbridge-logo-128.png" alt="" class="logo-img" width="30" height="30">
+        <span>RunBridge<small>Treadmill → Garmin bridge</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="/compatibility/">Compatibility</a>
+        <a href="/runbridge-companion/">Companion</a>
+        <a href="/garmin-treadmill-accuracy/">Garmin Guides</a>
+        <a href="/guides/">Guides</a>
+        <a href="/#get-runbridge">Get RunBridge</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content">
+    <div class="page-shell article-shell">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">How to connect a Bluetooth treadmill to Garmin</li></ol></nav>
+      <h1>How to connect a Bluetooth treadmill to Garmin</h1>
+
+      <div class="prose"><p>Many modern treadmills broadcast workout data over Bluetooth. The common fitness-machine standard is <strong>FTMS</strong>, short for Fitness Machine Service. A treadmill can use FTMS to expose values such as speed and distance to compatible apps.</p>
+<p>Bluetooth on the product page is not enough by itself. Some treadmills use Bluetooth only for audio, heart-rate accessories or a manufacturer app. RunBridge needs a treadmill that exposes the relevant FTMS service and usable live workout data.</p>
+<h2>Why the treadmill may not pair directly</h2>
+<p>Garmin watches support familiar running-sensor profiles, including speed/cadence or foot-pod-style sensors. A treadmill broadcasting FTMS is speaking a different Bluetooth profile, so it may not appear as the running sensor the watch expects.</p>
+<p>RunBridge sits between those two profiles:</p>
+<ol>
+<li>It connects to the compatible FTMS treadmill.</li>
+<li>It reads the workout data the treadmill reports.</li>
+<li>It presents that data to Garmin as a supported running sensor.</li>
+</ol>
+<p>Communication stays local over Bluetooth; RunBridge does not need a cloud account or subscription.</p>
+<h2>Before you try to connect</h2>
+<ul>
+<li>Check the <a href="/compatibility/">model-specific compatibility records</a>.</li>
+<li>If the model is not documented, use <a href="/runbridge-companion/">RunBridge Companion</a> to inspect the treadmill&#39;s FTMS data.</li>
+<li>Remember that a treadmill&#39;s displayed speed can itself be miscalibrated. RunBridge relays the data the treadmill reports; it does not measure physical belt speed.</li>
+</ul>
+<h2>Pairing the system</h2>
+<p>Once compatibility is established, follow the <a href="/guides/quick-start/">RunBridge quick start guide</a>. Pair RunBridge to the treadmill first, then add its running sensor on Garmin. If either side does not connect, the <a href="/guides/troubleshooting/">troubleshooting guide</a> explains the LED states and the checks to perform.</p>
+<p>If your main problem is a pace or distance mismatch rather than pairing, read <a href="/garmin-treadmill-accuracy/">why Garmin treadmill data can be wrong</a>.</p>
+</div><aside class="cta-panel"><h2>Check your treadmill</h2><p>Browse model-specific evidence or test FTMS compatibility with the free RunBridge Companion app.</p><div class="button-row"><a class="btn btn-primary" href="/compatibility/">See compatibility</a><a class="btn btn-ghost" href="/runbridge-companion/">Test with Companion</a></div></aside>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 RunBridge. Independently developed and privacy focused.</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="/terms.html">Terms</a><a href="/privacy/">Privacy</a><a href="/compliance/">Compliance</a><a href="/guides/">Guides</a><a href="mailto:support@runbridge.dev">Support</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,14 +1,6 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TH1G0W27XH"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-TH1G0W27XH');
-  </script>
   <meta charset="utf-8" />
   <title>RunBridge – Firmware Updater</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,7 +13,7 @@
 <header>
   <div class="nav-inner">
     <a href="index.html" class="logo">
-      <img src="Docs/runbridge-logo.png" alt="RunBridge logo" class="logo-img" />
+        <img src="Docs/runbridge-logo-128.png" alt="RunBridge logo" class="logo-img" width="30" height="30" />
       <div>
         <div>RunBridge</div>
         <div class="logo-subtitle">Support - Firmware Updater</div>
@@ -101,7 +93,7 @@
         <li><b>Double-tap Reset</b> on RunBridge (see photo above). Within a few seconds, a <b>new removable drive</b> should appear. Its name can vary. Common examples include <b>RUNBRIDGE</b> or <b>XIAO-SENSE</b>, but use whichever <b>new</b> small drive appears right after the double-tap.</li>
         <li>Open that drive. Drag your <b>.uf2</b> file into the window, or copy and paste it there. The drive contains a file named <b>CURRENT.UF2</b>. When Windows asks to <b>replace</b> that file, choose <b>Replace</b>—replacing <b>CURRENT.UF2</b> with the firmware support sent you is <b>normal, expected, and safe</b>.</li>
         <li>Wait a moment. The drive may <b>vanish</b> while Windows still shows a copy dialog—see the yellow note above. If the drive disappears and RunBridge reconnects, the update probably succeeded even if Windows reported an error.</li>
-        <li>After a short wait, the RGB LED should show a <b>brief boot color cycle</b> when the firmware starts. After that, the LED may be <b>off</b> until normal device activity begins (examples in <a href="docs.html?page=LED-States">LED States</a>).</li>
+        <li>After a short wait, the RGB LED should show a <b>brief boot color cycle</b> when the firmware starts. After that, the LED may be <b>off</b> until normal device activity begins (examples in <a href="/guides/led-states/">LED States</a>).</li>
         <li>If you <b>never</b> see that boot color cycle after USB power, <b>unplug</b> RunBridge, wait a few seconds, and <b>plug it back in</b>, then watch the LED again (this is more common on Mac but helps on Windows too).</li>
       </ol>
 
@@ -112,7 +104,7 @@
         <li>Open <b>Finder</b>. In the sidebar under <b>Locations</b>, watch for your Mac and any removable volumes.</li>
         <li><b>Double-tap Reset</b> on RunBridge. Within a few seconds, a <b>new volume</b> should appear. Its name can vary. Common examples include <b>RUNBRIDGE</b> or <b>XIAO-SENSE</b>, but use whichever <b>new</b> volume appears right after the double-tap. If macOS asks again to allow a USB accessory, <b>Allow</b>—the bootloader looks like a different device to the system.</li>
         <li>Drag your <b>.uf2</b> file onto that volume, or open the volume and copy the file inside. You may see a Finder message that the copy could not be completed; if the volume <b>disappears</b> and the device reconnects, the flash may still have succeeded (see the yellow note above).</li>
-        <li>After updating, the RGB LED should show a <b>brief boot color cycle</b> when the firmware starts. After that, the LED may be <b>off</b> until normal device activity begins (examples in <a href="docs.html?page=LED-States">LED States</a>).</li>
+        <li>After updating, the RGB LED should show a <b>brief boot color cycle</b> when the firmware starts. After that, the LED may be <b>off</b> until normal device activity begins (examples in <a href="/guides/led-states/">LED States</a>).</li>
         <li>If you <b>never</b> see that boot color cycle, or you are unsure the update finished, <b>unplug</b> RunBridge, wait a few seconds, and <b>plug it back in</b>—macOS often needs this clean USB cycle—then check the LED again.</li>
       </ol>
     </div>
@@ -140,7 +132,7 @@
       <li><b>Mac: drive missing after plugging in?</b> Make sure you <b>allowed</b> the USB accessory when prompted (on first plug and again after double-tap Reset). Unplug, wait a few seconds, reconnect, and approve if asked.</li>
       <li><b>Copy “failed” but the drive disappeared?</b> The update may have <b>succeeded anyway</b>; unplug/replug (especially on Mac) and check LEDs or verify with the Extractor <b>d</b> command.</li>
       <li><b>Replacing CURRENT.UF2?</b> Yes. The bootloader drive shows a file named <b>CURRENT.UF2</b>. Replacing it with the <b>.uf2</b> support gave you is <b>expected and safe</b>.</li>
-      <li><b>Still in update mode after copying?</b> If the small bootloader drive <b>stays mounted</b> and the RGB LED keeps the <b>bootloader pulsing pattern</b> instead of returning to <b>normal RunBridge behavior</b> (see <a href="docs.html?page=LED-States">LED States</a>—especially the brief <b>boot color cycle</b> when the device starts), copy the same support-provided <b>.uf2</b> onto that drive again—choose <b>Replace</b> if asked about <b>CURRENT.UF2</b>. If it still will not leave update mode, contact support.</li>
+      <li><b>Still in update mode after copying?</b> If the small bootloader drive <b>stays mounted</b> and the RGB LED keeps the <b>bootloader pulsing pattern</b> instead of returning to <b>normal RunBridge behavior</b> (see <a href="/guides/led-states/">LED States</a>—especially the brief <b>boot color cycle</b> when the device starts), copy the same support-provided <b>.uf2</b> onto that drive again—choose <b>Replace</b> if asked about <b>CURRENT.UF2</b>. If it still will not leave update mode, contact support.</li>
       <li><b>Still stuck?</b> Contact <a href="mailto:support@runbridge.dev">support@runbridge.dev</a> with what you tried and what you see on screen.</li>
     </ul>
   </div>

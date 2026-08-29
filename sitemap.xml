@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://runbridge.dev/</loc></url>
-  <url><loc>https://runbridge.dev/docs.html</loc></url>
-  <url><loc>https://runbridge.dev/docs.html?page=QuickStart</loc></url>
-  <url><loc>https://runbridge.dev/docs.html?page=Troubleshooting</loc></url>
-  <url><loc>https://runbridge.dev/docs.html?page=Compatibility</loc></url>
-  <url><loc>https://runbridge.dev/docs.html?page=LED-States</loc></url>
-  <url><loc>https://runbridge.dev/docs.html?page=Support-and-Policies</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/</loc></url>
+  <url><loc>https://runbridge.dev/guides/</loc></url>
+  <url><loc>https://runbridge.dev/garmin-treadmill-accuracy/</loc></url>
+  <url><loc>https://runbridge.dev/connect-treadmill-to-garmin/</loc></url>
+  <url><loc>https://runbridge.dev/runna-garmin-treadmill/</loc></url>
+  <url><loc>https://runbridge.dev/garmin-treadmill-foot-pod/</loc></url>
+  <url><loc>https://runbridge.dev/runbridge-companion/</loc></url>
+  <url><loc>https://runbridge.dev/guides/quick-start/</loc></url>
+  <url><loc>https://runbridge.dev/guides/troubleshooting/</loc></url>
+  <url><loc>https://runbridge.dev/guides/check-compatibility/</loc></url>
+  <url><loc>https://runbridge.dev/guides/led-states/</loc></url>
+  <url><loc>https://runbridge.dev/guides/support-and-policies/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/assault-runner-pro/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/spirit-xt685/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/horizon-7-4-at/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/darwin-tm30/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/technogym-excite-run-700-unity/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/domyos-t900d/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/bowflex-t9/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/domyos-run500/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/horizon-t202-26/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/horizon-treadxp/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/odin-t620/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/sole-f80/</loc></url>
+  <url><loc>https://runbridge.dev/compatibility/sole-f85/</loc></url>
   <url><loc>https://runbridge.dev/updater.html</loc></url>
   <url><loc>https://runbridge.dev/extractor.html</loc></url>
   <url><loc>https://runbridge.dev/analyzer.html</loc></url>
   <url><loc>https://runbridge.dev/terms.html</loc></url>
+  <url><loc>https://runbridge.dev/privacy/</loc></url>
   <url><loc>https://runbridge.dev/compliance/</loc></url>
   <url><loc>https://runbridge.dev/compliance/declaration/</loc></url>
   <url><loc>https://runbridge.dev/compliance/regulatory/</loc></url>

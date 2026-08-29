@@ -139,8 +139,8 @@ Compatibility with untested models is **not guaranteed**.
 
 The recommended way to sanity-check your treadmill is **RunBridge Companion** (free). It scans for nearby treadmills, checks FTMS / live data, and shows a clear compatibility result. Full details are in [`Docs/Compatibility.md`](Docs/Compatibility.md).
 
-[![Get it on Google Play](Docs/badges/google-play.png)](https://play.google.com/store/apps/details?id=dev.runbridge.companion)
-[![Download on the App Store](Docs/badges/app-store.svg)](https://apps.apple.com/app/runbridge-companion/id6795531707)
+<a href="https://play.google.com/store/apps/details?id=dev.runbridge.companion"><img src="Docs/badges/google-play.png" alt="Get it on Google Play" width="150" height="58"></a>
+<a href="https://apps.apple.com/app/runbridge-companion/id6795531707"><img src="Docs/badges/app-store.svg" alt="Download on the App Store" width="120" height="40"></a>
 
 Prefer not to use Companion? The Compatibility page also documents an optional **nRF Connect** fallback for spotting the Fitness Machine service (`0x1826`).
 
@@ -209,7 +209,7 @@ Each unit is hand-assembled, loaded with firmware, and test-run before shipping.
 
 ## Firmware
 
-- **Current release:** 3.2.5 (March 2026). See [runbridge.dev/updater.html](https://runbridge.dev/updater.html) for version history.
+- **Current release:** 4.0.1. See [runbridge.dev/updater.html](https://runbridge.dev/updater.html) for version history.
 - Firmware is **closed-source** and pre-flashed.
 - It is intended to be **appliance-style** for end users — no routine firmware updates are required.
 - **Firmware updates are not publicly distributed.** They are provided by support as needed on an individual basis. If you need an update, contact support (see the [web site](https://runbridge.dev/updater.html) or support email). When support provides a UF2 file, you can install it via USB drag-and-drop (double-tap Reset to enter update mode, then copy the file onto the device drive).
@@ -273,6 +273,28 @@ RunBridge is an independent project and is **not** affiliated with or endorsed b
 FTMS and RSC are industry standards, but manufacturer implementations vary. Compatibility with untested watches and treadmills is not guaranteed.
 
 All product names and trademarks are property of their respective owners.
+
+---
+
+## Local website preview
+
+The public site is static HTML generated into the repository root. Serve from this directory so root-absolute links (`/docs/`, `/compatibility/`, and so on) resolve.
+
+Requirements: **Node.js 24+** and **Python 3**.
+
+```powershell
+cd path\to\RunBridge
+npm install
+npm test
+npm run build
+npm run serve
+```
+
+Then open [http://127.0.0.1:8765/](http://127.0.0.1:8765/). The server binds to loopback only. Stop it with Ctrl+C.
+
+One-command equivalent on Windows: `.\scripts\serve-local.ps1`
+
+Optional: `npm run validate` checks generated metadata, links, and sitemap after a build.
 
 ---
 

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Check Treadmill Compatibility with RunBridge</title>
+  <meta name="description" content="Check whether a treadmill exposes the Bluetooth FTMS data RunBridge needs before purchasing.">
+  <link rel="canonical" href="https://runbridge.dev/guides/check-compatibility/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="RunBridge">
+  <meta property="og:title" content="Check Treadmill Compatibility with RunBridge">
+  <meta property="og:description" content="Check whether a treadmill exposes the Bluetooth FTMS data RunBridge needs before purchasing.">
+  <meta property="og:url" content="https://runbridge.dev/guides/check-compatibility/">
+  <meta property="og:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta property="og:image:alt" content="RunBridge treadmill-to-Garmin bridge device">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Check Treadmill Compatibility with RunBridge">
+  <meta name="twitter:description" content="Check whether a treadmill exposes the Bluetooth FTMS data RunBridge needs before purchasing.">
+  <meta name="twitter:image" content="https://runbridge.dev/Docs/runbridge-front.png">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="icon" type="image/png" href="/Docs/runbridge-logo-128.png">
+  <link rel="stylesheet" href="/style.css?v=20260829-2">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","name":"Check treadmill compatibility","headline":"Check treadmill compatibility","description":"Check whether a treadmill exposes the Bluetooth FTMS data RunBridge needs before purchasing.","url":"https://runbridge.dev/guides/check-compatibility/","author":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"},"publisher":{"@type":"Organization","name":"RunBridge","url":"https://runbridge.dev"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://runbridge.dev/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://runbridge.dev/guides/"},{"@type":"ListItem","position":3,"name":"Check treadmill compatibility","item":"https://runbridge.dev/guides/check-compatibility/"}]}</script>
+</head>
+<body class="content-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="logo" href="/" aria-label="RunBridge home">
+        <img src="/Docs/runbridge-logo-128.png" alt="" class="logo-img" width="30" height="30">
+        <span>RunBridge<small>Treadmill → Garmin bridge</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="/compatibility/">Compatibility</a>
+        <a href="/runbridge-companion/">Companion</a>
+        <a href="/garmin-treadmill-accuracy/">Garmin Guides</a>
+        <a href="/guides/">Guides</a>
+        <a href="/#get-runbridge">Get RunBridge</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content">
+    <div class="page-shell doc-shell">
+      <nav class="breadcrumbs" aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/guides/">Guides</a></li><li aria-current="page">Check treadmill compatibility</li></ol></nav>
+      <h1>Check treadmill compatibility</h1>
+
+      <div class="prose"><p>RunBridge sits between your treadmill and your Garmin watch. It relies on two things:</p>
+<ol>
+<li>An <strong>FTMS-enabled treadmill</strong> that broadcasts over Bluetooth.</li>
+<li>A <strong>Garmin watch</strong> that supports external speed/cadence / footpod sensors.</li>
+</ol>
+<ul>
+<li><strong>Developed using:</strong> AssaultRunner Pro + Garmin Fenix 7 Pro Sapphire Solar</li>
+<li><strong>Recorded treadmill evidence:</strong> See the <a href="/compatibility/">model compatibility database</a> for current, evidence-labeled records.</li>
+<li><strong>Recorded additional watch:</strong> Garmin Epix 2</li>
+</ul>
+<hr>
+<h2>Supported (in general)</h2>
+<h3>Treadmills</h3>
+<p>RunBridge is designed for treadmills whose consoles advertise <strong>FTMS</strong> over Bluetooth:</p>
+<ul>
+<li>Often described as “Bluetooth FTMS”, “FTMS compatible”, or “supports Zwift/third-party apps”.</li>
+<li>Many modern commercial and prosumer treadmills fall into this category.</li>
+</ul>
+<p>If your treadmill works with apps like Zwift or Kinomap over Bluetooth (without extra dongles), it’s a <strong>good sign</strong> it uses FTMS.</p>
+<blockquote>
+<p>Note: Some treadmills only broadcast FTMS once a workout is started.</p>
+</blockquote>
+<h3>Watches</h3>
+<p>A watch must support:</p>
+<ul>
+<li><strong>Foot Pod</strong> sensors, and/or</li>
+<li><strong>Running Speed/Cadence</strong> sensors</li>
+</ul>
+<p>RunBridge does not publish a blanket Garmin-model claim. Check the sensor menu on the watch you plan to use:</p>
+<p>Check your watch under:</p>
+<blockquote>
+<p><strong>Settings → Sensors &amp; Accessories → Add New</strong></p>
+</blockquote>
+<p>If you see <strong>Foot Pod</strong> or <strong>Running Speed/Cadence</strong>, that’s a strong sign your watch supports the sensor type RunBridge broadcasts.</p>
+<hr>
+<h2>Not supported / poor fit</h2>
+<p>RunBridge is <strong>not</strong> a good fit if:</p>
+<ul>
+<li>Your treadmill only supports:<ul>
+<li>Proprietary app connections (e.g., brand-only apps) with no FTMS exposed</li>
+<li>Bluetooth audio (headphone icon only)</li>
+</ul>
+</li>
+<li>Your watch:<ul>
+<li>Does not support external running sensors</li>
+<li>Cannot pair to a Bluetooth footpod or running speed/cadence sensor</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Recommended: check with RunBridge Companion</h2>
+<p>The easiest way to confirm FTMS support is <a href="/runbridge-companion/">RunBridge Companion</a> (free on Android and iOS). It scans for nearby Bluetooth treadmills, lets you confirm manufacturer and model, checks for FTMS / Treadmill Data / live notifications, guides a short movement check while <strong>you</strong> stay in control of the treadmill, and shows a clear compatibility result with a confidence level.</p>
+<p>Important:</p>
+<ul>
+<li>The app never controls treadmill speed, incline, start, or stop</li>
+<li>Nothing is uploaded automatically</li>
+<li>Diagnostics stay on your device until you choose to share them</li>
+</ul>
+<div class="store-badges" aria-label="Download RunBridge Companion">
+  <a href="https://play.google.com/store/apps/details?id=dev.runbridge.companion" aria-label="Get RunBridge Companion on Google Play"><img class="store-badge-google" src="/Docs/badges/google-play.png" alt="Get it on Google Play" width="150" height="58"></a>
+  <a href="https://apps.apple.com/app/runbridge-companion/id6795531707" aria-label="Download RunBridge Companion on the App Store"><img class="store-badge-apple" src="/Docs/badges/app-store.svg" alt="Download on the App Store" width="120" height="40"></a>
+</div>
+
+<h3>Steps</h3>
+<ol>
+<li>Install <strong>RunBridge Companion</strong> from the store link above for your phone.</li>
+<li>Stand near the treadmill, power it on, and enable Bluetooth.</li>
+<li>Scan for nearby treadmills and select yours.</li>
+<li>Confirm manufacturer and model if prompted.</li>
+<li>Follow the in-app FTMS / live-data check (and the short movement check if offered).</li>
+<li>Read the compatibility result and confidence level.</li>
+</ol>
+<p>If the result is unclear, you can save diagnostics on the device and optionally share a ZIP with support.</p>
+<hr>
+<h2>Alternative: Quick FTMS check with nRF Connect</h2>
+<p>If you prefer not to use RunBridge Companion, you can roughly confirm FTMS support using <strong>nRF Connect for Mobile</strong> by Nordic Semiconductor (free on iOS and Android).</p>
+<h3>Steps</h3>
+<ol>
+<li><p><strong>Install the app</strong></p>
+<ul>
+<li>Search for <strong>“nRF Connect for Mobile”</strong> in the App Store or Google Play.</li>
+<li>Install and open it.</li>
+</ul>
+</li>
+<li><p><strong>Get close to the treadmill</strong></p>
+<ul>
+<li>Stand near the treadmill console.</li>
+<li>Make sure the treadmill is powered on and Bluetooth is enabled.</li>
+</ul>
+</li>
+<li><p><strong>Scan for devices</strong></p>
+<ul>
+<li>In nRF Connect, go to the <strong>Scanner</strong> tab.</li>
+<li>Tap <strong>Scan</strong>.</li>
+<li>If needed, start a simple workout on the treadmill so it begins broadcasting.</li>
+</ul>
+</li>
+<li><p><strong>Find your treadmill</strong></p>
+<ul>
+<li>Look for a device name that matches your treadmill brand/model, or something clearly related to it.</li>
+<li>Tap that device in the list.</li>
+</ul>
+</li>
+<li><p><strong>Check for FTMS / Fitness Machine service</strong></p>
+<ul>
+<li>After connecting, look at the list of services.</li>
+<li>You’re interested in a service named <strong>“Fitness Machine”</strong> or with the UUID <strong>0x1826</strong>.</li>
+<li>Some apps also label this as <strong>FTMS</strong> or <strong>Fitness Machine Service</strong>.</li>
+</ul>
+</li>
+</ol>
+<p>If you see a Fitness Machine / FTMS service (UUID 0x1826), that’s a strong sign your treadmill is a good match for RunBridge.</p>
+<p>If you don’t see it:</p>
+<ul>
+<li>The treadmill might not expose FTMS</li>
+<li>Or it may only advertise FTMS after a specific mode/workout is started</li>
+<li>Or it only talks to a proprietary phone app</li>
+</ul>
+<p>If you’re not sure what you’re seeing, grab a screenshot and email it to<br><a href="mailto:hello@runbridge.dev">hello@runbridge.dev</a>.</p>
+<hr>
+<h2>Still not sure?</h2>
+<p>Before buying (or before spending more time troubleshooting), send us:</p>
+<ul>
+<li>Treadmill brand and model</li>
+<li>Garmin watch model</li>
+<li>A RunBridge Companion result / screenshot, or nRF Connect screenshots (optional)</li>
+</ul>
+<p>to <strong><a href="mailto:hello@runbridge.dev">hello@runbridge.dev</a></strong> and we’ll tell you if it’s a good match.</p>
+</div><nav class="doc-next" aria-label="Documentation links"><a href="/guides/">All guides</a><a href="/compatibility/">Treadmill compatibility</a><a href="/runbridge-companion/">Companion app</a></nav>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 RunBridge. Independently developed and privacy focused.</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="/terms.html">Terms</a><a href="/privacy/">Privacy</a><a href="/compliance/">Compliance</a><a href="/guides/">Guides</a><a href="mailto:support@runbridge.dev">Support</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
