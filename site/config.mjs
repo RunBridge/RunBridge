@@ -10,7 +10,7 @@ export const siteConfig = Object.freeze({
   googlePlayUrl: 'https://play.google.com/store/apps/details?id=dev.runbridge.companion',
   supportEmail: 'support@runbridge.dev',
   contactEmail: 'hello@runbridge.dev',
-  socialImage: '/Docs/runbridge-front.png',
+  socialImage: '/Docs/runbridge-front.jpg',
   navigation: [
     { href: '/compatibility/', label: 'Compatibility' },
     { href: '/runbridge-companion/', label: 'Companion' },

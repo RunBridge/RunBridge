@@ -278,7 +278,7 @@ All product names and trademarks are property of their respective owners.
 
 ## Local website preview
 
-The public site is static HTML generated into the repository root. Serve from this directory so root-absolute links (`/docs/`, `/compatibility/`, and so on) resolve.
+The public site is static HTML generated into the repository root. Serve from this directory so root-absolute links (`/guides/`, `/compatibility/`, and so on) resolve.
 
 Requirements: **Node.js 24+** and **Python 3**.
 

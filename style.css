@@ -978,29 +978,74 @@ footer {
 .btn-secondary { background: #e2e8f0; color: #0f172a; border-color: #e2e8f0; }
 .btn-secondary:hover { background: #fff; color: #020617; text-decoration: none; }
 
-.problem-section, .product-grid, .resource-grid, .compatibility-grid {
+.problem-section, .product-grid, .resource-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem;
 }
 
 .resource-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-.problem-section > div, .product-grid article, .resource-grid article, .compatibility-card, .review-section {
+.problem-section > div, .product-grid article, .resource-grid article, .review-section {
   padding: 1.25rem;
   border: 1px solid var(--border-subtle);
   border-radius: 1rem;
   background: rgba(11, 17, 32, .85);
 }
 
-.resource-grid h2, .resource-grid h3, .compatibility-card h2 { margin-top: 0; }
+.resource-grid h2, .resource-grid h3 { margin-top: 0; }
 .price { margin: 0.2rem 0; font-size: 2rem; font-weight: 750; }
 .trust-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
 .trust-grid div { padding: 1rem; border-top: 2px solid #3b82f6; background: rgba(15, 23, 42, .7); }
 .trust-grid strong, .trust-grid span { display: block; }
 .trust-grid span { color: var(--text-muted); font-size: 0.86rem; }
 
-.compatibility-grid { margin-top: 1rem; }
 .status-label { color: #bfdbfe; font-weight: 700; }
+
+/* Compatibility hub — manufacturer-grouped filterable list */
+.compat-filter { margin: 1.5rem 0; }
+.compat-filter label { display: block; font-weight: 650; margin-bottom: 0.4rem; }
+.compat-filter input {
+  width: 100%; max-width: 440px; padding: 0.6rem 0.85rem;
+  font: inherit; color: var(--text-main);
+  background: #020617; border: 1px solid #334155; border-radius: 0.6rem;
+}
+.compat-status { min-height: 1.2em; margin: 0.5rem 0 0; color: var(--text-muted); font-size: 0.9rem; }
+.compat-list { margin: 1.5rem 0; }
+.compat-brand { margin: 1.75rem 0; }
+.compat-brand > h2 {
+  margin: 0 0 0.75rem; padding-bottom: 0.4rem; font-size: 1.15rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.compat-brand ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+.compat-row {
+  border: 1px solid var(--border-subtle); border-radius: 0.75rem;
+  background: rgba(11, 17, 32, .7); overflow: hidden;
+}
+.compat-row-head {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem;
+  padding: 0.8rem 1rem; color: var(--text-main);
+}
+a.compat-row-head:hover { background: rgba(15, 23, 42, .9); text-decoration: none; }
+a.compat-row-head:hover .compat-model { text-decoration: underline; }
+.compat-model { font-weight: 650; }
+.compat-note { margin: 0; padding: 0 1rem 0.8rem; color: var(--text-muted); font-size: 0.9rem; }
+.evidence-badge {
+  margin-left: auto; flex: 0 0 auto;
+  padding: 0.12rem 0.6rem; border: 1px solid currentColor; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 650;
+}
+.evidence-badge[data-classification="runbridge_tested"] { color: #4ade80; }
+.evidence-badge[data-classification="customer_confirmed"],
+.evidence-badge[data-classification="confirmed_working"] { color: #7dd3fc; }
+.evidence-badge[data-classification="customer_field_history"] { color: #fcd34d; }
+.evidence-badge[data-classification="firmware_evidence"] { color: #a5b4fc; }
+.evidence-badge[data-classification="expected_ftms"],
+.evidence-badge[data-classification="unknown"] { color: #cbd5e1; }
+.evidence-badge[data-classification="unsupported"] { color: #fca5a5; }
+.compat-empty {
+  margin: 1.5rem 0; padding: 1rem 1.25rem;
+  border: 1px solid #334155; border-radius: 0.75rem; background: rgba(30, 41, 59, .6);
+}
 .compatibility-status { margin: 1.5rem 0; padding: 1.25rem; border: 1px solid #334155; border-radius: 1rem; background: rgba(15, 23, 42, .8); }
 .compatibility-status[data-classification="runbridge_tested"] { border-left: 4px solid var(--success); }
 .compatibility-status[data-classification="customer_confirmed"] { border-left: 4px solid #60a5fa; }
@@ -1031,25 +1076,34 @@ th { color: #e2e8f0; }
 .customer-review figcaption { display: grid; gap: 0.15rem; margin-top: 1rem; color: var(--text-muted); font-size: 0.82rem; }
 .customer-review strong { color: var(--text-main); }
 
+.faq-section .faq-list { display: grid; gap: 1rem; margin: 1rem 0 0; }
+.faq-list dt { font-weight: 650; color: var(--text-main); }
+.faq-list dd { margin: 0.35rem 0 0; color: #d1d5db; }
+
+.legacy-links { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1.25rem; }
+.legacy-links a { color: #93c5fd; text-decoration: underline; text-underline-offset: 0.18em; }
+
 @media (max-width: 800px) {
-  .nav-inner { flex-wrap: wrap; gap: 0.45rem; padding-block: 0.5rem; }
-  .nav-links { width: 100%; flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; padding-bottom: 0.2rem; }
+  .nav-inner { flex-wrap: nowrap; gap: 0.75rem; padding-block: 0.5rem; }
+  .logo { flex: 0 0 auto; }
+  .nav-links { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; justify-content: flex-start; padding-bottom: 0.2rem; }
   .nav-links a { flex: 0 0 auto; }
-  .hero-landing, .problem-section, .product-grid, .resource-grid, .compatibility-grid { grid-template-columns: 1fr; }
+  .hero-landing, .problem-section, .product-grid, .resource-grid { grid-template-columns: 1fr; }
   .hero-landing img { max-height: 340px; }
   .trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 520px) {
   main { padding-inline: 0.8rem; }
-  .nav-links { overflow: visible; justify-content: space-between; }
-  .nav-links a { padding-inline: 0.2rem; font-size: 0.8rem; }
-  .nav-links a:nth-child(4), .nav-links a:nth-child(5) { display: none; }
+  .logo small { display: none; }
+  .nav-links { gap: 0.3rem; }
+  .nav-links a { padding-inline: 0.4rem; font-size: 0.82rem; }
   .hero-landing { padding: 1.2rem; }
   .hero-landing h1 { font-size: clamp(2rem, 11vw, 3rem); }
   .evidence-grid, .trust-grid { grid-template-columns: 1fr; }
   .review-grid { grid-template-columns: 1fr; }
   .button-row .btn, .store-buttons .btn { width: 100%; justify-content: center; }
+  .evidence-badge { margin-left: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

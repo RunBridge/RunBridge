@@ -70,7 +70,7 @@ export async function buildSite({ outputDir = projectRoot } = {}) {
     for (const relative of ['privacy', 'compliance']) {
       await cp(path.join(projectRoot, relative), path.join(outputDir, relative), { recursive: true });
     }
-    for (const relative of ['Docs/runbridge-logo-128.png', 'Docs/runbridge-front.webp', 'Docs/badges/google-play.png', 'Docs/badges/app-store.svg']) {
+    for (const relative of ['favicon.ico', 'apple-touch-icon.png', 'Docs/runbridge-logo-128.png', 'Docs/runbridge-front.webp', 'Docs/runbridge-front.jpg', 'Docs/badges/google-play.png', 'Docs/badges/app-store.svg']) {
       await mkdir(path.dirname(path.join(outputDir, relative)), { recursive: true });
       await copyFile(path.join(projectRoot, relative), path.join(outputDir, relative));
     }

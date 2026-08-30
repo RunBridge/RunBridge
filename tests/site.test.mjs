@@ -90,17 +90,27 @@ test('compatibility page visibly distinguishes customer field history from testi
   assert.doesNotMatch(html, /Tested by RunBridge/);
 });
 
-test('compatibility evidence snapshot publishes thirteen named positive model routes', async () => {
+test('compatibility evidence snapshot publishes a positive model route per detail record', async () => {
   const records = JSON.parse(await readFile(new URL('../site/compatibility.json', import.meta.url), 'utf8'));
   assert.deepEqual(validateCompatibilityRecords(records), []);
   const detailRecords = records.filter((record) => record.detailPage);
-  assert.equal(detailRecords.length, 13);
+  const hub = renderCompatibilityHub(records);
+
+  // The hub links every detail record and never links a non-detail record.
+  assert.ok(detailRecords.length > 0);
+  for (const record of detailRecords) {
+    assert.ok(hub.includes(`href="/compatibility/${record.slug}/"`), `hub should link ${record.slug}`);
+  }
+  for (const record of records.filter((record) => !record.detailPage)) {
+    assert.ok(!hub.includes(`href="/compatibility/${record.slug}/"`), `hub should not link ${record.slug}`);
+  }
+
   assert.ok(detailRecords.some((record) => record.slug === 'technogym-excite-run-700-unity'));
   assert.ok(detailRecords.some((record) => record.slug === 'domyos-t900d'));
   assert.ok(!detailRecords.some((record) => record.model === 'Unknown'));
   assert.ok(!detailRecords.some((record) => record.classification === 'unsupported'));
   assert.ok(!records.some((record) => record.manufacturer === 'Kayoba'));
-  assert.doesNotMatch(renderCompatibilityHub(records), /Kayoba/i);
+  assert.doesNotMatch(hub, /Kayoba/i);
 });
 
 test('homepage renders four visible Etsy reviews mirrored by Product schema', () => {
@@ -156,7 +166,14 @@ test('static build emits crawlable funnel, model and documentation pages', async
   const outputDir = await mkdtemp(path.join(tmpdir(), 'runbridge-build-test-'));
   const result = await buildSite({ outputDir });
 
-  assert.equal(result.compatibilityPages, 13);
+  const records = JSON.parse(await readFile(new URL('../site/compatibility.json', import.meta.url), 'utf8'));
+  const detailRecords = records.filter((record) => record.detailPage);
+  assert.ok(detailRecords.length > 0);
+  assert.equal(result.compatibilityPages, detailRecords.length);
+  for (const record of detailRecords) {
+    const modelHtml = await readFile(path.join(outputDir, routeToFile(`/compatibility/${record.slug}/`)), 'utf8');
+    assert.match(modelHtml, /<main id="main-content">/, `built page for ${record.slug}`);
+  }
   for (const route of [
     '/', '/compatibility/', '/compatibility/spirit-xt685/', '/runbridge-companion/',
     '/garmin-treadmill-accuracy/', '/guides/', '/guides/quick-start/',
