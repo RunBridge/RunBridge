@@ -119,8 +119,8 @@ ${page.breadcrumbs ? `      ${page.breadcrumbs}\n` : ''}${page.hideTitle ? '' : 
 }
 
 const compatibilityStatus = {
-  compatible: 'Compatible',
-  reported: 'Reported working',
+  compatible: 'RunBridge tested',
+  reported: 'Customer confirmed',
   incompatible: 'Not compatible',
 };
 
@@ -188,8 +188,8 @@ export function renderCompatibilityHub(records) {
 
   const body = `<p class="page-lede">Check whether a treadmill can send its speed and distance to Garmin through RunBridge. A Bluetooth logo alone is not enough — RunBridge needs a treadmill that broadcasts Bluetooth FTMS workout data.</p>
     <aside class="accuracy-note"><h2>What the labels mean</h2><ul>
-      <li><strong>Compatible</strong> — RunBridge tested this treadmill, or a customer confirmed it works.</li>
-      <li><strong>Reported working</strong> — a customer runs this treadmill with RunBridge and has not reported problems, but RunBridge has not tested it. Check yours with the free RunBridge Companion app before buying.</li>
+      <li><strong>RunBridge tested</strong> — RunBridge has run this treadmill with RunBridge and confirmed it works.</li>
+      <li><strong>Customer confirmed</strong> — a customer confirms this treadmill works with RunBridge; RunBridge has not independently tested it. Check yours with the free RunBridge Companion app before buying.</li>
       <li><strong>Not compatible</strong> — Customer has reported this treadmill does not work with RunBridge.</li>
     </ul></aside>
     <div class="compat-filter" data-compat-filter hidden>

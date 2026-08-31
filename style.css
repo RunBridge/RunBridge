@@ -1032,7 +1032,7 @@ footer {
   font-size: 0.75rem; font-weight: 650;
 }
 .compat-badge[data-status="compatible"] { color: #4ade80; }
-.compat-badge[data-status="reported"] { color: #fcd34d; }
+.compat-badge[data-status="reported"] { color: #7dd3fc; }
 .compat-badge[data-status="incompatible"] { color: #fca5a5; }
 .compat-empty {
   margin: 1.5rem 0; padding: 1rem 1.25rem;

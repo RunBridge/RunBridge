@@ -81,20 +81,20 @@ test('compatibility validation enforces unique slugs and known statuses', () => 
   assert.ok(errors.some((error) => error.includes('Missing manufacturer or model')));
 });
 
-test('compatibility hub separates reported-working treadmills from confirmed ones', () => {
+test('compatibility hub distinguishes RunBridge-tested from customer-confirmed treadmills', () => {
   const hub = renderCompatibilityHub([
     { slug: 'acme-tested', manufacturer: 'Acme', model: 'Tested', status: 'compatible' },
-    { slug: 'beta-reported', manufacturer: 'Beta', model: 'Reported', status: 'reported' },
+    { slug: 'beta-confirmed', manufacturer: 'Beta', model: 'Confirmed', status: 'reported' },
     { slug: 'gamma-no', manufacturer: 'Gamma', model: 'Nope', status: 'incompatible' },
   ]);
 
-  assert.match(hub, /data-status="compatible">Compatible</);
-  assert.match(hub, /data-status="reported">Reported working</);
+  assert.match(hub, /data-status="compatible">RunBridge tested</);
+  assert.match(hub, /data-status="reported">Customer confirmed</);
   assert.match(hub, /data-status="incompatible">Not compatible</);
-  // A reported-working treadmill is never badged as a plain confirmed "Compatible".
-  assert.doesNotMatch(hub, /data-status="reported">Compatible</);
-  // The label meanings are visible on the page.
-  assert.match(hub, /has not tested it/i);
+  // A customer-confirmed treadmill is never badged as RunBridge tested.
+  assert.doesNotMatch(hub, /data-status="reported">RunBridge tested</);
+  // The evidence-source distinction is visible on the page.
+  assert.match(hub, /has not independently tested it/i);
   // Incompatible treadmills sit in their own group, not under a manufacturer.
   assert.match(hub, /<h2>Not compatible<\/h2>/);
 });
