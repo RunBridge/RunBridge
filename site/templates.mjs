@@ -47,11 +47,6 @@ export function makeBreadcrumbSchema(items) {
   return breadcrumbSchema(items);
 }
 
-function listSection(title, values) {
-  if (!values?.length) return '';
-  return `<section><h2>${escapeHtml(title)}</h2><ul>${values.map((value) => `<li>${escapeHtml(value)}</li>`).join('')}</ul></section>`;
-}
-
 export function renderPage(page) {
   const canonical = canonicalUrl(page.route);
   const socialImage = new URL(page.socialImage ?? siteConfig.socialImage, siteConfig.origin).href;
@@ -78,7 +73,9 @@ export function renderPage(page) {
   <meta property="og:url" content="${canonical}">
   <meta property="og:image" content="${socialImage}">
   <meta property="og:image:alt" content="RunBridge treadmill-to-Garmin bridge device">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image:width" content="800">
+  <meta property="og:image:height" content="1200">
+  <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="${escapeHtml(page.title)}">
   <meta name="twitter:description" content="${escapeHtml(page.description)}">
   <meta name="twitter:image" content="${socialImage}">
@@ -86,7 +83,7 @@ export function renderPage(page) {
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="/Docs/runbridge-logo-128.png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <link rel="stylesheet" href="/style.css?v=20260830">
+  <link rel="stylesheet" href="/style.css?v=20260830-2">
   ${jsonLd(schema)}
 </head>
 <body class="${escapeHtml(page.bodyClass ?? 'content-page')}">
@@ -112,7 +109,7 @@ ${page.breadcrumbs ? `      ${page.breadcrumbs}\n` : ''}${page.hideTitle ? '' : 
     <div class="footer-inner">
       <p>© 2026 RunBridge. Independently developed and privacy focused.</p>
       <nav class="footer-links" aria-label="Footer navigation">
-        <a href="/terms.html">Terms</a><a href="/privacy/">Privacy</a><a href="/compliance/">Compliance</a><a href="/guides/">Guides</a><a href="mailto:${siteConfig.supportEmail}">Support</a>
+        <a href="/terms.html">Terms</a><a href="/privacy">Privacy</a><a href="/compliance/">Compliance</a><a href="/guides/">Guides</a><a href="mailto:${siteConfig.supportEmail}">Support</a>
       </nav>
     </div>
   </footer>
@@ -121,67 +118,10 @@ ${page.breadcrumbs ? `      ${page.breadcrumbs}\n` : ''}${page.hideTitle ? '' : 
 `;
 }
 
-export function renderCompatibilityPage(record, { allRecords = [] } = {}) {
-  const name = `${record.manufacturer} ${record.model}${record.variant ? ` ${record.variant}` : ''}`;
-  const route = `/compatibility/${record.slug}/`;
-  const crumbs = [
-    { label: 'Home', href: '/' },
-    { label: 'Treadmill compatibility', href: '/compatibility/' },
-    { label: name, href: route },
-  ];
-  const fieldHistoryNote = record.classification === 'customer_field_history'
-    ? '<p class="evidence-caution"><strong>Evidence strength:</strong> This is customer field history, not a direct RunBridge lab test or an explicit customer confirmation. No compatibility failure was reported for the recorded firmware 4.0.1 deployment.</p>'
-    : '';
-  const related = allRecords.filter((candidate) => record.related?.includes(candidate.slug) && candidate.detailPage)
-    .map((candidate) => `<li><a href="/compatibility/${candidate.slug}/">${escapeHtml(candidate.manufacturer)} ${escapeHtml(candidate.model)}</a></li>`)
-    .join('');
-  const body = `
-    <p class="page-lede">${escapeHtml(record.summary)}</p>
-    <section class="compatibility-status" data-classification="${escapeHtml(record.classification)}">
-      <p class="status-label">${escapeHtml(record.publicStatus)}</p>
-      ${fieldHistoryNote}
-      <dl class="evidence-grid">
-        <div><dt>Evidence</dt><dd>${escapeHtml(record.evidence)}</dd></div>
-        <div><dt>Source</dt><dd>${escapeHtml(record.source || 'Project records')}</dd></div>
-        <div><dt>Recorded</dt><dd>${escapeHtml(record.recordedDate || 'Date not recorded')}</dd></div>
-        <div><dt>Firmware</dt><dd>${escapeHtml(record.firmware || 'Not recorded')}</dd></div>
-      </dl>
-    </section>
-    ${listSection('Setup notes', record.setup)}
-    ${listSection('Known limitations', record.limitations)}
-    <aside class="accuracy-note"><h2>What “compatible” means</h2><p>RunBridge can relay the speed and distance data this treadmill reports. It cannot correct a treadmill whose belt speed or console distance is itself miscalibrated.</p></aside>
-    <section class="cta-panel"><h2>Test your treadmill before buying</h2><p>RunBridge Companion checks the FTMS services and live workout data RunBridge needs, locally on your phone.</p><div class="button-row"><a class="btn btn-primary" href="/runbridge-companion/">Test with RunBridge Companion</a><a class="btn btn-ghost" href="${siteConfig.etsyUrl}">Get RunBridge</a></div></section>
-    ${related ? `<section><h2>Related treadmills</h2><ul>${related}</ul></section>` : ''}
-  `;
-  return renderPage({
-    route,
-    title: `${name} Garmin Compatibility | RunBridge`,
-    description: `See the recorded RunBridge compatibility evidence for the ${name}, including status, firmware context, limitations, and how to test FTMS support.`,
-    h1: `${name} and RunBridge compatibility`,
-    body,
-    breadcrumbs: renderBreadcrumbs(crumbs),
-    schema: [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'WebPage',
-        name: `${name} and RunBridge compatibility`,
-        description: record.summary,
-        url: canonicalUrl(route),
-      },
-      breadcrumbSchema(crumbs),
-    ],
-  });
-}
-
-const compatibilityTierLabels = {
-  runbridge_tested: 'RunBridge tested',
-  customer_confirmed: 'Customer confirmed',
-  confirmed_working: 'Confirmed (project docs)',
-  customer_field_history: 'Customer field history',
-  firmware_evidence: 'Firmware evidence',
-  expected_ftms: 'Expected — untested',
-  unsupported: 'Not compatible',
-  unknown: 'Insufficient evidence',
+const compatibilityStatus = {
+  compatible: 'Compatible',
+  reported: 'Reported working',
+  incompatible: 'Not compatible',
 };
 
 export function renderCompatibilityHub(records) {
@@ -191,22 +131,15 @@ export function renderCompatibilityHub(records) {
     const raw = fullName(record).toLowerCase();
     return `${raw} ${raw.replace(/[\s./-]+/g, '')}`.trim();
   };
-  const badge = (record) => `<span class="evidence-badge" data-classification="${escapeHtml(record.classification)}">${escapeHtml(compatibilityTierLabels[record.classification] ?? record.classification)}</span>`;
-  const row = (record) => {
-    const name = escapeHtml(fullName(record));
-    const head = record.detailPage
-      ? `<a class="compat-row-head" href="/compatibility/${record.slug}/"><span class="compat-model">${name}</span>${badge(record)}</a>`
-      : `<div class="compat-row-head"><span class="compat-model">${name}</span>${badge(record)}</div>`;
-    return `<li class="compat-row" data-search="${escapeHtml(searchIndex(record))}">${head}<p class="compat-note">${escapeHtml(record.summary)}</p></li>`;
-  };
+  const badge = (record) => `<span class="compat-badge" data-status="${escapeHtml(record.status)}">${escapeHtml(compatibilityStatus[record.status] ?? record.status)}</span>`;
+  const row = (record) => `<li class="compat-row" id="${escapeHtml(record.slug)}" data-search="${escapeHtml(searchIndex(record))}"><div class="compat-row-head"><span class="compat-model">${escapeHtml(fullName(record))}</span>${badge(record)}</div>${record.note ? `<p class="compat-note">${escapeHtml(record.note)}</p>` : ''}</li>`;
   const group = (heading, items, attr = '') => `<section class="compat-brand"${attr}><h2>${escapeHtml(heading)}</h2><ul>${items.map(row).join('')}</ul></section>`;
 
-  const positive = records.filter((record) => record.detailPage);
-  const unsupported = records.filter((record) => record.classification === 'unsupported');
-  const otherRecords = records.filter((record) => !record.detailPage && record.classification !== 'unsupported');
+  const listed = records.filter((record) => record.status !== 'incompatible');
+  const incompatible = records.filter((record) => record.status === 'incompatible');
 
   const brands = new Map();
-  for (const record of positive) {
+  for (const record of listed) {
     if (!brands.has(record.manufacturer)) brands.set(record.manufacturer, []);
     brands.get(record.manufacturer).push(record);
   }
@@ -214,8 +147,7 @@ export function renderCompatibilityHub(records) {
     .sort((a, b) => a[0].localeCompare(b[0], 'en', { sensitivity: 'base' }))
     .map(([brand, items]) => group(brand, items.sort((x, y) => x.model.localeCompare(y.model, 'en', { numeric: true, sensitivity: 'base' }))))
     .join('');
-  const incompatibleSection = unsupported.length ? group('Known incompatible', unsupported, ' data-group="incompatible"') : '';
-  const otherSection = otherRecords.length ? group('Insufficient evidence', otherRecords, ' data-group="other"') : '';
+  const incompatibleSection = incompatible.length ? group('Not compatible', incompatible, ' data-group="incompatible"') : '';
 
   const filterScript = `<script>
 (function () {
@@ -254,26 +186,30 @@ export function renderCompatibilityHub(records) {
 })();
 </script>`;
 
-  const body = `<p class="page-lede">Find the evidence RunBridge has for a specific treadmill. A Bluetooth logo alone does not prove FTMS support, so every status below is tied to a project record rather than a manufacturer marketing inference.</p>
-    <aside class="accuracy-note"><h2>Read the evidence label</h2><p><strong>RunBridge tested</strong>, <strong>customer confirmed</strong>, and <strong>customer field history</strong> are different evidence strengths. Field history means a firmware 4.0.1 deployment exists with no reported compatibility failure; it is not presented as a direct lab test.</p></aside>
+  const body = `<p class="page-lede">Check whether a treadmill can send its speed and distance to Garmin through RunBridge. A Bluetooth logo alone is not enough — RunBridge needs a treadmill that broadcasts Bluetooth FTMS workout data.</p>
+    <aside class="accuracy-note"><h2>What the labels mean</h2><ul>
+      <li><strong>Compatible</strong> — RunBridge tested this treadmill, or a customer confirmed it works.</li>
+      <li><strong>Reported working</strong> — a customer runs this treadmill with RunBridge and has not reported problems, but RunBridge has not tested it. Check yours with the free RunBridge Companion app before buying.</li>
+      <li><strong>Not compatible</strong> — this treadmill does not broadcast the Bluetooth FTMS workout data RunBridge needs.</li>
+    </ul></aside>
     <div class="compat-filter" data-compat-filter hidden>
       <label for="compat-search">Find your treadmill</label>
       <input type="search" id="compat-search" autocomplete="off" spellcheck="false" placeholder="Search by brand or model, e.g. Sole F80">
       <p class="compat-status" data-compat-status role="status" aria-live="polite"></p>
     </div>
-    <div class="compat-list">${brandSections}${incompatibleSection}${otherSection}</div>
-    <p class="compat-empty" data-compat-empty hidden>No treadmill matches your search. Generic Bluetooth support is not enough, so test your treadmill with <a href="/runbridge-companion/">RunBridge Companion</a> before buying.</p>
-    <section class="cta-panel"><h2>Your treadmill is not listed?</h2><p>Use RunBridge Companion to check the actual FTMS service and live data instead of guessing from generic Bluetooth support.</p><div class="button-row"><a class="btn btn-primary" href="/runbridge-companion/">Check my treadmill</a><a class="btn btn-ghost" href="/guides/check-compatibility/">Read the compatibility guide</a></div></section>
+    <div class="compat-list">${brandSections}${incompatibleSection}</div>
+    <p class="compat-empty" data-compat-empty hidden>No treadmill matches your search. Test yours with the free <a href="/runbridge-companion/">RunBridge Companion</a> app to check it before buying.</p>
+    <section class="cta-panel"><h2>Treadmill not listed?</h2><p>Most FTMS treadmills are not individually listed yet. Use RunBridge Companion to check whether yours broadcasts the workout data RunBridge needs.</p><div class="button-row"><a class="btn btn-primary" href="/runbridge-companion/">Check my treadmill</a><a class="btn btn-ghost" href="/guides/check-compatibility/">Read the compatibility guide</a></div></section>
     ${filterScript}`;
   return renderPage({
     route: '/compatibility/',
     title: 'Treadmill Compatibility with Garmin and RunBridge',
-    description: 'Browse evidence-backed RunBridge compatibility records for FTMS treadmills and test an unlisted treadmill before buying.',
+    description: 'Check whether your treadmill can send speed and distance to Garmin through RunBridge, or test an unlisted treadmill before buying.',
     h1: 'RunBridge treadmill compatibility',
     breadcrumbs: renderBreadcrumbs(crumbs),
     body,
     schema: [
-      { '@context': 'https://schema.org', '@type': 'WebPage', name: 'RunBridge treadmill compatibility', description: 'Evidence-backed RunBridge compatibility records for FTMS treadmills.', url: canonicalUrl('/compatibility/') },
+      { '@context': 'https://schema.org', '@type': 'WebPage', name: 'RunBridge treadmill compatibility', description: 'Which treadmills can send speed and distance to Garmin through RunBridge.', url: canonicalUrl('/compatibility/') },
       breadcrumbSchema(crumbs),
     ],
   });
@@ -336,8 +272,8 @@ export function renderHomePage() {
     <section><p class="eyebrow">Check before buying</p><h2>Is your treadmill compatible?</h2><p>Browse model-specific evidence or test an unlisted treadmill with the free RunBridge Companion app. Generic Bluetooth support is not enough; RunBridge needs usable FTMS workout data.</p><div class="button-row"><a class="btn btn-primary" href="/compatibility/">See compatible treadmills</a><a class="btn btn-secondary" href="/runbridge-companion/">Test with RunBridge Companion</a></div></section>
     <section class="trust-grid"><div><strong>Local Bluetooth</strong><span>No unnecessary cloud account</span></div><div><strong>No subscription</strong><span>Buy the hardware once</span></div><div><strong>Privacy focused</strong><span>Workout communication stays local</span></div><div><strong>Independently developed</strong><span>Focused support and documentation</span></div></section>
     <section id="get-runbridge"><p class="eyebrow">Choose your build</p><h2>Get RunBridge</h2><div class="product-grid">
-      <article><h3>Assembled RunBridge</h3><p class="price">$${siteConfig.assembledPrice}</p><p>Ready-to-use hardware for runners who want the simplest path from a compatible treadmill to Garmin.</p><a class="btn btn-primary" href="${siteConfig.etsyUrl}">Buy assembled on Etsy</a></article>
-      <article><h3>DIY kit</h3><p class="price">$${siteConfig.diyPrice}</p><p>For makers who want to assemble the documented RunBridge hardware themselves.</p><a class="btn btn-secondary" href="${siteConfig.etsyUrl}">Buy the DIY kit on Etsy</a></article>
+      <article><h3>Assembled RunBridge</h3><p class="price">$${siteConfig.assembledPrice} USD</p><p>Ready-to-use hardware for runners who want the simplest path from a compatible treadmill to Garmin.</p><a class="btn btn-primary" href="${siteConfig.assembledEtsyUrl}">Buy assembled on Etsy</a></article>
+      <article><h3>DIY kit</h3><p class="price">$${siteConfig.diyPrice} USD</p><p>For makers who want to assemble the documented RunBridge hardware themselves.</p><a class="btn btn-secondary" href="${siteConfig.diyEtsyUrl}">Buy the DIY kit on Etsy</a></article>
     </div></section>
     <section class="review-section"><h2>What RunBridge customers say</h2><p>Recent feedback from the <a class="text-link" href="https://www.etsy.com/shop/RunBridge#reviews">RunBridge Etsy shop</a>.</p><div class="review-grid">${reviewCards}</div></section>
     <section><h2>Learn before you choose</h2><div class="resource-grid"><article><h3><a href="/garmin-treadmill-accuracy/">Garmin treadmill accuracy</a></h3><p>Why pace and distance differ, and where calibration helps.</p></article><article><h3><a href="/runna-garmin-treadmill/">Runna, Garmin and treadmill workouts</a></h3><p>What structured indoor workouts reveal about live pace.</p></article><article><h3><a href="/garmin-treadmill-foot-pod/">Foot pod alternatives</a></h3><p>Compare the main measurement approaches honestly.</p></article></div></section>
@@ -348,7 +284,7 @@ export function renderHomePage() {
     h1: 'Your treadmill already knows its speed. Let your Garmin know it too.', hideTitle: true, mainClass: 'home-shell', body,
     schema: [
       { '@context': 'https://schema.org', '@type': 'Organization', name: 'RunBridge', url: siteConfig.origin, email: siteConfig.contactEmail },
-      { '@context': 'https://schema.org', '@type': 'Product', name: productName, description: 'Hardware bridge that relays compatible treadmill-reported FTMS speed and distance to Garmin as a running sensor.', image: `${siteConfig.origin}${siteConfig.socialImage}`, brand: { '@type': 'Brand', name: 'RunBridge' }, offers: [{ '@type': 'Offer', name: 'Assembled RunBridge', price: siteConfig.assembledPrice, priceCurrency: 'USD', url: siteConfig.etsyUrl }, { '@type': 'Offer', name: 'RunBridge DIY kit', price: siteConfig.diyPrice, priceCurrency: 'USD', url: siteConfig.etsyUrl }], review: customerReviews.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, datePublished: review.date, reviewBody: review.body, reviewRating: { '@type': 'Rating', ratingValue: 5, bestRating: 5 } })) },
+      { '@context': 'https://schema.org', '@type': 'Product', name: productName, description: 'Hardware bridge that relays compatible treadmill-reported FTMS speed and distance to Garmin as a running sensor.', image: `${siteConfig.origin}${siteConfig.socialImage}`, brand: { '@type': 'Brand', name: 'RunBridge' }, offers: [{ '@type': 'Offer', name: 'Assembled RunBridge', price: siteConfig.assembledPrice, priceCurrency: 'USD', url: siteConfig.assembledEtsyUrl }, { '@type': 'Offer', name: 'RunBridge DIY kit', price: siteConfig.diyPrice, priceCurrency: 'USD', url: siteConfig.diyEtsyUrl }], review: customerReviews.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, datePublished: review.date, reviewBody: review.body, reviewRating: { '@type': 'Rating', ratingValue: 5, bestRating: 5 } })) },
       { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })) },
     ],
   });
@@ -365,7 +301,7 @@ export function renderLegacyDocsPage() {
   <meta name="description" content="Index of the current RunBridge setup, compatibility, troubleshooting, LED status and support guides.">
   <link rel="canonical" href="https://runbridge.dev/guides/">
   <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="stylesheet" href="/style.css?v=20260830">
+  <link rel="stylesheet" href="/style.css?v=20260830-2">
   <script>(function(){var k=new URLSearchParams(location.search).get('page');var routes={'QuickStart':'/guides/quick-start/','Troubleshooting':'/guides/troubleshooting/','Compatibility':'/guides/check-compatibility/','LED-States':'/guides/led-states/','Support-and-Policies':'/guides/support-and-policies/'};if(k&&routes[k])location.replace(routes[k]);}());</script>
 </head>
 <body class="content-page">

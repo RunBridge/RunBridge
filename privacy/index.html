@@ -8,105 +8,27 @@
   <link rel="canonical" href="https://runbridge.dev/privacy/" />
   <link rel="icon" href="/favicon.ico" sizes="any" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <style>
-    :root {
-      --accent: #2563eb;
-      --bg: #0f172a;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --border-subtle: #1f2937;
-      --card-bg: #0b1120;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--text-main);
-      line-height: 1.6;
-    }
-
-    main {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem 1rem 4rem;
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: white;
-    }
-
-    h2 {
-      font-size: 1.25rem;
-      margin-top: 2rem;
-      color: white;
-      border-bottom: 1px solid var(--border-subtle);
-      padding-bottom: 0.5rem;
-    }
-
-    h3 {
-      font-size: 1.05rem;
-      margin-top: 1.5rem;
-      color: white;
-    }
-
-    p, ul {
-      color: var(--text-muted);
-    }
-
-    .note {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .summary {
-      background: var(--card-bg);
-      border: 1px solid var(--border-subtle);
-      border-radius: 12px;
-      padding: 1.25rem 1.5rem;
-      margin: 1.5rem 0;
-    }
-
-    .summary h2 {
-      margin-top: 0;
-      border-bottom: none;
-      padding-bottom: 0;
-      font-size: 1.1rem;
-    }
-
-    .summary ul {
-      margin-bottom: 0;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .back-link {
-      display: inline-block;
-      margin-bottom: 2rem;
-      font-size: 0.9rem;
-    }
-
-    .legal-nav {
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border-subtle);
-      font-size: 0.9rem;
-      color: var(--text-muted);
-    }
-  </style>
+  <link rel="stylesheet" href="/style.css?v=20260830-2" />
 </head>
-<body>
-  <main>
-    <a href="../index.html" class="back-link">← Back to RunBridge Home</a>
+<body class="legal-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="nav-inner">
+      <a class="logo" href="/" aria-label="RunBridge home">
+        <img src="/Docs/runbridge-logo-128.png" alt="" class="logo-img" width="30" height="30" />
+        <span>RunBridge<small>Treadmill → Garmin bridge</small></span>
+      </a>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="/compatibility/">Compatibility</a>
+        <a href="/runbridge-companion/">Companion</a>
+        <a href="/garmin-treadmill-accuracy/">Garmin Guides</a>
+        <a href="/guides/">Guides</a>
+        <a href="/#get-runbridge">Get RunBridge</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main-content">
+    <div class="legal-shell">
     <p class="note">Last updated: 2026-07-22</p>
     <h1>Privacy Policy</h1>
     <p>
@@ -115,10 +37,10 @@
       at <a href="https://runbridge.dev">runbridge.dev</a>.
     </p>
     <p>
-      Related: <a href="../terms.html">Terms &amp; Conditions</a>.
+      Related: <a href="/terms.html">Terms &amp; Conditions</a>.
     </p>
 
-    <div class="summary">
+    <div class="legal-summary">
       <h2>What we don’t do</h2>
       <ul>
         <li>We do not require accounts or logins.</li>
@@ -257,9 +179,18 @@
     </p>
 
     <p class="legal-nav">
-      Also see <a href="../terms.html">Terms &amp; Conditions</a>
-      and <a href="../compliance/">Compliance</a>.
+      Also see <a href="/terms.html">Terms &amp; Conditions</a>
+      and <a href="/compliance/">Compliance</a>.
     </p>
+    </div>
   </main>
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>© 2026 RunBridge. Independently developed and privacy focused.</p>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="/terms.html">Terms</a><a href="/privacy">Privacy</a><a href="/compliance/">Compliance</a><a href="/guides/">Guides</a><a href="mailto:support@runbridge.dev">Support</a>
+      </nav>
+    </div>
+  </footer>
 </body>
 </html>

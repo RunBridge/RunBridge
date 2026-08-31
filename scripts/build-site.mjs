@@ -9,7 +9,6 @@ import {
   makeBreadcrumbSchema,
   renderBreadcrumbs,
   renderCompatibilityHub,
-  renderCompatibilityPage,
   renderDocsIndex,
   renderHomePage,
   renderLegacyDocsPage,
@@ -80,11 +79,6 @@ export async function buildSite({ outputDir = projectRoot } = {}) {
   await writeRoute(outputDir, '/compatibility/', renderCompatibilityHub(records));
   await writeRoute(outputDir, '/guides/', renderDocsIndex());
 
-  const detailRecords = records.filter((record) => record.detailPage);
-  for (const record of detailRecords) {
-    await writeRoute(outputDir, `/compatibility/${record.slug}/`, renderCompatibilityPage(record, { allRecords: records }));
-  }
-
   for (const page of contentPages) {
     const raw = await readFile(path.join(projectRoot, page.source), 'utf8');
     const bodyHtml = marked.parse(interpolate(withoutFirstMarkdownHeading(raw)), { gfm: true });
@@ -111,20 +105,16 @@ export async function buildSite({ outputDir = projectRoot } = {}) {
 
   await writeFile(path.join(outputDir, 'docs.html'), renderLegacyDocsPage(), 'utf8');
 
-  const generatedRoutes = [
-    ...publicRoutes,
-    ...detailRecords.map((record) => `/compatibility/${record.slug}/`),
-  ];
   const legacyRoutes = ['/updater.html', '/extractor.html', '/analyzer.html', '/terms.html', '/privacy/', '/compliance/', '/compliance/declaration/', '/compliance/regulatory/'];
-  const sitemapRoutes = [...new Set([...generatedRoutes, ...legacyRoutes])];
+  const sitemapRoutes = [...new Set([...publicRoutes, ...legacyRoutes])];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapRoutes.map((route) => `  <url><loc>${canonicalUrl(route).replace(/\/$/, route.endsWith('.html') ? '' : '/')}</loc></url>`).join('\n')}\n</urlset>\n`;
   await writeFile(path.join(outputDir, 'sitemap.xml'), sitemap, 'utf8');
   await writeFile(path.join(outputDir, 'robots.txt'), 'User-agent: *\nAllow: /\n\nSitemap: https://runbridge.dev/sitemap.xml\n', 'utf8');
 
-  return { routes: sitemapRoutes, compatibilityPages: detailRecords.length };
+  return { routes: sitemapRoutes };
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const result = await buildSite();
-  console.log(`Built ${result.routes.length} public routes (${result.compatibilityPages} compatibility pages).`);
+  console.log(`Built ${result.routes.length} public routes.`);
 }

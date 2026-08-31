@@ -207,11 +207,11 @@
     return false;
   }
 
-  function setStatus(kind, title, bodyHtml) {
+  function setStatus(kind, title, bodyText) {
     statusBox.classList.remove("good","warn","bad");
     statusBox.classList.add(kind);
     statusTitle.textContent = title;
-    statusBody.innerHTML = bodyHtml || "";
+    statusBody.textContent = bodyText || "";
   }
 
   function appendConsole(text) {
@@ -327,7 +327,7 @@
         setStatus(
           "bad",
           "Wrong device selected?",
-          "I couldn't find an identity line like <b>RUNBRIDGE:</b> or <b>TESTBRIDGE:</b> (from serial <code>?</code>). " +
+          "I couldn't find an identity line like RUNBRIDGE: or TESTBRIDGE: (from serial ?). " +
           "You may have picked the wrong USB serial device. Try another port or cable."
         );
         downloadPartialBtn.disabled = accumulated.length === 0;
@@ -335,7 +335,7 @@
         return;
       }
 
-      setStatus("warn","RunBridge detected", `Device: <b>${deviceIdentLine}</b>` + (requestLogs ? "<br>Requesting logs…" : "<br>You can send commands below."));
+      setStatus("warn", "RunBridge detected", `Device: ${deviceIdentLine}\n${requestLogs ? "Requesting logs…" : "You can send commands below."}`);
 
       if (requestLogs) await sendCommand("d");
 

@@ -6,6 +6,8 @@ export const siteConfig = Object.freeze({
   assembledPrice: '49',
   diyPrice: '20',
   etsyUrl: 'https://runbridge.etsy.com',
+  assembledEtsyUrl: 'https://runbridge.etsy.com/listing/4441603208/runbridge-bluetooth-treadmill-adapter',
+  diyEtsyUrl: 'https://runbridge.etsy.com/listing/4457693029/runbridge-bluetooth-treadmill-to-garmin',
   appStoreUrl: 'https://apps.apple.com/app/runbridge-companion/id6795531707',
   googlePlayUrl: 'https://play.google.com/store/apps/details?id=dev.runbridge.companion',
   supportEmail: 'support@runbridge.dev',

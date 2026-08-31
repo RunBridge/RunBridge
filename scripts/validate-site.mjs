@@ -4,16 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 import { canonicalUrl, routeToFile } from '../site/config.mjs';
 
-export const compatibilityClassifications = new Set([
-  'runbridge_tested',
-  'customer_confirmed',
-  'customer_field_history',
-  'confirmed_working',
-  'firmware_evidence',
-  'expected_ftms',
-  'unsupported',
-  'unknown',
-]);
+export const compatibilityStatuses = new Set(['compatible', 'reported', 'incompatible']);
 
 export function validateCompatibilityRecords(records) {
   const errors = [];
@@ -21,15 +12,14 @@ export function validateCompatibilityRecords(records) {
   for (const record of records) {
     if (slugs.has(record.slug)) errors.push(`Duplicate compatibility slug: ${record.slug}`);
     slugs.add(record.slug);
-    if (!compatibilityClassifications.has(record.classification)) {
-      errors.push(`Invalid compatibility classification for ${record.slug}: ${record.classification}`);
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(record.slug ?? '')) {
+      errors.push(`Invalid compatibility slug: ${record.slug}`);
     }
-    if (!String(record.evidence ?? '').trim()) errors.push(`Missing compatibility evidence for ${record.slug}`);
-    if (record.classification === 'customer_field_history' && record.firmware !== '4.0.1') {
-      errors.push(`Customer field history requires firmware 4.0.1: ${record.slug}`);
+    if (!compatibilityStatuses.has(record.status)) {
+      errors.push(`Invalid compatibility status for ${record.slug}: ${record.status}`);
     }
-    if (record.classification === 'unsupported' && record.detailPage) {
-      errors.push(`Unsupported record cannot have a positive detail page: ${record.slug}`);
+    if (!String(record.manufacturer ?? '').trim() || !String(record.model ?? '').trim()) {
+      errors.push(`Missing manufacturer or model for ${record.slug}`);
     }
   }
   return errors;
@@ -44,8 +34,22 @@ async function exists(file) {
   }
 }
 
-function internalTargets(html) {
-  return [...html.matchAll(/(?:href|src)="(\/[^"#?]*)/g)].map((match) => match[1]);
+function internalTargets(html, route) {
+  const base = canonicalUrl(route);
+  return [...html.matchAll(/(?:href|src)\s*=\s*["']([^"']+)["']/gi)]
+    .map((match) => match[1].trim())
+    .filter((target) => target && !target.startsWith('#') && !target.startsWith('?'))
+    .map((target) => {
+      try {
+        const resolved = new URL(target, base);
+        return resolved.origin === new URL(base).origin
+          ? { target, pathname: decodeURIComponent(resolved.pathname) }
+          : null;
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean);
 }
 
 function targetToFile(target) {
@@ -80,9 +84,9 @@ export async function validateSite({ rootDir, routes, checkSitemap = true }) {
       try { JSON.parse(match[1]); } catch { errors.push(`Invalid JSON-LD: ${route}`); }
     }
 
-    for (const target of internalTargets(html)) {
-      const targetFile = path.join(rootDir, targetToFile(target));
-      if (!(await exists(targetFile))) errors.push(`Broken internal link in ${route}: ${target}`);
+    for (const { target, pathname } of internalTargets(html, route)) {
+      const targetFile = path.join(rootDir, targetToFile(pathname));
+      if (!(await exists(targetFile))) errors.push(`Broken internal link in ${route}: ${target} (resolved to ${pathname})`);
     }
   }
 
@@ -111,7 +115,6 @@ if (invokedPath === fileURLToPath(import.meta.url)) {
   ]);
   const routes = [
     ...publicRoutes,
-    ...records.filter((record) => record.detailPage).map((record) => `/compatibility/${record.slug}/`),
     '/updater.html', '/extractor.html', '/analyzer.html', '/terms.html', '/privacy/',
     '/compliance/', '/compliance/declaration/', '/compliance/regulatory/',
   ];
