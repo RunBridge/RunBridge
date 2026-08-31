@@ -190,7 +190,7 @@ export function renderCompatibilityHub(records) {
     <aside class="accuracy-note"><h2>What the labels mean</h2><ul>
       <li><strong>Compatible</strong> — RunBridge tested this treadmill, or a customer confirmed it works.</li>
       <li><strong>Reported working</strong> — a customer runs this treadmill with RunBridge and has not reported problems, but RunBridge has not tested it. Check yours with the free RunBridge Companion app before buying.</li>
-      <li><strong>Not compatible</strong> — this treadmill does not broadcast the Bluetooth FTMS workout data RunBridge needs.</li>
+      <li><strong>Not compatible</strong> — Customer has reported this treadmill does not work with RunBridge.</li>
     </ul></aside>
     <div class="compat-filter" data-compat-filter hidden>
       <label for="compat-search">Find your treadmill</label>
