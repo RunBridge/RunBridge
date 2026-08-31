@@ -32,6 +32,6 @@ There is no single best treadmill sensor for every runner. The useful question i
 
 ## Choose based on your situation
 
-If your own treadmill supports FTMS and you want Garmin to match its reported workout data, start with the [compatibility database](/compatibility/) or [test with RunBridge Companion](/runbridge-companion/). If you move between treadmills or need an independent measurement, a runner-worn or belt sensor may be a better category to investigate.
+If your own treadmill supports FTMS and you want Garmin to match its reported workout data, start with the [compatibility list](/compatibility/) or [test with RunBridge Companion](/runbridge-companion/). If you move between treadmills or need an independent measurement, a runner-worn or belt sensor may be a better category to investigate.
 
 For the causes behind a mismatch, see [why Garmin treadmill pace and distance can be wrong](/garmin-treadmill-accuracy/).

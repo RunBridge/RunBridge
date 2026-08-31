@@ -269,7 +269,7 @@ export function renderHomePage() {
       <img src="/Docs/runbridge-front.webp" width="640" height="960" alt="Front and back views of the compact RunBridge device" fetchpriority="high">
     </section>
     <section class="problem-section"><div><p class="eyebrow">The problem</p><h2>Indoor running asks Garmin to estimate</h2><p>Without GPS, wrist-based pace and distance can lag or disagree with the treadmill, especially through intervals and pace changes. Calibration can help, but it does not solve every live-pacing situation.</p><a class="text-link" href="/garmin-treadmill-accuracy/">Understand Garmin treadmill accuracy</a></div><div><p class="eyebrow">The bridge</p><h2>Use the treadmill's own reported workout data</h2><p>RunBridge translates compatible FTMS data into a running-sensor profile Garmin understands. It does not claim the treadmill's physical belt speed is perfectly calibrated.</p><a class="text-link" href="/connect-treadmill-to-garmin/">See how the connection works</a></div></section>
-    <section><p class="eyebrow">Check before buying</p><h2>Is your treadmill compatible?</h2><p>Browse model-specific evidence or test an unlisted treadmill with the free RunBridge Companion app. Generic Bluetooth support is not enough; RunBridge needs usable FTMS workout data.</p><div class="button-row"><a class="btn btn-primary" href="/compatibility/">See compatible treadmills</a><a class="btn btn-secondary" href="/runbridge-companion/">Test with RunBridge Companion</a></div></section>
+    <section><p class="eyebrow">Check before buying</p><h2>Is your treadmill compatible?</h2><p>Check the compatibility list for your treadmill model, or test an unlisted model with the free RunBridge Companion app. Generic Bluetooth support is not enough; RunBridge needs usable FTMS workout data.</p><div class="button-row"><a class="btn btn-primary" href="/compatibility/">See compatible treadmills</a><a class="btn btn-secondary" href="/runbridge-companion/">Test with RunBridge Companion</a></div></section>
     <section class="trust-grid"><div><strong>Local Bluetooth</strong><span>No unnecessary cloud account</span></div><div><strong>No subscription</strong><span>Buy the hardware once</span></div><div><strong>Privacy focused</strong><span>Workout communication stays local</span></div><div><strong>Independently developed</strong><span>Focused support and documentation</span></div></section>
     <section id="get-runbridge"><p class="eyebrow">Choose your build</p><h2>Get RunBridge</h2><div class="product-grid">
       <article><h3>Assembled RunBridge</h3><p class="price">$${siteConfig.assembledPrice} USD</p><p>Ready-to-use hardware for runners who want the simplest path from a compatible treadmill to Garmin.</p><a class="btn btn-primary" href="${siteConfig.assembledEtsyUrl}">Buy assembled on Etsy</a></article>
@@ -315,7 +315,7 @@ export function renderLegacyDocsPage() {
         <a href="/guides/check-compatibility/">Check treadmill compatibility</a>
         <a href="/guides/led-states/">RunBridge LED status guide</a>
         <a href="/guides/support-and-policies/">RunBridge support and policies</a>
-        <a href="/compatibility/">Treadmill compatibility database</a>
+        <a href="/compatibility/">Treadmill compatibility list</a>
       </nav>
     </div>
   </main>

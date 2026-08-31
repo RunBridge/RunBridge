@@ -16,7 +16,7 @@ Communication stays local over Bluetooth; RunBridge does not need a cloud accoun
 
 ## Before you try to connect
 
-- Check the [model-specific compatibility records](/compatibility/).
+- Check the [treadmill compatibility list](/compatibility/) for your model.
 - If the model is not documented, use [RunBridge Companion](/runbridge-companion/) to inspect the treadmill's FTMS data.
 - Remember that a treadmill's displayed speed can itself be miscalibrated. RunBridge relays the data the treadmill reports; it does not measure physical belt speed.
 

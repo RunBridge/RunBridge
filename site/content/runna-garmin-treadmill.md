@@ -16,7 +16,7 @@ That can make the numbers on Garmin better match the treadmill used to control t
 
 ## Check before buying
 
-1. Look for your model in the [RunBridge compatibility database](/compatibility/).
+1. Look for your model in the [RunBridge compatibility list](/compatibility/).
 2. If it is not listed, [test it with RunBridge Companion](/runbridge-companion/).
 3. If compatible, follow the [quick start guide](/guides/quick-start/) to connect the treadmill and Garmin sides.
 

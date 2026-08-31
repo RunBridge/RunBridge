@@ -6,7 +6,7 @@ RunBridge sits between your treadmill and your Garmin watch. It relies on two th
 2. A **Garmin watch** that supports external speed/cadence / footpod sensors.
 
 - **Developed using:** AssaultRunner Pro + Garmin Fenix 7 Pro Sapphire Solar
-- **Recorded treadmill evidence:** See the [model compatibility database](/compatibility/) for current, evidence-labeled records.
+- **Treadmill compatibility:** See the [treadmill compatibility list](/compatibility/) for the current per-model status.
 - **Recorded additional watch:** Garmin Epix 2
 ---
 

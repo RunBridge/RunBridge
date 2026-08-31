@@ -88,7 +88,7 @@ export async function buildSite({ outputDir = projectRoot } = {}) {
       { label: page.h1, href: page.route },
     ];
     const related = page.kind === 'article'
-      ? '<aside class="cta-panel"><h2>Check your treadmill</h2><p>Browse model-specific evidence or test FTMS compatibility with the free RunBridge Companion app.</p><div class="button-row"><a class="btn btn-primary" href="/compatibility/">See compatibility</a><a class="btn btn-ghost" href="/runbridge-companion/">Test with Companion</a></div></aside>'
+      ? '<aside class="cta-panel"><h2>Check your treadmill</h2><p>Check the treadmill compatibility list, or test FTMS support with the free RunBridge Companion app.</p><div class="button-row"><a class="btn btn-primary" href="/compatibility/">See compatibility</a><a class="btn btn-ghost" href="/runbridge-companion/">Test with Companion</a></div></aside>'
       : page.kind === 'documentation'
         ? '<nav class="doc-next" aria-label="Documentation links"><a href="/guides/">All guides</a><a href="/compatibility/">Treadmill compatibility</a><a href="/runbridge-companion/">Companion app</a></nav>'
         : '';

@@ -27,4 +27,4 @@ RunBridge does not recalibrate the treadmill itself. It aligns Garmin with the t
 
 ## Check the practical next step
 
-Start with the [treadmill compatibility database](/compatibility/). If your model is not listed, [RunBridge Companion](/runbridge-companion/) can check the FTMS services and live data available from the treadmill before you buy. For the sensor options side by side, see [Garmin treadmill foot pod alternatives](/garmin-treadmill-foot-pod/).
+Start with the [treadmill compatibility list](/compatibility/). If your model is not listed, [RunBridge Companion](/runbridge-companion/) can check the FTMS services and live data available from the treadmill before you buy. For the sensor options side by side, see [Garmin treadmill foot pod alternatives](/garmin-treadmill-foot-pod/).

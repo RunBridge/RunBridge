@@ -23,4 +23,4 @@ Testing happens locally over Bluetooth and follows RunBridge's privacy-first app
 
 If the result is compatible, [get RunBridge from the official Etsy shop]({{ETSY_URL}}) and follow the [quick start guide](/guides/quick-start/). If the test is unclear, use the app's diagnostic information with [RunBridge support](/guides/support-and-policies/) rather than assuming that generic Bluetooth support means FTMS compatibility.
 
-You can also browse [recorded treadmill compatibility](/compatibility/) to see the evidence available for specific models.
+You can also check the [treadmill compatibility list](/compatibility/) to see which models are RunBridge tested or customer confirmed.
