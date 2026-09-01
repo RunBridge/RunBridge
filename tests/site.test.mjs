@@ -123,6 +123,12 @@ test('homepage renders four visible Etsy reviews mirrored by Product schema', ()
   assert.ok(Array.isArray(product.review));
   assert.equal(product.review.length, 4);
   assert.deepEqual(product.review.map((review) => review.author.name), ['Evan', 'Thilo', 'Solvej', 'Rhys Jacob']);
+  // Multiple reviews must be summarised by an aggregateRating for Google rich results.
+  assert.equal(product.aggregateRating['@type'], 'AggregateRating');
+  assert.equal(product.aggregateRating.reviewCount, product.review.length);
+  assert.equal(product.aggregateRating.ratingValue, 5);
+  // Every offer needs an availability so merchant listing / product snippets validate.
+  for (const offer of product.offers) assert.match(offer.availability, /schema\.org\/InStock/);
 });
 
 test('homepage purchase choices link to the configured Etsy listings and match the schema offers', () => {

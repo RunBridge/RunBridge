@@ -262,6 +262,18 @@ export function renderHomePage() {
     },
   ];
   const faqItems = faqs.map((item) => `<div><dt>${escapeHtml(item.q)}</dt><dd>${escapeHtml(item.a)}</dd></div>`).join('');
+  const productOffers = [
+    { '@type': 'Offer', name: 'Assembled RunBridge', price: siteConfig.assembledPrice, priceCurrency: 'USD', availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', url: siteConfig.assembledEtsyUrl },
+    { '@type': 'Offer', name: 'RunBridge DIY kit', price: siteConfig.diyPrice, priceCurrency: 'USD', availability: 'https://schema.org/InStock', itemCondition: 'https://schema.org/NewCondition', url: siteConfig.diyEtsyUrl },
+  ];
+  const productReviews = customerReviews.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, datePublished: review.date, reviewBody: review.body, reviewRating: { '@type': 'Rating', ratingValue: 5, bestRating: 5, worstRating: 1 } }));
+  const productAggregateRating = {
+    '@type': 'AggregateRating',
+    ratingValue: 5,
+    bestRating: 5,
+    worstRating: 1,
+    reviewCount: productReviews.length,
+  };
   const body = `<section class="hero-landing">
       <div><p class="eyebrow">Treadmill data on Garmin</p><h1>Your treadmill already knows its speed. Let your Garmin know it too.</h1>
       <p class="hero-copy">RunBridge relays treadmill-reported speed and distance from compatible Bluetooth FTMS treadmills to Garmin as a familiar running sensor—without a subscription, cloud account or phone during the workout.</p>
@@ -284,7 +296,7 @@ export function renderHomePage() {
     h1: 'Your treadmill already knows its speed. Let your Garmin know it too.', hideTitle: true, mainClass: 'home-shell', body,
     schema: [
       { '@context': 'https://schema.org', '@type': 'Organization', name: 'RunBridge', url: siteConfig.origin, email: siteConfig.contactEmail },
-      { '@context': 'https://schema.org', '@type': 'Product', name: productName, description: 'Hardware bridge that relays compatible treadmill-reported FTMS speed and distance to Garmin as a running sensor.', image: `${siteConfig.origin}${siteConfig.socialImage}`, brand: { '@type': 'Brand', name: 'RunBridge' }, offers: [{ '@type': 'Offer', name: 'Assembled RunBridge', price: siteConfig.assembledPrice, priceCurrency: 'USD', url: siteConfig.assembledEtsyUrl }, { '@type': 'Offer', name: 'RunBridge DIY kit', price: siteConfig.diyPrice, priceCurrency: 'USD', url: siteConfig.diyEtsyUrl }], review: customerReviews.map((review) => ({ '@type': 'Review', author: { '@type': 'Person', name: review.author }, datePublished: review.date, reviewBody: review.body, reviewRating: { '@type': 'Rating', ratingValue: 5, bestRating: 5 } })) },
+      { '@context': 'https://schema.org', '@type': 'Product', name: productName, description: 'Hardware bridge that relays compatible treadmill-reported FTMS speed and distance to Garmin as a running sensor.', image: `${siteConfig.origin}${siteConfig.socialImage}`, brand: { '@type': 'Brand', name: 'RunBridge' }, offers: productOffers, aggregateRating: productAggregateRating, review: productReviews },
       { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: faqs.map((item) => ({ '@type': 'Question', name: item.q, acceptedAnswer: { '@type': 'Answer', text: item.a } })) },
     ],
   });
