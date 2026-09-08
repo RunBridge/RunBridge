@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
@@ -133,16 +133,45 @@ test('homepage renders four visible Etsy reviews mirrored by Product schema', ()
 
 test('homepage purchase choices link to the configured Etsy listings and match the schema offers', () => {
   const html = renderHomePage();
-  const { assembledEtsyUrl, diyEtsyUrl } = siteConfig;
+  const { assembledEtsyUrl, diyEtsyUrl, etsyUrl } = siteConfig;
 
   assert.notEqual(assembledEtsyUrl, diyEtsyUrl, 'assembled and DIY listings must be distinct');
   assert.ok(html.includes(`href="${assembledEtsyUrl}"`), 'assembled purchase button links to assembledEtsyUrl');
   assert.ok(html.includes(`href="${diyEtsyUrl}"`), 'DIY purchase button links to diyEtsyUrl');
+  assert.ok(html.includes(`href="${etsyUrl}#reviews"`), 'reviews link uses etsyUrl');
 
   const product = jsonLdBlocks(html).find((block) => block['@type'] === 'Product');
   const offerUrlByName = Object.fromEntries(product.offers.map((offer) => [offer.name, offer.url]));
   assert.equal(offerUrlByName['Assembled RunBridge'], assembledEtsyUrl);
   assert.equal(offerUrlByName['RunBridge DIY kit'], diyEtsyUrl);
+});
+
+test('every generated Etsy URL uses the RunBridge shop host', async () => {
+  const { buildSite } = await import('../scripts/build-site.mjs');
+  const outputDir = await mkdtemp(path.join(tmpdir(), 'runbridge-etsy-test-'));
+  await buildSite({ outputDir });
+
+  async function htmlFiles(dir) {
+    const entries = await readdir(dir, { withFileTypes: true });
+    const files = [];
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) files.push(...await htmlFiles(full));
+      else if (entry.name.endsWith('.html')) files.push(full);
+    }
+    return files;
+  }
+
+  const prefix = 'https://runbridge.etsy.com';
+  const urls = [];
+  for (const file of await htmlFiles(outputDir)) {
+    const html = await readFile(file, 'utf8');
+    urls.push(...html.match(/https?:\/\/[^\s"'<>]*etsy\.com[^\s"'<>]*/gi) ?? []);
+  }
+  assert.ok(urls.length > 0, 'expected at least one Etsy URL in generated HTML');
+  for (const url of urls) {
+    assert.ok(url.startsWith(prefix), `Etsy URL must start with ${prefix}: ${url}`);
+  }
 });
 
 test('shared social metadata accurately describes the portrait product image', () => {
