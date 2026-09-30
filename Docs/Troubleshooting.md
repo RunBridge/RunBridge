@@ -60,7 +60,13 @@ If it still never appears, email [support@runbridge.dev](mailto:support@runbridg
      - The footpod sensor is enabled.
      - Pace source may need to be set to the footpod on some watches.
 
-4. **Remove competing sensors temporarily:**
+4. **Set the RunBridge foot pod:**
+   - **Speed:** Always
+   - **Distance:** Always
+   - **Cal. Factor:** 100.0
+   - Turn auto-calibration off
+
+5. **Remove competing sensors temporarily:**
    - If you also use Stryd or another footpod, try disabling it for a test run so Garmin has only one footpod choice.
 
 If you still get no movement, capture:
@@ -89,6 +95,12 @@ and send it to [support@runbridge.dev](mailto:support@runbridge.dev).
 3. **Check treadmill behavior:**
    - Some treadmills pause their internal distance when belt speed goes to 0 temporarily.
    - Very short on/off intervals can cause odd results.
+
+4. **Set the RunBridge foot pod:**
+   - **Speed:** Always
+   - **Distance:** Always
+   - **Cal. Factor:** 100.0
+   - Turn auto-calibration off
 
 If the difference is large and consistent, we’d like to see logs or a video. Email [support@runbridge.dev](mailto:support@runbridge.dev).
 

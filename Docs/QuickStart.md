@@ -52,7 +52,24 @@ If you already have another footpod (like Stryd) paired, you may want to tempora
 
 ---
 
-## 4. Start an indoor run
+## 4. Set Speed, Distance, and calibration
+
+Open the saved sensor:
+
+> **Settings → Sensors & Accessories → RunBridge**
+
+Set:
+
+- **Speed:** Always
+- **Distance:** Always
+- **Cal. Factor:** 100.0
+- Turn auto-calibration off
+
+The watch then uses the speed and distance RunBridge reports from the treadmill.
+
+---
+
+## 5. Start an indoor run
 
 1. On your watch, choose an **Indoor Run** activity.
 2. Confirm that the footpod / speed & cadence sensor is connected (usually shown in the sensor list).
